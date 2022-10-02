@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
+import { User } from "../types";
 
-const UserSchema = new Schema({
+const UserSchema = new Schema<User>({
 nickName: {
     type: String,
     required: true
@@ -28,4 +29,4 @@ contacts: [{
 // }]
 })
 UserSchema.plugin(require("mongoose-autopopulate"))
-    module.exports = model('User', UserSchema)
+export const Users = model('User', UserSchema)

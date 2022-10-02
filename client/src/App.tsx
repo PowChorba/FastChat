@@ -1,28 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import  io  from 'socket.io-client';
+import Home from './Components/Home/Home';
+import { Routes, Route } from 'react-router-dom'
+import AuthRoute from './Firebase/useContext';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from './Firebase/Secret';
+import Register from './Components/Register/register';
+import Login from './Components/Login/Login';
+
 
 const socket = io("http://localhost:3001");
+initializeApp(firebaseConfig)
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path='/home' element={<AuthRoute><Home/></AuthRoute>}/>
+      <Route path='/register' element={<Register/>}/>
+      <Route path='/login' element={<Login/>}/>
+    </Routes>
   );
 }
 
