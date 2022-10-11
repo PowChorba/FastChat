@@ -3,10 +3,10 @@ import { Users } from '../models/users'
 import { User } from '../types'
 
 
-export const newUser = async (req: Request, res: Response) => {
+export const newUser = async (req: any, res: any) => {
     const { nickName, userEmail, password, image } = req.body
     try {
-        const newUser: User = await Users.create({
+        const newUser = await Users.create({
             nickName,
             userEmail,
             password,
@@ -18,10 +18,51 @@ export const newUser = async (req: Request, res: Response) => {
     }
 }
 
-export const allUsers = async (_req: Request, res: Response) => {
+export const allUsers = async (req: Request, res: Response) => {
+    const { nickName } = req.query
     try {
-        const allUsers = await Users.find()
-        res.json(allUsers)
+        if(nickName){
+            const findUser = await Users.findOne({nickName: nickName})
+            if(findUser){
+                return res.send([findUser])
+            }else {
+                return res.send('We could not find that user')
+            }
+        }else {
+            const allUsers = await Users.find()
+            return res.json(allUsers)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const contactsUser =async (req: Request, res: Response) => {
+    const { userId} = req.params
+    const { contact } = req.body
+    try {
+        const findUser = await Users.findById(userId)
+        const findUserDos = await Users.findById(contact)
+        if(findUser && findUserDos) {
+            await findUser.updateOne({$push: {contacts: contact}})
+            res.send(findUser)
+        }else{
+            res.send('We could not find that user')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const userById =async (req: Request, res: Response) => {
+    const { userId } = req.params
+    try {
+        const findUser = await Users.findById(userId)
+        if(findUser){
+            return res.send(findUser)
+        }else{
+            return res.json({msg: 'We could not find that user'})
+        }
     } catch (error) {
         console.log(error)
     }

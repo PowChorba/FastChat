@@ -4,11 +4,11 @@ import { User } from "../types";
 const UserSchema = new Schema<User>({
 nickName: {
     type: String,
-    required: true
+    required: true,
+    unique: true
 },
 userEmail: {
     type: String,
-    unique: true,
     required: true
 },
 password: {
@@ -17,16 +17,12 @@ password: {
 },
 image: {
     type: String,
-    // default:
 },
 contacts: [{
     type: Schema.Types.ObjectId,
-    ref: "User"
-}],
-// chats : [{
-//     type: Schema.Types.ObjectId,
-//     ref: "User"
-// }]
+    ref: "Users",
+    autopopulate: true
+}]
 })
 UserSchema.plugin(require("mongoose-autopopulate"))
-export const Users = model('User', UserSchema)
+export const Users = model<User>('Users', UserSchema)

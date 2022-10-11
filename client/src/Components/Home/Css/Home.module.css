@@ -1,0 +1,36 @@
+.contenedor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.divTitulo {
+    grid-column: 1/3;
+}
+
+.divContactos{
+    grid-column: 1/3;
+}
+
+.divMensajes {
+    width: 50%;
+    text-align: center;
+
+}
+
+.contenedorMensajes{
+    overflow-y: scroll;
+    max-height: 50vh;
+}
+
+/* .divBusquedaUsuarios {
+    display: none;
+} */
+
+.contactosHide {
+    display: none;
+}
+
+.btnContactos {
+    width: 25%;
+    height: 100%;
+}

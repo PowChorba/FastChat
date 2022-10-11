@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword} from 'firebase/auth'
 
 export default function Login(){
@@ -45,5 +45,8 @@ export default function Login(){
                 </div>
                 <button type="submit">Login</button>
             </form>
+            <div>
+                <p>Don't have an account? <Link to='/register'>Register</Link></p>
+            </div>
         </div>)
 }
