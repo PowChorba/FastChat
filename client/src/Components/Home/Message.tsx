@@ -18,10 +18,10 @@ export default function Message({mensajes, chat, currentUser}: Props){
     
     return(
         <div className={s.contenedorMensajes}>
-            {mensajes.map((e: any) => {
+            {mensajes.map((e) => {
                 return(
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>
-                        <p>{e.messageAuthor === currentUser?._id ? currentUser?.nickName : friend?.nickName }</p>
+                        <p>{e.messageAuthor === currentUser?._id ? 'Tu' : friend?.nickName }</p>
                         <p>{e.textMessage}</p>
                         <p>{e.createdAt}</p>
                     </div>)

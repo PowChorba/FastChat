@@ -1,0 +1,11 @@
+.chat {
+    text-align: left;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.imagen {
+    border-radius: 50%;
+    margin-right: 5px;
+}

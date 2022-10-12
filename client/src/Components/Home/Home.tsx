@@ -107,12 +107,14 @@ export default function Home(){
     }
 
     const [hide, setHide ] = useState(true)
+    const [hideChat, setHideChat] = useState(false)
 
     const handleHide = () => {
         setHide(!hide)
+        setHideChat(!hideChat)
 }
 
-console.log(userChats)
+console.log(searchUser)
 
 return(
     <div className={s.contenedor}>
@@ -121,24 +123,19 @@ return(
         <div className={s.divTitulo}>
             <h1>Este es el chat</h1>
         </div>
+        <div className={s.divAside}>
         <div className={s.divBusquedaUsuarios}>
-        <p>Aca los contactos</p>
+        <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenes}/>
         <form onSubmit={handleSubmitBusqueda}>
             <input type="text" name="busqueda" value={busqueda} onChange={handleBusqueda}/>
             <button type="submit">Buscar</button>
         </form>
         {
-            // searchUser.length !== 0 && searchUser?.map(e => {
-            //     return(
-            //         <div key={e._id}>
-            //             <p>{e.nickName}</p>
-            //             <button onClick={() => handleNewContact(e._id)}>Add Contact</button>
-            //         </div>)
-            // })
             typeof (searchUser) === 'object' ?  searchUser?.map(e => {
                 return(
                     <div key={e._id}>
-                        <p>{e.nickName}</p>
+                        <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
+                        <span>{e.nickName}</span>
                         <button>Add Contact</button>
                     </div>)
             }): <p>Usuario inexistente</p>
@@ -150,9 +147,9 @@ return(
             : currentUser?.contacts?.map(e => {
                 return(
                     <div key={e._id}>
-                        {/* <p>{e._id}</p> */}
-                        <p>{e.userEmail}</p>
-                        <p>{e.nickName}</p>
+                        <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
+                        <span>{e.nickName}</span>
+                        <br />
                         {
                            userChats.length !== 0 && userChats?.filter(e => e.chatsUsers[0] === e._id || e.chatsUsers[1] === e._id ) ? 'Ya tienen un chat creado'
                            : <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}>New Chat</button> 
@@ -161,19 +158,30 @@ return(
             })
         }
         </div>
-        <div>
-        <h2>All Chats</h2>
         {
-            userChats && userChats.map(e => {
-                return(
-                    <div key={e._id}>
-                        <button onClick={() => handleChat(e._id)}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
-                    </div>)
-            })
+            searchUser.length === 0 
+            ? <div className={hideChat ? s.contactosHide : s.divContactos}>
+            {/* <h2>All Chats</h2> */}
+            {
+                userChats && userChats.map(e => {
+                    return(
+                        <div key={e._id}>
+                            <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
+                        </div>)
+                })
+            }
+            </div>
+            : <div className={s.none}>asd</div>
         }
         </div>
-        <div className={s.divMensajes}>
-            <div><img src={friend?.image} alt="asd"  width="48px"/> {friend?.nickName}</div>
+        {
+            currentChat === '' 
+            ? <div className={s.divChatsCerrados}>
+                <h4>Inicia una conversacion nueva o abre una ya iniciada</h4>
+            </div> 
+            :
+            <div className={s.divMensajes}>
+            <div className={s.divDatosUserChat}><img src={friend?.image} alt="asd"  width="48px" className={s.imagenes}/> {friend?.nickName}</div>
         <div className={s.contenedorMensajes}>
             {
                 filterMessages?.length === 0 ? <p>Today</p>
@@ -185,10 +193,11 @@ return(
                 })
             }
         </div>
-        <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.a}>
-            <textarea name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} cols={50} rows={5}></textarea>
-            <button type="submit">Send</button>
+        <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
+            <textarea name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} cols={100} rows={2} className={s.formTextArea}></textarea>
+            <button type="submit" className={messages.textMessage === '' ? s.none : s.sendMensaje}>Send</button>
         </form>
         </div>
+        }
     </div>)
 }

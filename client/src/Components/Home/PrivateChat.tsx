@@ -1,5 +1,6 @@
 import { useAppSelector } from "../../Redux/hooks"
 import { User } from "../../types"
+import s from './Css/PrivateChat.module.css'
 
 interface Props {
     chatUser: string[] 
@@ -11,10 +12,11 @@ export default function PrivateChat({chatUser, currentUser}: Props ) {
     const secondUserId = chatUser.find((e: string) => e !== currentUser?._id)
     const userFriend = user?.find(e => e._id === secondUserId)
 
-
+    console.log(chatUser)
     
     return(
-        <div>
-            <p>{userFriend?.nickName}</p>
+        <div className={s.chat}>
+            <img src={userFriend?.image} alt="asd" width='48px' className={s.imagen}/>
+            <span>{userFriend?.nickName}</span>
         </div>)
 }

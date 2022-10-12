@@ -1,20 +1,32 @@
 .contenedor {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.5fr 1.5fr;
+    width: 75%;
+    margin: 0px auto;
+}
+
+.none {
+    display: none;
 }
 
 .divTitulo {
     grid-column: 1/3;
 }
 
-.divContactos{
-    grid-column: 1/3;
+/* MENSAJES */
+.divMensajes {  
+    text-align: center;
+    border: 1px solid black;
+    padding: 10px;
 }
 
-.divMensajes {
-    width: 50%;
-    text-align: center;
-
+.divChatsCerrados{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    border: 1px solid black;
+    padding: 10px;
 }
 
 .contenedorMensajes{
@@ -22,9 +34,14 @@
     max-height: 50vh;
 }
 
-/* .divBusquedaUsuarios {
-    display: none;
-} */
+
+/* BUSQUEDA DE USUARIOS/CHATS (ASIDE) */
+
+.divAside{
+    border: 1px solid black;
+    margin-right: 5px;
+    padding: 10px;
+}
 
 .contactosHide {
     display: none;
@@ -33,4 +50,39 @@
 .btnContactos {
     width: 25%;
     height: 100%;
+}
+
+.asd {
+    width: 75%;
+}
+
+.imagenes {
+    border-radius: 50%;
+}
+
+
+/* DATOS DEL USUARIO DEL CHAT */
+.divDatosUserChat{
+    text-align: left;
+    border-bottom: 1px solid black;
+    display: flex;
+    align-items: center;
+}
+
+/* FORM PARA ENVIAR EL MENSAJE  */
+.formMandarMensaje{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid black;
+}
+
+.formTextArea{
+    margin-top: 5px;
+    resize: none;
+}
+
+.sendMensaje{
+    margin-left: 5px;
+    border-radius: 15px;
 }
