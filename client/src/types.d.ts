@@ -9,7 +9,7 @@ export type User = {
 
 export type Chats = {
     _id?: string
-    chatsUsers: string[]
+    chatsUsers: User[]
 }
 
 export type NewChat = {

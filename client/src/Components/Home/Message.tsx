@@ -10,18 +10,16 @@ interface Props {
 }
 
 export default function Message({mensajes, chat, currentUser}: Props){
-    const allUsers = useAppSelector((state: RootState) => state.clientReducer.users)
     let allChats = useAppSelector((state: RootState) => state.clientReducer.chats)
     allChats = allChats?.filter(e => e._id === chat)
-    let friendId = allChats[0]?.chatsUsers.filter(e => e !== currentUser?._id)[0]
-    const friend = allUsers?.filter(e => e._id === friendId)[0]
+    const friendId = allChats[0]?.chatsUsers.filter(e => e._id !== currentUser?._id)[0]
     
     return(
         <div className={s.contenedorMensajes}>
             {mensajes.map((e) => {
                 return(
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>
-                        <p>{e.messageAuthor === currentUser?._id ? 'Tu' : friend?.nickName }</p>
+                        <p>{e.messageAuthor === currentUser?._id ? 'Tu' : friendId?.nickName }</p>
                         <p>{e.textMessage}</p>
                         <p>{e.createdAt}</p>
                     </div>)

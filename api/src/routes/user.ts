@@ -38,8 +38,7 @@ export const allUsers = async (req: Request, res: Response) => {
 }
 
 export const contactsUser =async (req: Request, res: Response) => {
-    const { userId} = req.params
-    const { contact } = req.body
+    const { userId,contact } = req.body
     try {
         const findUser = await Users.findById(userId)
         const findUserDos = await Users.findById(contact)
@@ -53,6 +52,23 @@ export const contactsUser =async (req: Request, res: Response) => {
         console.log(error)
     }
 }
+
+// export const contactsUser =async (req: Request, res: Response) => {
+//      const { userId } = req.params
+//      const { contact } = req.body
+//     try {
+//         const findUser = await Users.findById(userId)
+//         const findUserDos = await Users.findById(contact)
+//         if(findUser && findUserDos) {
+//             await findUser.updateOne({$push: {contacts: contact}})
+//             res.send(findUser)
+//         }else{
+//             res.send('We could not find that user')
+//         }
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
 export const userById =async (req: Request, res: Response) => {
     const { userId } = req.params

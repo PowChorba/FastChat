@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
-import { useEffect, useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import { ALL_CHATS, ALL_MESSAGES, ALL_USERS, NEW_CHAT, NEW_MESSAGE, USER_CHATS, USER_FILTER } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat"
@@ -20,10 +20,18 @@ export default function Home(){
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
     const allMessages = useAppSelector(state => state.clientReducer.messages)
-    const userChats = useAppSelector(state => state.clientReducer.userChats)
+    let userChats = useAppSelector(state => state.clientReducer.userChats)
     const searchUser = useAppSelector(state => state.clientReducer.searchUser)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
+    //FILTER USER CHATS
+    const [searchChat, setSearchChat] = useState('')
     
+    const handleSearchChat = (e: React.ChangeEvent<HTMLInputElement>) =>{ 
+        setSearchChat(e.target.value)
+    }
+    
+    const filterUserChats = userChats.filter(e => e.chatsUsers[0].nickName === searchChat || e.chatsUsers[1].nickName === searchChat)    
+
     //USE STATE
     const [currentChat, setCurrentChat] = useState('')
     const [newChat, setNewChat] = useState({
@@ -91,8 +99,7 @@ export default function Home(){
     //PERFIL DEL CONTACTO QUE TIENE EL CHAT ABIERTO
     let allChats = useAppSelector(state => state.clientReducer.chats)
     allChats = allChats?.filter(e => e._id === currentChat)
-    let friendId = allChats[0]?.chatsUsers.filter(e => e !== currentUser?._id)[0]
-    const friend = allUsers?.filter(e => e._id === friendId)[0]
+    const friendId = allChats[0]?.chatsUsers.filter(e => e._id !== currentUser?._id)[0]
 
     //BUSQUEDA DE CONTACTOS
     const [busqueda, setBusqueda] = useState('')
@@ -106,82 +113,108 @@ export default function Home(){
         dispatch(USER_FILTER(busqueda))
     }
 
-    const [hide, setHide ] = useState(true)
-    const [hideChat, setHideChat] = useState(false)
+    const [contacts, setContacts ] = useState(true)
+    const [usuarios, setUsuarios] = useState(true)
 
-    const handleHide = () => {
-        setHide(!hide)
-        setHideChat(!hideChat)
-}
+    const handleContacts = () => {
+        setContacts(!contacts)
+    }
 
-console.log(searchUser)
+    const handleUsuarios = () => {
+        setUsuarios(!usuarios)
+    }
 
-return(
+    return(
     <div className={s.contenedor}>
-        <button onClick={handleHide} className={s.btnContactos}>{hide ? 'Show Contacts' : 'Hide Contacts'}</button>
-        <button onClick={() => logOut()}>Deslogear</button>
+        <button onClick={() => logOut()}>Log out</button>
         <div className={s.divTitulo}>
-            <h1>Este es el chat</h1>
+            <h1>FastChat</h1>
         </div>
         <div className={s.divAside}>
-        <div className={s.divBusquedaUsuarios}>
-        <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenes}/>
-        <form onSubmit={handleSubmitBusqueda}>
-            <input type="text" name="busqueda" value={busqueda} onChange={handleBusqueda}/>
-            <button type="submit">Buscar</button>
-        </form>
-        {
-            typeof (searchUser) === 'object' ?  searchUser?.map(e => {
-                return(
-                    <div key={e._id}>
-                        <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
-                        <span>{e.nickName}</span>
-                        <button>Add Contact</button>
-                    </div>)
-            }): <p>Usuario inexistente</p>
-        }
-        </div>
-        <div className={hide ? s.contactosHide : s.divContactos}>
-        {
-            currentUser && currentUser.contacts?.length === 0 ? <p>No tienes contactos.</p>
-            : currentUser?.contacts?.map(e => {
-                return(
-                    <div key={e._id}>
-                        <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
-                        <span>{e.nickName}</span>
-                        <br />
-                        {
-                           userChats.length !== 0 && userChats?.filter(e => e.chatsUsers[0] === e._id || e.chatsUsers[1] === e._id ) ? 'Ya tienen un chat creado'
-                           : <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}>New Chat</button> 
-                        }
-                    </div>)
-            })
-        }
-        </div>
-        {
-            searchUser.length === 0 
-            ? <div className={hideChat ? s.contactosHide : s.divContactos}>
-            {/* <h2>All Chats</h2> */}
-            {
-                userChats && userChats.map(e => {
-                    return(
-                        <div key={e._id}>
-                            <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
-                        </div>)
-                })
-            }
+            {/* DEFAULT UI  */}
+            <div className={!contacts || !usuarios ? s.none : s.asdasd}>
+                <div className={s.perfilAside}>
+                    <img src={currentUser?.image} alt="asd" width='48px' height='48px' className={s.imagenes}/>
+                    <div>
+                        <button onClick={handleContacts}>Contacts</button>
+                        <button onClick={handleUsuarios}>Users</button>
+                    </div>
+                </div>
+                <form>
+                    <input type="text" placeholder="Search chat.." value={searchChat} onChange={handleSearchChat}/>
+                </form>
+                <div>
+                {   
+                    filterUserChats.length !== 0 
+                    ? filterUserChats.map(e => {
+                        return(
+                            <div key={e._id}>
+                                <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
+                            </div>)
+                    })
+                    : userChats && userChats.map(e => {
+                        return(
+                            <div key={e._id}>
+                                <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
+                            </div>)
+                    }) 
+                }
+                </div>
             </div>
-            : <div className={s.none}>asd</div>
-        }
+            {/* CONTACTS UI  */}
+            <div className={contacts ? s.contactosHide : s.divContactos}>
+                <button onClick={handleContacts}>{'<'}</button>
+                <form>
+                    <input type="text" placeholder="Seach contacts" />
+                </form>
+                {
+                    currentUser && currentUser.contacts?.length === 0 ? <p>No tienes contactos.</p>
+                    : currentUser?.contacts?.map(e => {
+                        return(
+                            <div key={e._id}>
+                                <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}>
+                                <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
+                                <span>{e.nickName}</span>
+                                <br />
+                                </button>
+                            </div>)
+                    })
+                }
+            </div>
+            {/* USUARIOS UI  */}
+            <div className={usuarios ? s.none : s.asd}>
+                <button onClick={handleUsuarios}>{'<'}</button>
+            <form onSubmit={handleSubmitBusqueda} className={s.formBusqueda}>
+                <input type="text" name="busqueda" value={busqueda} onChange={handleBusqueda} placeholder='Search user...'/>
+                <button type="submit" className={busqueda === '' ? s.noneButton : s.sendMensaje}>Search</button>
+            </form>
+                {
+                    searchUser.length === 0 ? allUsers.map(e => {
+                        return(<div key={e._id}>
+                            <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
+                            <span>{e.nickName}</span>
+                            <button className={s.sendMensaje}>Add Contact</button>
+                            </div>)
+                    })
+                    : typeof (searchUser) === 'object' ?  searchUser?.map(e => {
+                        return(
+                            <div key={e._id}>
+                                <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
+                                <span>{e.nickName}</span>
+                                <button className={s.sendMensaje}>Add Contact</button>
+                            </div>)
+                    }): <p>We could not find that User</p>
+                }
+            </div>
         </div>
         {
             currentChat === '' 
             ? <div className={s.divChatsCerrados}>
-                <h4>Inicia una conversacion nueva o abre una ya iniciada</h4>
+                <h4>Open a conversation or start a new one!</h4>
             </div> 
             :
             <div className={s.divMensajes}>
-            <div className={s.divDatosUserChat}><img src={friend?.image} alt="asd"  width="48px" className={s.imagenes}/> {friend?.nickName}</div>
+            <div className={s.divDatosUserChat}><img src={friendId?.image} alt="asd"  width="48px" className={s.imagenes}/> {friendId?.nickName}</div>
         <div className={s.contenedorMensajes}>
             {
                 filterMessages?.length === 0 ? <p>Today</p>
@@ -195,7 +228,7 @@ return(
         </div>
         <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
             <textarea name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} cols={100} rows={2} className={s.formTextArea}></textarea>
-            <button type="submit" className={messages.textMessage === '' ? s.none : s.sendMensaje}>Send</button>
+            <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}>Send</button>
         </form>
         </div>
         }

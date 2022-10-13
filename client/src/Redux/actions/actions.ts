@@ -57,6 +57,18 @@ export const USER_FILTER = createAsyncThunk(
     }
 )
 
+export const USER_CONTACTS = createAsyncThunk(
+    'USER_CONTACTS',async (data) => {
+        try {
+            const response = await axios.put('http://localhost:3001/users', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+
 export const NEW_CHAT = createAsyncThunk(
     'NEW_CHAT',async (newChat: NewChat) => {
         try {

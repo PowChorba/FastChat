@@ -3,7 +3,8 @@ import { Schema, model } from "mongoose";
 const ChatsSchema = new Schema({
 chatsUsers: [{
     type: Schema.Types.ObjectId,
-    ref: "User"
+    ref: "Users",
+    autopopulate: true
 }]
 
 })

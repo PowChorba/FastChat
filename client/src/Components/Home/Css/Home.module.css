@@ -9,6 +9,10 @@
     display: none;
 }
 
+.noneButton{
+    visibility: hidden;
+}
+
 .divTitulo {
     grid-column: 1/3;
 }
@@ -32,6 +36,12 @@
 .contenedorMensajes{
     overflow-y: scroll;
     max-height: 50vh;
+}
+
+/* PERFIL USUARIO EN ASIDE  */
+.perfilAside{
+    display: flex;
+    justify-content: space-between;
 }
 
 
@@ -60,6 +70,12 @@
     border-radius: 50%;
 }
 
+.formBusqueda{
+    text-align: center;
+    margin: 5px;
+}
+
+
 
 /* DATOS DEL USUARIO DEL CHAT */
 .divDatosUserChat{
@@ -85,4 +101,5 @@
 .sendMensaje{
     margin-left: 5px;
     border-radius: 15px;
+    cursor: pointer;
 }

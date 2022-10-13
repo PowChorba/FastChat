@@ -8,7 +8,8 @@ const router = Router()
 //USERS
 router.get('/users', allUsers)
 router.post('/users', newUser)
-router.put('/users/:userId', contactsUser)
+// router.put('/users/:userId', contactsUser)
+router.put('/users', contactsUser)
 router.get('/users/:userId', userById)
 
 
