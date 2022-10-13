@@ -21,7 +21,6 @@ image: {
 contacts: [{
     type: Schema.Types.ObjectId,
     ref: "Users",
-    autopopulate: true
 }]
 })
 UserSchema.plugin(require("mongoose-autopopulate"))
