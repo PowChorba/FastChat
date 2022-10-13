@@ -58,7 +58,7 @@ export const USER_FILTER = createAsyncThunk(
 )
 
 export const USER_CONTACTS = createAsyncThunk(
-    'USER_CONTACTS',async (data) => {
+    'USER_CONTACTS',async (data: any) => {
         try {
             const response = await axios.put('http://localhost:3001/users', data)
             return response.data
