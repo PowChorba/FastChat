@@ -1,7 +1,7 @@
-import { useAppSelector } from "../../Redux/hooks"
-import { Messages, User } from "../../types"
-import { RootState } from "../../Redux/store"
-import s from './Css/Message.module.css'
+import { useAppSelector } from "../../../Redux/hooks"
+import { Messages, User } from "../../../types"
+import { RootState } from "../../../Redux/store"
+import s from './Message.module.css'
 
 interface Props {
     mensajes: Messages[]

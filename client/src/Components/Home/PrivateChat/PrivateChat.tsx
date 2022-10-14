@@ -1,6 +1,6 @@
 
-import { User } from "../../types"
-import s from './Css/PrivateChat.module.css'
+import { User } from "../../../types"
+import s from './PrivateChat.module.css'
 
 interface Props {
     chatUser: User[]  

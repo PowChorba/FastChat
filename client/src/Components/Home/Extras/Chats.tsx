@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { ALL_MESSAGES, NEW_MESSAGE } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import Message from "../Message"
+import Message from "../Message/Message"
 import s from './Chats.module.css'
 
 
@@ -9,11 +9,11 @@ export default function Chats({currentUser, currentChat, friendId}: any) {
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     const filterMessages = allMessages?.filter(e => e.chatId === currentChat)
-    
+
     useEffect(() => {
         dispatch(ALL_MESSAGES())
     }, [dispatch])
-
+    
     const [messages, setMessages] = useState({
         textMessage: '',
         messageAuthor: '',

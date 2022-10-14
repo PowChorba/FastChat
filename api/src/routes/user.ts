@@ -37,8 +37,8 @@ export const allUsers = async (req: Request, res: Response) => {
     }
 }
 
-export const contactsUser =async (req: Request, res: Response) => {
-    const { userId,contact } = req.body
+export const updateUsers =async (req: Request, res: Response) => {
+    const { userId,contact, nickName,password,image } = req.body
     try {
         const findUser = await Users.findById(userId).populate('contacts')
         const findUserDos = await Users.findById(contact)
@@ -50,6 +50,9 @@ export const contactsUser =async (req: Request, res: Response) => {
                 await findUser.updateOne({$push: {contacts: contact}})
                 return res.send(findUser)
             }
+        }else if(!contact && findUser){
+            await findUser.updateOne({image,password,nickName})
+            return res.send('User updated')
         }else{
             return res.send('We could not find that user')
         }

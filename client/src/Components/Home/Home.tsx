@@ -2,12 +2,13 @@ import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
 import React, { useEffect, useState} from 'react'
 import { ALL_CHATS, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
-import PrivateChat from "./PrivateChat"
-import s from './Css/Home.module.css'
+import PrivateChat from "./PrivateChat/PrivateChat"
+import s from './Home.module.css'
 import { useNavigate } from "react-router-dom"
 import Users from "./Extras/Users"
 import Contacts from "./Extras/Contacts"
 import Chats from "./Extras/Chats"
+import Profile from "./Extras/Profile"
 
 export default function Home(){
     const dispatch = useAppDispatch()
@@ -30,7 +31,12 @@ export default function Home(){
         setSearchChat(e.target.value)
     }
     
-    const filterUserChats = userChats.filter(e => e.chatsUsers[0].nickName === searchChat || e.chatsUsers[1].nickName === searchChat)    
+    const filterUserChats = userChats.filter(e => e.chatsUsers[0].nickName === searchChat 
+        || e.chatsUsers[1].nickName === searchChat 
+        || e.chatsUsers[0].nickName.toLowerCase() === searchChat 
+        || e.chatsUsers[1].nickName.toLowerCase() === searchChat 
+        || e.chatsUsers[0].nickName.toUpperCase() === searchChat 
+        || e.chatsUsers[1].nickName.toUpperCase() === searchChat)    
 
     //USE STATE
     const [currentChat, setCurrentChat] = useState('')
@@ -44,8 +50,10 @@ export default function Home(){
     }, [dispatch, currentUser?._id])
 
     //SETTEAR VALOR DEL CURRENT CHAT
-    const handleChat = (e: any) => {
-        setCurrentChat(e)
+    const handleChat = (e: string | undefined) => {
+        if(e) {
+            setCurrentChat(e)
+        }
     }
 
     //PERFIL DEL CONTACTO QUE TIENE EL CHAT ABIERTO
@@ -55,6 +63,7 @@ export default function Home(){
     //PARA MOSTRASR LA INTERFAZ DE CONTACTOS O LA DE USUARIOS
     const [contacts, setContacts ] = useState(true)
     const [usuarios, setUsuarios] = useState(true)
+    const [profile, setProfile] = useState(true)
 
     const handleContacts = () => {
         setContacts(!contacts)
@@ -64,20 +73,24 @@ export default function Home(){
         setUsuarios(!usuarios)
     }
 
+    const handleProfile = () => {
+        setProfile(!profile)
+    }
+
     return(
     <div className={s.contenedor}>
-        <button onClick={() => logOut()}>Log out</button>
         <div className={s.divTitulo}>
             <h1>FastChat</h1>
         </div>
         <div className={s.divAside}>
             {/* DEFAULT UI  */}
-            <div className={!contacts || !usuarios ? s.none : s.asdasd}>
+            <div className={!contacts || !usuarios || !profile ? s.none : s.asdasd}>
                 <div className={s.perfilAside}>
-                    <img src={currentUser?.image} alt="asd" width='48px' height='48px' className={s.imagenes}/>
+                    <img src={currentUser?.image} alt="asd" width='48px' height='48px' className={s.imagenes} onClick={handleProfile}/>
                     <div>
                         <button onClick={handleContacts}>Contacts</button>
                         <button onClick={handleUsuarios}>Users</button>
+                        <button onClick={() => logOut()}>Log out</button>
                     </div>
                 </div>
                 <form>
@@ -86,7 +99,7 @@ export default function Home(){
                 <div>
                 {   
                     filterUserChats.length !== 0 
-                    ? filterUserChats.map(e => {
+                    ? filterUserChats && filterUserChats.map(e => {
                         return(
                             <div key={e._id}>
                                 <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
@@ -104,11 +117,18 @@ export default function Home(){
             {/* CONTACTS UI  */}
             <div className={contacts ? s.contactosHide : s.divContactos}>
                 <button onClick={handleContacts}>{'<'}</button>
+                <span>Contacts</span>
                 <Contacts currentUser={currentUser}/>
+            </div>
+            <div className={profile ? s.contactosHide : s.divContactos}>
+                <button onClick={handleProfile}>{'<'}</button>
+                <span>Profile</span>
+                <Profile currentUser={currentUser}/>
             </div>
             {/* USUARIOS UI  */}
             <div className={usuarios ? s.contactosHide : s.asd}>
                  <button onClick={handleUsuarios}>{'<'}</button>
+                 <span>Users</span>
                 <Users currentUser={currentUser}/>
             </div>
         </div>

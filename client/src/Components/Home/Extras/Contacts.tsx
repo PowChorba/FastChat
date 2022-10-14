@@ -16,10 +16,18 @@ export default function Contacts({currentUser}: Props) {
         firstUser: '',
         secondUser: ''
     })
+    const [busqueda, setBusqueda] = useState('')
 
+    const handleBusqueda = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBusqueda(e.target.value)
+    }
 
-    const handleDatosChat = (e: any) => {
-        if(currentUser?._id !== undefined) {
+    const busquedaContacts = currentUser?.contacts?.filter(e => e.nickName === busqueda 
+        || e.nickName.toLowerCase() === busqueda
+        || e.nickName.toUpperCase() === busqueda)
+
+    const handleDatosChat = (e: string | undefined) => {
+        if(currentUser?._id !== undefined && e) {
             setNewChat({
                 firstUser: currentUser._id,
                 secondUser: e
@@ -33,11 +41,22 @@ export default function Contacts({currentUser}: Props) {
 
     return(
         <div>
-            <form>
-                    <input type="text" placeholder="Seach contacts" />
+                <form>
+                    <input type="text" placeholder="Seach contacts" value={busqueda} onChange={handleBusqueda}/>
                 </form>
                 {
                     currentUser && currentUser.contacts?.length === 0 ? <p>No tienes contactos.</p>
+                    : busquedaContacts?.length !== 0 
+                    ? busquedaContacts?.map(e => {
+                        return(
+                            <div key={e._id}>
+                                <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}>
+                                <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
+                                <span>{e.nickName}</span>
+                                <br />
+                                </button>
+                            </div>)
+                    })
                     : currentUser?.contacts?.map((e) => {
                         return(
                             <div key={e._id}>

@@ -7,8 +7,7 @@ import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from './Firebase/Secret';
 import Register from './Components/Register/register';
 import Login from './Components/Login/Login';
-import Homee from './Components/Home/Prueba';
-
+import { ChakraProvider } from '@chakra-ui/react'
 
 const socket = io("http://localhost:3001");
 initializeApp(firebaseConfig)
@@ -16,11 +15,13 @@ initializeApp(firebaseConfig)
 
 function App() {
   return (
-    <Routes>
-      <Route path='/home' element={<AuthRoute><Home/></AuthRoute>}/>
-      <Route path='/register' element={<Register/>}/>
-      <Route path='/login' element={<Login/>}/>      
-    </Routes>
+    <ChakraProvider>
+      <Routes>
+        <Route path='/home' element={<AuthRoute><Home/></AuthRoute>}/>
+        <Route path='/register' element={<Register/>}/>
+        <Route path='/login' element={<Login/>}/>      
+      </Routes>
+    </ChakraProvider>
   );
 }
 

@@ -10,7 +10,6 @@ interface Props {
 
 
 export default function Users({currentUser}: Props){    
-    const searchUser = useAppSelector(state => state.clientReducer.searchUser)
     const allUsers = useAppSelector(state => state.clientReducer.users)
     const filterUsers = allUsers.filter(e => e._id !== currentUser?._id)
 
@@ -22,14 +21,12 @@ export default function Users({currentUser}: Props){
 
     //BUSQUEDA DE CONTACTOS
     const [busqueda, setBusqueda] = useState('')
+    const searchUsers = filterUsers.filter(e => e.nickName === busqueda 
+        || e.nickName.toLowerCase() === busqueda 
+        || e.nickName.toUpperCase() === busqueda)
 
     const handleBusqueda = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBusqueda(e.target.value)
-    }
-
-    const handleSubmitBusqueda = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        dispatch(USER_FILTER(busqueda))
     }
 
 
@@ -55,26 +52,25 @@ export default function Users({currentUser}: Props){
     return(
         <div>
             
-            <form onSubmit={handleSubmitBusqueda} className={s.formBusqueda}>
+            <form className={s.formBusqueda}>
                 <input type="text" name="busqueda" value={busqueda} onChange={handleBusqueda} placeholder='Search user...'/>
-                <button type="submit" className={busqueda === '' ? s.noneButton : s.sendMensaje}>Search</button>
             </form>
                 {
-                    searchUser.length === 0 ? filterUsers.map(e => {
+                     searchUsers.length !== 0 
+                    ? searchUsers.map(e => {
                         return(<div key={e._id}>
                             <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                             <span>{e.nickName}</span>
                             <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add Contact</button>
                             </div>)
                     })
-                    : typeof (searchUser) === 'object' ?  searchUser?.map(e => {
-                        return(
-                            <div key={e._id}>
-                                <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
-                                <span>{e.nickName}</span>
-                                <button className={s.sendMensaje}>Add Contact</button>
+                    : filterUsers && filterUsers.map(e => {
+                        return(<div key={e._id}>
+                            <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
+                            <span>{e.nickName}</span>
+                            <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add Contact</button>
                             </div>)
-                    }): <p>We could not find that User</p>
+                    })
                 }
             
         </div>)
