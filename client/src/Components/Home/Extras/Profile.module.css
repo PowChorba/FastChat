@@ -1,0 +1,24 @@
+.contenedor{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputImage{
+    display: none;
+}
+
+.profileImage{
+    border-radius: 50%;
+    display: flex;
+}
+
+.inputs{
+    padding: 10px;
+}
+
+.inputPassword{
+    padding: 5px;
+    margin-right: 5px;
+}

@@ -6,7 +6,7 @@ import s from './Message.module.css'
 interface Props {
     mensajes: Messages[]
     chat: string
-    currentUser: User | undefined
+    currentUser: User
 }
 
 export default function Message({mensajes, chat, currentUser}: Props){

@@ -5,32 +5,32 @@
 /* MENSAJES */
 .divMensajes {  
     text-align: center;
-    border: 1px solid black;
-    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.37);
 }
 
 .divChatsCerrados{
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 50vh;
+    height: 70vh;
     border: 1px solid black;
-    padding: 10px;
 }
 
 .contenedorMensajes{
+    padding: 10px;
     overflow-y: scroll;
-    height: 50vh;
-    max-height: 50vh;
+    height: 70vh;
+    max-height: 70vh;
     scroll-behavior: smooth;
 }
 
 /* DATOS DEL USUARIO DEL CHAT */
 .divDatosUserChat{
     text-align: left;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.37);
     display: flex;
     align-items: center;
+    padding: 15px;
 }
 
 /* FORM PARA ENVIAR EL MENSAJE  */
@@ -38,7 +38,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-top: 1px solid black;
+    border-top: 1px solid rgba(0, 0, 0, 0.37);
 }
 
 .formTextArea{

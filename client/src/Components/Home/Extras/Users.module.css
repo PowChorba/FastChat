@@ -1,10 +1,14 @@
+.contenedor{
+    width: 100%;
+}
+
 .none {
     display: none;
 }
 
-.asd {
+/* .asd {
     width: 75%;
-}
+} */
 
 .formBusqueda{
     text-align: center;

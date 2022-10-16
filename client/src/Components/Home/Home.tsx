@@ -9,6 +9,10 @@ import Users from "./Extras/Users"
 import Contacts from "./Extras/Contacts"
 import Chats from "./Extras/Chats"
 import Profile from "./Extras/Profile"
+import { Grid, GridItem, Text } from '@chakra-ui/react'
+import { FiUsers } from 'react-icons/fi'
+import { BsChatSquare } from 'react-icons/bs'
+import { HiLogout } from 'react-icons/hi'
 
 export default function Home(){
     const dispatch = useAppDispatch()
@@ -22,6 +26,7 @@ export default function Home(){
     }
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
+    const chatsUsuario = useAppSelector(state => state.clientReducer.userChats)
     let userChats = useAppSelector(state => state.clientReducer.userChats)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
     //FILTER USER CHATS
@@ -78,36 +83,34 @@ export default function Home(){
     }
 
     return(
-    <div className={s.contenedor}>
+    <Grid templateColumns='1fr 3fr' className={s.contenedor}>
         <div className={s.divTitulo}>
-            <h1>FastChat</h1>
+            <Text fontSize='50px'>FastChat</Text>
         </div>
-        <div className={s.divAside}>
+        <GridItem className={s.divAside}>
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile ? s.none : s.asdasd}>
                 <div className={s.perfilAside}>
                     <img src={currentUser?.image} alt="asd" width='48px' height='48px' className={s.imagenes} onClick={handleProfile}/>
                     <div>
-                        <button onClick={handleContacts}>Contacts</button>
-                        <button onClick={handleUsuarios}>Users</button>
-                        <button onClick={() => logOut()}>Log out</button>
+                        <button onClick={handleContacts}><BsChatSquare className={s.iconos}/></button>
+                        <button onClick={handleUsuarios}><FiUsers className={s.iconos}/></button>
+                        <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
                     </div>
                 </div>
-                <form>
-                    <input type="text" placeholder="Search chat.." value={searchChat} onChange={handleSearchChat}/>
-                </form>
-                <div>
+                    <input type="text" placeholder="Search chat.." value={searchChat} onChange={handleSearchChat} className={s.inputChats}/>
+                <div className={s.divChatsDefault}>
                 {   
                     filterUserChats.length !== 0 
                     ? filterUserChats && filterUserChats.map(e => {
                         return(
-                            <div key={e._id}>
+                            <div key={e._id} className={s.botonesChats}>
                                 <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
                             </div>)
                     })
                     : userChats && userChats.map(e => {
                         return(
-                            <div key={e._id}>
+                            <div key={e._id} className={s.botonesChats}>
                                 <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
                             </div>)
                     }) 
@@ -116,24 +119,30 @@ export default function Home(){
             </div>
             {/* CONTACTS UI  */}
             <div className={contacts ? s.contactosHide : s.divContactos}>
-                <button onClick={handleContacts}>{'<'}</button>
-                <span>Contacts</span>
+                <div className={s.divProfile}>
+                    <button onClick={handleContacts} className={s.botonAtras}>{'<'}</button>
+                    <span>Contacts</span>
+                </div>
                 <Contacts currentUser={currentUser}/>
             </div>
-            <div className={profile ? s.contactosHide : s.divContactos}>
-                <button onClick={handleProfile}>{'<'}</button>
-                <span>Profile</span>
+            <div className={profile ? s.contactosHide : s.div}>
+                <div className={s.divProfile}> 
+                    <button onClick={handleProfile} className={s.botonAtras}>{'<'}</button>
+                    <Text fontSize='20px'>Profile</Text>
+                </div>
                 <Profile currentUser={currentUser}/>
             </div>
             {/* USUARIOS UI  */}
-            <div className={usuarios ? s.contactosHide : s.asd}>
-                 <button onClick={handleUsuarios}>{'<'}</button>
-                 <span>Users</span>
+            <div className={usuarios ? s.contactosHide : s.div}>
+                <div className={s.divProfile}>
+                    <button onClick={handleUsuarios} className={s.botonAtras}>{'<'}</button>
+                    <Text>Users</Text>
+                </div>
                 <Users currentUser={currentUser}/>
             </div>
-        </div>
+        </GridItem>
         <div>
             <Chats currentChat={currentChat} currentUser={currentUser} friendId={friendId}/>
         </div>
-    </div>)
+    </Grid>)
 }

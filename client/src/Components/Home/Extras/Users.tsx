@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ALL_USERS, USER_CONTACTS, USER_FILTER } from "../../../Redux/actions/actions"
+import { ALL_USERS, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './Users.module.css'
@@ -36,7 +36,7 @@ export default function Users({currentUser}: Props){
         contact: ''
     })
 
-    const handleDataNewContact = (e: any) => {
+    const handleDataNewContact = (e: string) => {
         if(currentUser._id !== undefined){
             setAsd({
                 userId: currentUser._id,
@@ -50,8 +50,7 @@ export default function Users({currentUser}: Props){
     }
 
     return(
-        <div>
-            
+        <div className={s.contenedor}>
             <form className={s.formBusqueda}>
                 <input type="text" name="busqueda" value={busqueda} onChange={handleBusqueda} placeholder='Search user...'/>
             </form>

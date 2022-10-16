@@ -1,10 +1,11 @@
 import axios from "axios"
-import { useState } from "react"
+import React, { useState } from "react"
 import { USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/input'
 import { Button } from '@chakra-ui/react'
+import s from './Profile.module.css'
 
 interface Props {
     currentUser: User
@@ -64,22 +65,30 @@ export default function Profile({currentUser}: Props){
 
     return(
         <div>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <Input type="file" accept="image/jpeg, image/png" name="image" onChange={handleImage} placeholder={currentUser?.image} size='sx'/>
+            <form onSubmit={handleSubmit} className={s.contenedor}>
+                <div className={s.inputs}>
+                    <label htmlFor='inputTag'>
+                        <img src={user?.image ? user?.image : currentUser?.image} alt="asd"  width='150px' className={s.profileImage} />
+                        <Input id="inputTag" type="file" accept="image/jpeg, image/png" name="image" onChange={handleImage} placeholder={currentUser?.image} size='sx' className={s.inputImage}/>
+                    </label>
                 </div>
-                <div>
-                    <Input type="text" name="nickName" value={user.nickName} onChange={handleChange} placeholder={currentUser?.nickName}/>
+                <div className={s.inputs}>
+                    <InputGroup>
+                        <Input type="text" name="nickName" value={user.nickName} onChange={handleChange} placeholder={currentUser?.nickName}/>
+                        <InputRightElement className={s.inputImage}>
+                        <Button onClick={handleShow} colorScheme='blue' variant='outline' size='xs' className={s.inputPassword}>{show ? 'Hide' : 'Show'}</Button>
+                        </InputRightElement>
+                    </InputGroup>
                 </div>
-                <div>
+                <div className={s.inputs}>
                 <InputGroup>
                     <Input type={show ? 'text' : 'password'} placeholder='New password' name="password" value={user.password} onChange={handleChange}/>
                     <InputRightElement>
-                        <Button onClick={handleShow}>{show ? 'Hide' : 'Show'}</Button>
+                        <Button onClick={handleShow} colorScheme='blue' variant='outline' size='xs' className={s.inputPassword}>{show ? 'Hide' : 'Show'}</Button>
                     </InputRightElement>
                 </InputGroup>
                 </div>
-                <button type="submit">Update</button>
+                <Button type="submit" colorScheme='blue' variant='outline'>Update</Button>
             </form>
         </div>)
 }

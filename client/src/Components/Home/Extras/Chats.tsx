@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react"
 import { ALL_MESSAGES, NEW_MESSAGE } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
+import { User } from "../../../types"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
 
+interface Props {
+    currentUser: User
+    currentChat: string
+    friendId: User
+}
 
-export default function Chats({currentUser, currentChat, friendId}: any) {
+export default function Chats({currentUser, currentChat, friendId}: Props) {
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     const filterMessages = allMessages?.filter(e => e.chatId === currentChat)

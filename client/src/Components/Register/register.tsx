@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { User } from "../../types"
+import { CreateUser } from "../../types"
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth"
 import { useAppDispatch } from "../../Redux/hooks"
 import { useNavigate } from 'react-router-dom'
@@ -7,7 +7,7 @@ import { NEW_USER } from "../../Redux/actions/actions"
 import axios from 'axios'
 
 interface FormState{
-    inputValue: User
+    inputValue: CreateUser
 }
 
 

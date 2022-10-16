@@ -1,10 +1,17 @@
 export type User = {
-    _id?: string
+    _id: string
     nickName: string
     userEmail: string
     password: string
     image: string
     contacts?: User[]
+}
+
+export type CreateUser = {
+    nickName: string
+    userEmail: string
+    password: string
+    image: string
 }
 
 export type Chats = {
