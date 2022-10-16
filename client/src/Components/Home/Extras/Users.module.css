@@ -1,0 +1,30 @@
+.contenedor{
+    width: 100%;
+}
+
+.none {
+    display: none;
+}
+
+/* .asd {
+    width: 75%;
+} */
+
+.formBusqueda{
+    text-align: center;
+    margin: 5px;
+}
+
+.sendMensaje{
+    margin-left: 5px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.imagenes {
+    border-radius: 50%;
+}
+
+.noneButton{
+    visibility: hidden;
+}

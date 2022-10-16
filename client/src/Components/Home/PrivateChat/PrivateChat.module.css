@@ -1,0 +1,23 @@
+.chat {
+    text-align: left;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.imagen {
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.overFlow{
+    margin-left: 5px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.lastMessage {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

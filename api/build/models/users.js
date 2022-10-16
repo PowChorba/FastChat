@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Users = void 0;
 const mongoose_1 = require("mongoose");
 const UserSchema = new mongoose_1.Schema({
     nickName: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     userEmail: {
         type: String,
-        unique: true,
         required: true
     },
     password: {
@@ -17,16 +18,11 @@ const UserSchema = new mongoose_1.Schema({
     },
     image: {
         type: String,
-        // default:
     },
     contacts: [{
             type: mongoose_1.Schema.Types.ObjectId,
-            ref: "User"
-        }],
-    // chats : [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: "User"
-    // }]
+            ref: "Users"
+        }]
 });
 UserSchema.plugin(require("mongoose-autopopulate"));
-module.exports = (0, mongoose_1.model)('User', UserSchema);
+exports.Users = (0, mongoose_1.model)('Users', UserSchema);

@@ -4,6 +4,7 @@ const {dbConnection} = require("./dataBase/db")
 const path = require("path")
 const http = require("http")
 const {Server} = require("socket.io");
+import route from './routes/index'
 require('dotenv').config()
 
 
@@ -27,6 +28,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+app.use('/', route)
 
 const server = app.listen(app.get("port"),()=>{
     console.log("server is on port" + " " + process.env.PORT)

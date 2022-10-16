@@ -9,9 +9,11 @@ messageAuthor: {
     type: Schema.Types.ObjectId,
     ref: "User"
 },
-messageTime: {
-type: Date
+chatId: {
+    type: String
 }
-
+}, {
+    timestamps: true
 })
-    module.exports = model('Message', MessageSchema)
+
+export const Messages = model('Messages', MessageSchema)
