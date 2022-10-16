@@ -29,7 +29,6 @@ export default function Users({currentUser}: Props){
         setBusqueda(e.target.value)
     }
 
-
     //ADD CONTACT
     const [asd, setAsd] = useState({
         userId: '',
@@ -71,6 +70,5 @@ export default function Users({currentUser}: Props){
                             </div>)
                     })
                 }
-            
         </div>)
 }

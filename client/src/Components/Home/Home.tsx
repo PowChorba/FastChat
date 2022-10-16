@@ -26,7 +26,7 @@ export default function Home(){
     }
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
-    const chatsUsuario = useAppSelector(state => state.clientReducer.userChats)
+    // const chatsUsuario = useAppSelector(state => state.clientReducer.userChats)
     let userChats = useAppSelector(state => state.clientReducer.userChats)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
     //FILTER USER CHATS
@@ -53,14 +53,14 @@ export default function Home(){
         dispatch(ALL_USERS())
         dispatch(ALL_CHATS())
     }, [dispatch, currentUser?._id])
-
+    console.log(currentUser)
     //SETTEAR VALOR DEL CURRENT CHAT
     const handleChat = (e: string | undefined) => {
         if(e) {
             setCurrentChat(e)
         }
     }
-
+    
     //PERFIL DEL CONTACTO QUE TIENE EL CHAT ABIERTO
     let allChats = useAppSelector(state => state.clientReducer.chats)
     allChats = allChats?.filter(e => e._id === currentChat)
@@ -116,7 +116,7 @@ export default function Home(){
                     }) 
                 }
                 </div>
-            </div>
+            </div> 
             {/* CONTACTS UI  */}
             <div className={contacts ? s.contactosHide : s.divContactos}>
                 <div className={s.divProfile}>

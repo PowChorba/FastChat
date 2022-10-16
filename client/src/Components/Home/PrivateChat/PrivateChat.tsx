@@ -18,6 +18,8 @@ export default function PrivateChat({chatUser, currentUser}: Props ) {
     allChats = allChats.filter(e => e.chatsUsers[0]._id === secondUserId?._id || e.chatsUsers[1]._id === secondUserId?._id )
     allMessages = allMessages.filter(e => e.chatId === allChats[0]?._id)
 
+    // console.log(allChats)
+
     useEffect(() => {
         if(currentUser?._id) dispatch(USER_CHATS(currentUser._id))
         dispatch(ALL_MESSAGES())
