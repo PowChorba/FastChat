@@ -2,6 +2,14 @@
     visibility: hidden;
 }
 
+.displayNone{
+    display: none;
+}
+
+.contenedor {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
 /* MENSAJES */
 .divMensajes {  
     text-align: center;
@@ -31,6 +39,7 @@
     display: flex;
     align-items: center;
     padding: 15px;
+    cursor: pointer;
 }
 
 /* FORM PARA ENVIAR EL MENSAJE  */
@@ -41,9 +50,10 @@
     border-top: 1px solid rgba(0, 0, 0, 0.37);
 }
 
-.formTextArea{
-    margin-top: 5px;
-    resize: none;
+.divInputSend{
+    margin: 15px;
+    display: flex;
+    width: 50%;
 }
 
 .sendMensaje{
@@ -56,3 +66,14 @@
     border-radius: 50%;
 }
 
+/* DATOS DEL USUARIO DEL CHAT  */
+.divCerrarInfo {
+    padding: 10px;
+    background-color: #d1d7dbbb;
+    text-align: left;
+    padding: 10px;
+}
+
+.botonCerrarInfo{
+    margin-right: 10px;
+}

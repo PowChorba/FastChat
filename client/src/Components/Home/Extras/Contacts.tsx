@@ -2,7 +2,7 @@ import { useState } from "react"
 import { NEW_CHAT } from "../../../Redux/actions/actions"
 import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
-import s from './Users.module.css'
+import s from '../Users/Users.module.css'
 
 interface Props {
     currentUser: User

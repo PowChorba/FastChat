@@ -1,14 +1,14 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
-import React, { useEffect, useState} from 'react'
+import { useEffect, useState} from 'react'
 import { ALL_CHATS, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
 import { useNavigate } from "react-router-dom"
-import Users from "./Extras/Users"
+import Users from "./Users/Users"
 import Contacts from "./Extras/Contacts"
-import Chats from "./Extras/Chats"
-import Profile from "./Extras/Profile"
+import Chats from "./Chats/Chats"
+import Profile from "./Profile/Profile"
 import { Grid, GridItem, Text } from '@chakra-ui/react'
 import { FiUsers } from 'react-icons/fi'
 import { BsChatSquare } from 'react-icons/bs'
@@ -26,7 +26,6 @@ export default function Home(){
     }
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
-    // const chatsUsuario = useAppSelector(state => state.clientReducer.userChats)
     let userChats = useAppSelector(state => state.clientReducer.userChats)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
     //FILTER USER CHATS
@@ -47,15 +46,16 @@ export default function Home(){
     const [currentChat, setCurrentChat] = useState('')
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
-        if(currentUser?._id){
-            dispatch(USER_CHATS(currentUser?._id))
-        }
         dispatch(ALL_USERS())
-        dispatch(ALL_CHATS())
+        if(currentUser?._id){
+            dispatch(USER_CHATS(currentUser._id))
+            dispatch(ALL_CHATS())
+        }
     }, [dispatch, currentUser?._id])
+    
     console.log(currentUser)
     //SETTEAR VALOR DEL CURRENT CHAT
-    const handleChat = (e: string | undefined) => {
+    const handleChat = (e: string ) => {
         if(e) {
             setCurrentChat(e)
         }

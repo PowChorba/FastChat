@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { CreateUser, Messages, NewChat } from '../../types'
+import { CreateMessages, CreateUser, Messages, NewChat } from '../../types'
 
 export const ALL_USERS = createAsyncThunk(
     'ALL_USERS', async () => {
@@ -104,7 +104,7 @@ export const ALL_MESSAGES = createAsyncThunk(
 )
 
 export const NEW_MESSAGE = createAsyncThunk(
-    'NEW_MESSAGE',async (message: Messages) => {
+    'NEW_MESSAGE',async (message: CreateMessages) => {
         try {
             const response = await axios.post('http://localhost:3001/messages', message)
             return response.data

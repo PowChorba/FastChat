@@ -14,6 +14,14 @@ export default function Message({mensajes, chat, currentUser}: Props){
     allChats = allChats?.filter(e => e._id === chat)
     const friendId = allChats[0]?.chatsUsers.filter(e => e._id !== currentUser?._id)[0]
     
+    const newDate = (e: string) => {
+        const date = new Date(e)
+        const hours = date.getHours()
+        let minutes = date.getMinutes()
+        if(minutes < 10) return (hours + ':0' + minutes)
+        return (hours + ':' + minutes)
+    }
+
     return(
         <div className={s.contenedorMensajes}>
             {mensajes.map((e) => {
@@ -21,7 +29,7 @@ export default function Message({mensajes, chat, currentUser}: Props){
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>
                         <p>{e.messageAuthor === currentUser?._id ? 'Tu' : friendId?.nickName }</p>
                         <p>{e.textMessage}</p>
-                        <p>{e.createdAt}</p>
+                        <p>{newDate(e.createdAt)}</p>
                     </div>)
             })}
         </div>)

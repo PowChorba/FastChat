@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { ALL_USERS, USER_CONTACTS } from "../../../Redux/actions/actions"
+import { useState } from "react"
+import { USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './Users.module.css'
@@ -14,10 +14,6 @@ export default function Users({currentUser}: Props){
     const filterUsers = allUsers.filter(e => e._id !== currentUser?._id)
 
     const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        dispatch(ALL_USERS())
-    })
 
     //BUSQUEDA DE CONTACTOS
     const [busqueda, setBusqueda] = useState('')

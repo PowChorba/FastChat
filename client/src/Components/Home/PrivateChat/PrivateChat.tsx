@@ -7,7 +7,7 @@ import s from './PrivateChat.module.css'
 
 interface Props {
     chatUser: User[]  
-    currentUser: User | undefined
+    currentUser: User 
 }
 
 export default function PrivateChat({chatUser, currentUser}: Props ) {
@@ -18,7 +18,13 @@ export default function PrivateChat({chatUser, currentUser}: Props ) {
     allChats = allChats.filter(e => e.chatsUsers[0]._id === secondUserId?._id || e.chatsUsers[1]._id === secondUserId?._id )
     allMessages = allMessages.filter(e => e.chatId === allChats[0]?._id)
 
-    // console.log(allChats)
+    const newDate = (e: string) => {
+        const date = new Date(e)
+        const hours = date.getHours()
+        let minutes = date.getMinutes()
+        if(minutes < 10) return (hours + ':0' + minutes)
+        return (hours + ':' + minutes)
+    }
 
     useEffect(() => {
         if(currentUser?._id) dispatch(USER_CHATS(currentUser._id))
@@ -32,6 +38,6 @@ export default function PrivateChat({chatUser, currentUser}: Props ) {
                 <span>{secondUserId?.nickName}  </span>
                 <p className={s.lastMessage}>{allMessages[allMessages.length -1]?.textMessage}</p>
             </div>
-            {/* <span>{allMessages[allMessages.length -1]?.createdAt}</span> */}
+            <span>{newDate(allMessages[allMessages.length -1]?.createdAt)}</span>
         </div>)
 }
