@@ -9,7 +9,7 @@ import Users from "./Users/Users"
 import Contacts from "./Extras/Contacts"
 import Chats from "./Chats/Chats"
 import Profile from "./Profile/Profile"
-import { Grid, GridItem, Text } from '@chakra-ui/react'
+import { Grid, GridItem, Input, Text } from '@chakra-ui/react'
 import { FiUsers } from 'react-icons/fi'
 import { BsChatSquare } from 'react-icons/bs'
 import { HiLogout } from 'react-icons/hi'
@@ -84,34 +84,33 @@ export default function Home(){
 
     return(
     <Grid templateColumns='1fr 3fr' className={s.contenedor}>
-        <div className={s.divTitulo}>
-            <Text fontSize='50px'>FastChat</Text>
-        </div>
         <GridItem className={s.divAside}>
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile ? s.none : s.asdasd}>
                 <div className={s.perfilAside}>
-                    <img src={currentUser?.image} alt="asd" width='48px' height='48px' className={s.imagenes} onClick={handleProfile}/>
+                    <img src={currentUser?.image} alt="asd" width='48px' height='48px' className={s.imagenPerfil} onClick={handleProfile}/>
                     <div>
                         <button onClick={handleContacts}><BsChatSquare className={s.iconos}/></button>
                         <button onClick={handleUsuarios}><FiUsers className={s.iconos}/></button>
                         <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
                     </div>
                 </div>
-                    <input type="text" placeholder="Search chat.." value={searchChat} onChange={handleSearchChat} className={s.inputChats}/>
+                    <div className={s.inputChats}>
+                        <Input variant='filled' type="text" placeholder="Search chat.." value={searchChat} onChange={handleSearchChat} />
+                    </div>
                 <div className={s.divChatsDefault}>
                 {   
                     filterUserChats.length !== 0 
                     ? filterUserChats && filterUserChats.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
                             </div>)
                     })
                     : userChats && userChats.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.asd}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
                             </div>)
                     }) 
                 }

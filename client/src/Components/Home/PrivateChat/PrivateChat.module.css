@@ -1,8 +1,10 @@
 .chat {
+    padding: 5px;
     text-align: left;
     display: flex;
     align-items: center;
     cursor: pointer;
+    border-bottom: 2px solid #EDF2F7;
 }
 
 .imagen {

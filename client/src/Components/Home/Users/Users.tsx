@@ -26,14 +26,14 @@ export default function Users({currentUser}: Props){
     }
 
     //ADD CONTACT
-    const [asd, setAsd] = useState({
+    const [addContact, setAddContact] = useState({
         userId: '',
         contact: ''
     })
 
     const handleDataNewContact = (e: string) => {
         if(currentUser._id !== undefined){
-            setAsd({
+            setAddContact({
                 userId: currentUser._id,
                 contact: e
             })
@@ -41,7 +41,7 @@ export default function Users({currentUser}: Props){
     }
 
     const handleNewContact = () => {
-        dispatch(USER_CONTACTS(asd))
+        dispatch(USER_CONTACTS(addContact))
     }
 
     return(
@@ -62,7 +62,9 @@ export default function Users({currentUser}: Props){
                         return(<div key={e._id}>
                             <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                             <span>{e.nickName}</span>
-                            <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add Contact</button>
+                            <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>
+                                Add Contact
+                            </button>
                             </div>)
                     })
                 }

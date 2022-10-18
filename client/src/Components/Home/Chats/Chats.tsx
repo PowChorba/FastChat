@@ -1,4 +1,4 @@
-import { Input } from "@chakra-ui/react"
+import { Button, Input } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
@@ -81,12 +81,17 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
             <div className={profileChat ? s.contenedor : s.asd}>
             <div className={s.divMensajes}>
                 <div className={s.divDatosUserChat } onClick={handleProfileChat}><img src={friendId?.image} alt="asd"  width="48px" className={s.imagenes}/> {friendId?.nickName}</div>
+                <div className={s.contenedorMensajes}>
                 <div>
                     {
-                        prueba?.length !== 0 ? <span></span>: <button onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</button>
+                        prueba?.length !== 0 ? <span></span>
+                        : <div className={s.divAgregarBloquear}>
+                            <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
+                            <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
+                            <Button variant='outline' colorScheme='red'>Block User</Button>
+                        </div>
                     }
                 </div>
-                <div className={s.contenedorMensajes}>
                     {
                         filterMessages?.length === 0 ? <p>Today</p>
                         : filterMessages?.map(e => { 
