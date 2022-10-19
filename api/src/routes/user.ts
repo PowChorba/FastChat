@@ -1,9 +1,7 @@
 import {Request, Response} from 'express'
 import { Users } from '../models/users'
-import { User } from '../types'
 
-
-export const newUser = async (req: any, res: any) => {
+export const newUser = async (req: Request, res: Response) => {
     const { nickName, userEmail, password, image } = req.body
     try {
         const newUser = await Users.create({
@@ -37,8 +35,8 @@ export const allUsers = async (req: Request, res: Response) => {
     }
 }
 
-export const updateUsers =async (req: Request, res: Response) => {
-    const { userId,contact, nickName,password,image } = req.body
+export const updateUsers = async (req: Request, res: Response) => {
+    const { userId,contactId, contact, nickName,password,image } = req.body
     try {
         const findUser = await Users.findById(userId).populate('contacts')
         const findUserDos = await Users.findById(contact)
@@ -50,33 +48,25 @@ export const updateUsers =async (req: Request, res: Response) => {
                 await findUser.updateOne({$push: {contacts: contact}})
                 return res.send(findUser)
             }
-        }else if(!contact && findUser){
+        }else if(!contact && findUser && !contactId){
             await findUser.updateOne({image,password,nickName})
             return res.send('User updated')
-        }else{
+        }else if(findUser && contactId){
+            const filterContact = findUser.contacts?.filter(e => e._id?.toString() === contactId)
+            if(filterContact?.length === 1){
+                await findUser.updateOne({$pull: {contacts: contactId}})
+                return res.send('Contact deleted successfully')
+            }else {
+                return res.send('Esta rompiendo')
+            }
+        }
+        else{
             return res.send('We could not find that user')
         }
     } catch (error) {
         return console.log(error)
     }
 }
-
-// export const contactsUser =async (req: Request, res: Response) => {
-//      const { userId } = req.params
-//      const { contact } = req.body
-//     try {
-//         const findUser = await Users.findById(userId)
-//         const findUserDos = await Users.findById(contact)
-//         if(findUser && findUserDos) {
-//             await findUser.updateOne({$push: {contacts: contact}})
-//             res.send(findUser)
-//         }else{
-//             res.send('We could not find that user')
-//         }
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
 
 export const userById =async (req: Request, res: Response) => {
     const { userId } = req.params
@@ -91,4 +81,22 @@ export const userById =async (req: Request, res: Response) => {
         console.log(error)
     }
 }
+
+// export const updateUsers =async (req: Request, res: Response) => {
+//     const { userId, contactId} = req.body
+//     try {
+//         const findUser = await Users.findById(userId)
+//         if(findUser) {
+//             const filterContact = findUser.contacts?.filter(e => e._id?.toString() === contactId)
+//             if(filterContact?.length === 1){
+//                 await findUser.updateOne({$pull: {contacts: contactId}})
+//                 return res.send('Contact deleted successfully')
+//             }else {
+//                 return res.send('Esta rompiendo')
+//             } 
+//         }
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 

@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword} from 'firebase/auth'
+import s from './Login.module.css'
+import { Button, Input } from "@chakra-ui/react"
 
 export default function Login(){
     const [user, setUser] = useState({
@@ -32,21 +34,21 @@ export default function Login(){
     }
 
     return(
-        <div>
-            <h1>Login with your User</h1>
-            <form onSubmit={e => handleSubmit(e)}>
-                <div>
+        <div className={s.contenedor}>
+            <h1 className={s.tituloLogin}>Login to FastChat!</h1>
+            <form onSubmit={e => handleSubmit(e)} className={s.formLogin}>
+                <div className={s.divsForm}>
                     <label>Email: </label>
-                    <input type="email" name="userEmail" value={user.userEmail} onChange={handleChange} />
+                    <Input type="email" name="userEmail" value={user.userEmail} onChange={handleChange} />
                 </div>
-                <div>
+                <div className={s.divsForm}>
                     <label>Password: </label>
-                    <input type="password" name="password" value={user.password} onChange={handleChange} />
+                    <Input type="password" name="password" value={user.password} onChange={handleChange} />
                 </div>
-                <button type="submit">Login</button>
-            </form>
-            <div>
-                <p>Don't have an account? <Link to='/register'>Register</Link></p>
+                <Button type="submit">Login</Button>
+            <div className={s.divLinkRegister}>
+                <p>Don't have an account? <Link to='/register' className={s.linkRegister}>Register</Link></p>
             </div>
+            </form>
         </div>)
 }

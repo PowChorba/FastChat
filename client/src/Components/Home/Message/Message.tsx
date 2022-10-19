@@ -1,18 +1,12 @@
-import { useAppSelector } from "../../../Redux/hooks"
 import { Messages, User } from "../../../types"
-import { RootState } from "../../../Redux/store"
 import s from './Message.module.css'
 
 interface Props {
     mensajes: Messages[]
-    chat: string
     currentUser: User
 }
 
-export default function Message({mensajes, chat, currentUser}: Props){
-    // let allChats = useAppSelector((state: RootState) => state.clientReducer.chats)
-    // allChats = allChats?.filter(e => e._id === chat)
-    // const friendId = allChats[0]?.chatsUsers.filter(e => e._id !== currentUser?._id)[0]
+export default function Message({mensajes, currentUser}: Props){
     
     const newDate = (e: string) => {
         const date = new Date(e)
@@ -22,8 +16,25 @@ export default function Message({mensajes, chat, currentUser}: Props){
         return (hours + ':' + minutes)
     }
 
+    const day = (e: string) => {
+        const date = new Date(e)
+        const dia = date.getDay()
+        return dia
+    }
+
+    const date = new Date()
+
     return(
         <div className={s.contenedorMensajes}>
+            {
+                mensajes.map((e) => {
+                    return(<div>
+                        {
+                           date.getDay() - day(e.createdAt)  === 0 ? 'Today' : ''
+                        }
+                    </div>)
+                })
+            }
             {mensajes.map((e) => {
                 return(
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>

@@ -2,29 +2,40 @@
     width: 100%;
 }
 
+.profileUsers {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    width: 98%;
+    padding: 10px;
+}
+
+.profileUsers:hover {
+    background-color: #EDF2F7;
+    cursor: pointer;
+}
+
 .none {
     display: none;
 }
 
-/* .asd {
-    width: 75%;
-} */
-
 .formBusqueda{
-    text-align: center;
-    margin: 5px;
+        width: 100%;
+        margin: 0px auto;
+        padding: 10px;
+        border-bottom: 1px solid #EDF2F7;
 }
 
 .sendMensaje{
     margin-left: 5px;
-    border-radius: 15px;
     cursor: pointer;
 }
 
 .imagenes {
     border-radius: 50%;
+    margin-right: 10px;
 }
 
-.noneButton{
-    visibility: hidden;
+.icono {
+    font-size: 20px;
 }

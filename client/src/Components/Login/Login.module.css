@@ -1,0 +1,29 @@
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin: 0px auto;
+}
+
+.formLogin {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 20px;
+}
+
+.tituloLogin{
+    font-size: 30px;
+}
+
+.divsForm {
+    margin: 10px auto;
+}
+
+.linkRegister{
+    border-bottom: 1px solid black;
+}
+
+.divLinkRegister{
+    margin-top: 15px;
+}

@@ -1,4 +1,4 @@
-import './App.css';
+import s from './App.module.css';
 import  io  from 'socket.io-client';
 import Home from './Components/Home/Home';
 import { Routes, Route } from 'react-router-dom'
@@ -15,13 +15,15 @@ initializeApp(firebaseConfig)
 
 function App() {
   return (
+    <div className={s.contenedor}>
     <ChakraProvider>
-      <Routes>
-        <Route path='/home' element={<AuthRoute><Home/></AuthRoute>}/>
-        <Route path='/register' element={<Register/>}/>
-        <Route path='/login' element={<Login/>}/>      
-      </Routes>
+        <Routes>
+          <Route path='/home' element={<AuthRoute><Home/></AuthRoute>}/>
+          <Route path='/register' element={<Register/>}/>
+          <Route path='/login' element={<Login/>}/>      
+        </Routes>
     </ChakraProvider>
+    </div>
   );
 }
 

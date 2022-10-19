@@ -44,3 +44,15 @@ export const userChat =async (req: Request, res: Response) => {
         console.log(error)
     }
 }
+
+export const deleteChat =async (req:Request, res: Response) => {
+    const { chatId } = req.params
+    try {
+        const findChat = await Chats.findById(chatId)
+        if(findChat){
+            findChat.deleteOne({_id : chatId})
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}

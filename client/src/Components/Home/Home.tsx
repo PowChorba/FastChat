@@ -6,7 +6,7 @@ import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
 import { useNavigate } from "react-router-dom"
 import Users from "./Users/Users"
-import Contacts from "./Extras/Contacts"
+import Contacts from "./Contacts/Contacts"
 import Chats from "./Chats/Chats"
 import Profile from "./Profile/Profile"
 import { Grid, GridItem, Input, Text } from '@chakra-ui/react'

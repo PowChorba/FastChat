@@ -5,10 +5,6 @@
     align-items: center;
 }
 
-.inputImage{
-    display: none;
-}
-
 .profileImage{
     border-radius: 50%;
     display: flex;
@@ -21,4 +17,8 @@
 .inputPassword{
     padding: 5px;
     margin-right: 5px;
+}
+
+.inputImage{
+    display: none;
 }

@@ -1,0 +1,23 @@
+.imagenes {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.formInput{
+    width: 100%;
+    margin: 0px auto;
+    padding: 10px;
+    border-bottom: 1px solid #EDF2F7;
+}
+
+.profileUsers {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    width: 98%;
+    padding: 10px;
+}
+
+.profileUsers:hover {
+    background-color: #EDF2F7;
+}

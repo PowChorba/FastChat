@@ -75,8 +75,7 @@ export default function Profile({currentUser}: Props){
                 <div className={s.inputs}>
                     <InputGroup>
                         <Input type="text" name="nickName" value={user.nickName} onChange={handleChange} placeholder={currentUser?.nickName}/>
-                        <InputRightElement className={s.inputImage}>
-                        <Button onClick={handleShow} colorScheme='blue' variant='outline' size='xs' className={s.inputPassword}>{show ? 'Hide' : 'Show'}</Button>
+                        <InputRightElement>
                         </InputRightElement>
                     </InputGroup>
                 </div>

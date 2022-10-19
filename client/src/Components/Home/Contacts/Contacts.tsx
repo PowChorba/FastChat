@@ -1,8 +1,9 @@
+import { Input } from "@chakra-ui/react"
 import { useState } from "react"
 import { NEW_CHAT } from "../../../Redux/actions/actions"
 import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
-import s from '../Users/Users.module.css'
+import s from './Contacts.module.css'
 
 interface Props {
     currentUser: User
@@ -41,16 +42,16 @@ export default function Contacts({currentUser}: Props) {
 
     return(
         <div>
-                <form>
-                    <input type="text" placeholder="Seach contacts" value={busqueda} onChange={handleBusqueda}/>
-                </form>
+                <div className={s.formInput}>
+                    <Input variant='filled' type="text" placeholder="Seach contacts" value={busqueda} onChange={handleBusqueda}/>
+                </div>
                 {
                     currentUser && currentUser.contacts?.length === 0 ? <p>No tienes contactos.</p>
                     : busquedaContacts?.length !== 0 
                     ? busquedaContacts?.map(e => {
                         return(
                             <div key={e._id}>
-                                <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}>
+                                <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat} className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
                                 <br />
@@ -60,7 +61,7 @@ export default function Contacts({currentUser}: Props) {
                     : currentUser?.contacts?.map((e) => {
                         return(
                             <div key={e._id}>
-                                <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}>
+                                <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat} className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
                                 <br />

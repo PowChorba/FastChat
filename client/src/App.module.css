@@ -1,0 +1,7 @@
+.contenedor { 
+  background-image: url('./assets/images.avif');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+}

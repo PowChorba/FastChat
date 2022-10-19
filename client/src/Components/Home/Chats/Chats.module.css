@@ -20,16 +20,32 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 70vh;
+    height: 95vh;
     border: 1px solid black;
 }
 
 .contenedorMensajes{
     padding: 10px;
     overflow-y: scroll;
-    height: 70vh;
-    max-height: 70vh;
+    height: 80vh;
+    max-height: 80vh;
     scroll-behavior: smooth;
+    background-image: url('../../../assets/chatsFondo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+}
+
+.contenedorMensajes::-webkit-scrollbar{
+    width: 6px;
+}
+
+.contenedorMensajes::-webkit-scrollbar-track{
+    background: rgba(255, 0, 0, 0);
+}
+
+.contenedorMensajes::-webkit-scrollbar-thumb{
+    background-color: #EDF2F7;
 }
 
 /* DATOS DEL USUARIO DEL CHAT */
@@ -39,6 +55,7 @@
     display: flex;
     align-items: center;
     padding: 15px;
+    font-size: 20px;
     cursor: pointer;
 }
 
@@ -48,10 +65,11 @@
     justify-content: center;
     align-items: center;
     border-top: 1px solid rgba(0, 0, 0, 0.37);
+    background-color: #EDF2F7;
 }
 
 .divInputSend{
-    margin: 15px;
+    margin: 10px;
     display: flex;
     width: 50%;
 }
@@ -64,6 +82,7 @@
 
 .imagenes {
     border-radius: 50%;
+    margin-right: 10px;
 }
 
 /* DATOS DEL USUARIO DEL CHAT  */

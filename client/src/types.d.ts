@@ -44,3 +44,9 @@ export type CreateMessages = {
     messageAuthor: string
     chatId: string
 }
+
+//DELETE USER
+export type DeleteUser = {
+    userId: string
+    contactId: string
+}

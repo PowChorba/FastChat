@@ -6,7 +6,7 @@ import { User } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
-
+import { GrClose } from 'react-icons/gr'
 interface Props {
     currentUser: User
     currentChat: string
@@ -97,24 +97,24 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
                         : filterMessages?.map(e => { 
                             return(
                                 <div key={e._id}>
-                                    <Message mensajes={[e]} chat={currentChat} currentUser={currentUser}/>
+                                    <Message mensajes={[e]} currentUser={currentUser}/>
                                 </div>)
                         })
                     }
                 </div>
                 <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                     <div className={s.divInputSend}>
-                        <Input name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage}/>
+                        <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage}/>
                         <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}>Send</button>
                     </div>
                 </form>
                 </div>
             <div className={profileChat ? s.divMensajes : s.displayNone}>
                 <div className={s.divCerrarInfo}>
-                    <button onClick={handleProfileChat} className={s.botonCerrarInfo}>X</button>
+                    <button onClick={handleProfileChat} className={s.botonCerrarInfo}><GrClose/></button>
                     <span>{' '}Contact info</span>
                 </div>
-                <ChatProfile user={friendId}/>
+                <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser}/>
             </div>
         </div>
         }
