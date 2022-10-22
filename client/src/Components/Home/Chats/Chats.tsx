@@ -96,7 +96,16 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
         })
     }, [currentUser]) 
 
-    // console.log(online)
+    //ARRAY PARA
+
+    const fechaActual = (e: string) => {
+        const date = new Date(e)
+        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+    }
+
+    const date = new Date()
+
+    const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString())) 
 
     return(
         <div>
@@ -131,10 +140,10 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
                 </div>
                     {
                         filterMessages?.length === 0 ? <p>Today</p>
-                        : filterMessages?.map((e:any) => { 
+                        : filterMessages?.map((e) => { 
                             return(
                                 <div key={e._id}>
-                                    <Message mensajes={[e]} currentUser={currentUser}/>
+                                    <Message mensajes={[e]} currentUser={currentUser} actualDayMessages={actualDayMessages}/>
                                 </div>)
                         })
                     }

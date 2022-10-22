@@ -1,13 +1,12 @@
-import { useEffect, useRef } from "react"
 import { Messages, User } from "../../../types"
 import s from './Message.module.css'
-import {io} from 'socket.io-client'
 interface Props {
     mensajes: Messages[]
     currentUser: User
+    actualDayMessages: Messages[]
 }
 
-export default function Message({mensajes, currentUser}: Props){
+export default function Message({mensajes, currentUser, actualDayMessages}: Props){
     
     const newDate = (e: string) => {
         const date = new Date(e)
@@ -17,31 +16,22 @@ export default function Message({mensajes, currentUser}: Props){
         return (hours + ':' + minutes)
     }
 
-    // const day = (e: string) => {
-    //     const date = new Date(e)
-    //     const dia = date.getDay()
-    //     return dia
-    // }
-
-    // const date = new Date()
-
-
     return(
         <div className={s.contenedorMensajes}>
-            {/* {
+            {
                 mensajes.map((e) => {
                     return(<div>
                         {
-                           date.getDay() - day(e.createdAt)  === 0 ? 'Today' : ''
+                           actualDayMessages[0] === e ? <div className={s.today}><p>Today</p></div> : ''
                         }
                     </div>)
                 })
-            } */}
+
+            }
             {mensajes.map((e) => {
                 return(
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>
                         <div className={e.messageAuthor === currentUser?._id ? s.divSubRight : s.divSubLeft}>
-                            {/* <p className={s.textoMensajes}>{e.messageAuthor === currentUser?._id ? 'Tu' : friendId?.nickName }:</p> */}
                             <p className={s.textoMensajes}>{e.textMessage}</p>
                             <p className={s.textoMensajesHora}>{newDate(e.createdAt)}</p>
                         </div>

@@ -39,3 +39,12 @@
     max-width: 450px;
     text-align: left;
 }
+
+.today{
+    display: flex;
+    width: 8%;
+    margin: 0px auto;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 20px;
+}
