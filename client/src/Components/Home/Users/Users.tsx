@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
-import { ALL_USERS, USER_CONTACTS } from "../../../Redux/actions/actions"
+import { Input } from "@chakra-ui/react"
+import { useState } from "react"
+import { USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './Users.module.css'
-
+import { AiOutlineUserAdd } from 'react-icons/ai'
 interface Props {
     currentUser: User
 }
@@ -14,10 +15,6 @@ export default function Users({currentUser}: Props){
     const filterUsers = allUsers.filter(e => e._id !== currentUser?._id)
 
     const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        dispatch(ALL_USERS())
-    })
 
     //BUSQUEDA DE CONTACTOS
     const [busqueda, setBusqueda] = useState('')
@@ -30,14 +27,14 @@ export default function Users({currentUser}: Props){
     }
 
     //ADD CONTACT
-    const [asd, setAsd] = useState({
+    const [addContact, setAddContact] = useState({
         userId: '',
         contact: ''
     })
 
     const handleDataNewContact = (e: string) => {
         if(currentUser._id !== undefined){
-            setAsd({
+            setAddContact({
                 userId: currentUser._id,
                 contact: e
             })
@@ -45,28 +42,30 @@ export default function Users({currentUser}: Props){
     }
 
     const handleNewContact = () => {
-        dispatch(USER_CONTACTS(asd))
+        dispatch(USER_CONTACTS(addContact))
     }
 
     return(
         <div className={s.contenedor}>
-            <form className={s.formBusqueda}>
-                <input type="text" name="busqueda" value={busqueda} onChange={handleBusqueda} placeholder='Search user...'/>
-            </form>
+            <div className={s.formBusqueda}>
+                <Input variant='filled' type="text" name="busqueda" value={busqueda} onChange={handleBusqueda} placeholder='Search user...'/>
+            </div>
                 {
                      searchUsers.length !== 0 
                     ? searchUsers.map(e => {
-                        return(<div key={e._id}>
+                        return(<div key={e._id} className={s.profileUsers}>
                             <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                             <span>{e.nickName}</span>
                             <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add Contact</button>
                             </div>)
                     })
                     : filterUsers && filterUsers.map(e => {
-                        return(<div key={e._id}>
+                        return(<div key={e._id} className={s.profileUsers}>
                             <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                             <span>{e.nickName}</span>
-                            <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add Contact</button>
+                            <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>
+                                <AiOutlineUserAdd className={s.icono}/>
+                            </button>
                             </div>)
                     })
                 }

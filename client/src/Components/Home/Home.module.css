@@ -1,15 +1,13 @@
 .contenedor {
     width: 90%;
-    margin: 0px auto;
+    margin: auto;
     box-shadow: 7px 9px 5px -4px rgba(0,0,0,0.16);
+    background-color: #fff;
+    justify-content: center;
 }
 
 .none {
     display: none;
-}
-
-.noneButton{
-    visibility: hidden;
 }
 
 .divTitulo {
@@ -23,38 +21,43 @@
     justify-content: space-between;
     width: 100%;
     padding: 15px;
-}
-.formSearhChats{
-    display: block;
+    background-color: #EDF2F7;
 }
 
 /* BUSQUEDA DE USUARIOS/CHATS (ASIDE) */
-
-.divAside{
-    border: 1px solid rgba(0, 0, 0, 0.37);
-    text-align: center;
-}
-
 .contactosHide {
     display: none;
 }
 
-.btnContactos {
-    width: 25%;
-    height: 100%;
+.divAside{
+    /* border: 1px solid rgba(0, 0, 0, 0.37); */
+    text-align: center;
 }
 
-.asd {
-    width: 75%;
+.botonesChats {
+    display: flex;
+    margin: 5px;
+    width: 100%;
+}
+
+.abrirChat{
+    width: 95%;
+    max-width: 375px;
 }
 
 .imagenes {
     border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
 }
 
-.formBusqueda{
-    text-align: center;
-    margin: 5px;
+.imagenPerfil{
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    cursor: pointer;
 }
 
 /* DIV PERFIL  */
@@ -73,11 +76,10 @@
 
 /* INPUT CHATS  */
 .inputChats {
-    width: 90%;
+    width: 100%;
     margin: 0px auto;
-    border: 1px solid rgba(0, 0, 0, 0.37);
-    border-radius: 10px;
-    padding: 3px;
+    padding: 5px;
+    border-bottom: 1px solid #EDF2F7;
 }
 
 .iconos {
@@ -87,12 +89,11 @@
 
 /* CHATS DEL USUARIO  */
 .divChatsDefault{
+    width: 100%;
     margin: 20px auto;
 }
 
-.botonesChats {
-    text-align: left;
-    width: 100%;
-    margin: 5px;
-    border-bottom: 1px solid rgba(0,0,0,0.37);
+.botonesChats:hover{
+    background-color: #EDF2F7;
 }
+

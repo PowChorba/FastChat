@@ -1,0 +1,11 @@
+.contenedor {
+    padding: 20px;
+}
+
+.imagen {
+    width: 250px;
+    height: 250px;
+    margin: 0px auto;
+    border-radius: 50%;
+    object-fit: cover;
+}

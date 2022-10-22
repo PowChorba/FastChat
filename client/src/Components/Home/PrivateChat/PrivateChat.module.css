@@ -1,11 +1,16 @@
 .chat {
+    padding: 5px;
     text-align: left;
     display: flex;
     align-items: center;
     cursor: pointer;
+    border-bottom: 2px solid #EDF2F7;
 }
 
 .imagen {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
     border-radius: 50%;
     margin-right: 5px;
 }
@@ -20,4 +25,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.probando{
+    height: 60px;
+    width: 60px;
 }

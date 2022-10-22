@@ -5,6 +5,10 @@ import { useAppDispatch } from "../../Redux/hooks"
 import { useNavigate } from 'react-router-dom'
 import { NEW_USER } from "../../Redux/actions/actions"
 import axios from 'axios'
+import s from './Register.module.css'
+import { Button, Input } from "@chakra-ui/react"
+import defaultImage from '../../assets/deafultImage.png'
+import { BsArrowLeft } from 'react-icons/bs'
 
 interface FormState{
     inputValue: CreateUser
@@ -64,27 +68,35 @@ export default function Register() {
         }
     }
 
+    const goBack = () =>{
+        window.history.back()
+    }
+
     return(
-        <div>
-            <h1>Create your user!</h1>
-            <form onSubmit={(e) => handleSubmit(e)}>
+        <div className={s.contenedor}>
+            <div>
+            </div>
+            <form onSubmit={(e) => handleSubmit(e)} className={s.formLogin}>
+                <BsArrowLeft className={s.arrowBack} onClick={goBack}/>
                 <div>
-                    <label>Profile Photo:</label>
-                    <input type="file" accept="image/jpeg, image/png" name="image" onChange={handleImage}/>
+                    <label htmlFor="inputTag">
+                        <img src={user.image === '' ? defaultImage : user.image} alt="asd" width='150x' className={s.imagePorfile}/>
+                        <Input id="inputTag" type="file" accept="image/jpeg, image/png" name="image" onChange={handleImage} className={s.inputNone}/>
+                    </label>
                 </div>
-                <div>
+                <div className={s.labelRegister}>
                     <label>Nickname: </label>
-                    <input type="text" name="nickName" value={user.nickName} onChange={handleChange}/>
+                    <Input type="text" name="nickName" value={user.nickName} onChange={handleChange}/>
                 </div>
-                <div>
+                <div className={s.labelRegister}>
                     <label>Email: </label>
-                    <input type="email" name="userEmail" value={user.userEmail} onChange={handleChange}/>
+                    <Input type="email" name="userEmail" value={user.userEmail} onChange={handleChange}/>
                 </div>
-                <div>
+                <div className={s.labelRegister}>
                     <label>Password: </label>
-                    <input type="password" name="password" value={user.password} onChange={handleChange}/>
+                    <Input type="password" name="password" value={user.password} onChange={handleChange}/>
                 </div>
-                <button type="submit">Register</button>
+                <Button type="submit" className={s.buttonRegister}>Register</Button>
             </form>
         </div>)
 }

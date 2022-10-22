@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { CreateUser, Messages, NewChat } from '../../types'
+import { CreateMessages, CreateUser, DeleteUser, NewChat } from '../../types'
 
 export const ALL_USERS = createAsyncThunk(
     'ALL_USERS', async () => {
@@ -73,7 +73,6 @@ export const NEW_CHAT = createAsyncThunk(
     'NEW_CHAT',async (newChat: NewChat) => {
         try {
             const response = await axios.post('http://localhost:3001/chats', newChat)
-            console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)
@@ -104,9 +103,32 @@ export const ALL_MESSAGES = createAsyncThunk(
 )
 
 export const NEW_MESSAGE = createAsyncThunk(
-    'NEW_MESSAGE',async (message: Messages) => {
+    'NEW_MESSAGE',async (message: CreateMessages) => {
         try {
             const response = await axios.post('http://localhost:3001/messages', message)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+export const DELETE_CHAT = createAsyncThunk(
+    'DELETE_CHAT',async (chatId: string) => {
+        try {
+            const response = await axios.delete(`http://localhost:3001/chats/${chatId}`)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+export const DELETE_CONTACT = createAsyncThunk(
+    'DELETE_CONTACT' , async (deleteData: DeleteUser) => {
+        console.log(deleteData)
+        try {
+            const response = await axios.put(`http://localhost:3001/users`, deleteData)
             return response.data
         } catch (error) {
             console.log(error)

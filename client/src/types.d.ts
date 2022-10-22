@@ -1,3 +1,5 @@
+//TYPES PARA LOS USUARIOS
+
 export type User = {
     _id: string
     nickName: string
@@ -14,8 +16,10 @@ export type CreateUser = {
     image: string
 }
 
+//TYPES PARA LOS CHATS
+
 export type Chats = {
-    _id?: string
+    _id: string
     chatsUsers: User[]
 }
 
@@ -25,10 +29,30 @@ export type NewChat = {
     secondUser: string | User
 }
 
+// TYPES PARA LOS MENSAJES
+
 export type Messages = {
-    _id?: string
+    _id: string
     textMessage: string
     messageAuthor: string
     chatId: string
-    createdAt?: string | undefined
+    createdAt: string
+}
+
+export type CreateMessages = {
+    textMessage: string
+    messageAuthor: string
+    chatId: string
+}
+
+//DELETE USER
+export type DeleteUser = {
+    userId: string
+    contactId: string
+}
+
+//SOCKET io DATA
+export interface SocketUser {
+    userId: string
+    socketId: string
 }

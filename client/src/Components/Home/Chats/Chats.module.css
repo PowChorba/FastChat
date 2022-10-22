@@ -1,0 +1,114 @@
+.noneButton{ 
+    visibility: hidden;
+}
+
+.displayNone{
+    display: none;
+}
+
+.contenedor {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+/* MENSAJES */
+.divMensajes {  
+    text-align: center;
+}
+
+.divChatsCerrados{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 95vh;
+}
+
+.contenedorMensajes{
+    padding: 10px;
+    overflow-y: scroll;
+    height: 80vh;
+    max-height: 80vh;
+    scroll-behavior: smooth;
+    background-image: url('../../../assets/chatsFondo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+}
+
+.contenedorMensajes::-webkit-scrollbar{
+    width: 6px;
+}
+
+.contenedorMensajes::-webkit-scrollbar-track{
+    background: rgba(255, 0, 0, 0);
+}
+
+.contenedorMensajes::-webkit-scrollbar-thumb{
+    background-color: #EDF2F7;
+}
+
+/* DATOS DEL USUARIO DEL CHAT */
+.divDatosUserChat{
+    text-align: left;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #EDF2F7;
+}
+
+.conection{
+    font-size: 12px;
+    /* text-align: center; */
+}
+
+/* FORM PARA ENVIAR EL MENSAJE  */
+.formMandarMensaje{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divInputSend{
+    margin: 10px;
+    display: flex;
+    width: 50%;
+}
+
+.sendMensaje{
+    margin-left: 5px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.imagenes {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* DATOS DEL USUARIO DEL CHAT  */
+.divCerrarInfo {
+    background-color: #EDF2F7;
+    text-align: left;
+    padding: 26px;
+}
+
+.botonCerrarInfo{
+    margin-right: 10px;
+}
+
+.divAgregarBloquear{
+    padding: 10px;
+}
+
+.buttonsAddBloq{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    background-color: #fff;
+    margin: 0px auto;
+    border-radius: 20px;
+}
