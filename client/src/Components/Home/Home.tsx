@@ -18,11 +18,11 @@ export default function Home(){
     const dispatch = useAppDispatch()
     const auth = getAuth()
     const navigate = useNavigate()
-
+    console.log(auth.currentUser)
     //DESLOGEAR
     const logOut = () => {
         signOut(auth)
-        navigate('/login')
+        navigate('/')
     }
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
@@ -88,7 +88,7 @@ export default function Home(){
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile ? s.none : s.asdasd}>
                 <div className={s.perfilAside}>
-                    <img src={currentUser?.image} alt="asd" width='48px' height='48px' className={s.imagenPerfil} onClick={handleProfile}/>
+                    <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
                     <div>
                         <button onClick={handleContacts}><BsChatSquare className={s.iconos}/></button>
                         <button onClick={handleUsuarios}><FiUsers className={s.iconos}/></button>
@@ -120,9 +120,9 @@ export default function Home(){
             <div className={contacts ? s.contactosHide : s.divContactos}>
                 <div className={s.divProfile}>
                     <button onClick={handleContacts} className={s.botonAtras}>{'<'}</button>
-                    <span>Contacts</span>
+                    <Text fontSize='20px'>Contacts</Text>
                 </div>
-                <Contacts currentUser={currentUser}/>
+                <Contacts currentUser={currentUser} />
             </div>
             <div className={profile ? s.contactosHide : s.div}>
                 <div className={s.divProfile}> 
@@ -135,7 +135,7 @@ export default function Home(){
             <div className={usuarios ? s.contactosHide : s.div}>
                 <div className={s.divProfile}>
                     <button onClick={handleUsuarios} className={s.botonAtras}>{'<'}</button>
-                    <Text>Users</Text>
+                    <Text fontSize='20px'>Users</Text>
                 </div>
                 <Users currentUser={currentUser}/>
             </div>

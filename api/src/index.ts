@@ -1,10 +1,8 @@
 import express from "express"
 const cors = require('cors')
 const {dbConnection} = require("./dataBase/db")
-const path = require("path")
-const http = require("http")
-const {Server} = require("socket.io");
 import route from './routes/index'
+import { Socket, SocketUser } from "./types"
 require('dotenv').config()
 
 
@@ -32,17 +30,47 @@ app.use(express.json());
 app.use('/', route)
 
 const server = app.listen(app.get("port"),()=>{
-    console.log("server is on port" + " " + process.env.PORT)
+    console.log("Server is on port" + " " + process.env.PORT)
 })
 
-const serverSocket = http.createServer(app)
-
-const io = new Server(server,{
+const io = require('socket.io')(3002, {
     cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET","POST","DELETE"],
-    },
+        origin: 'http://localhost:3000'
+    }
 })
-io.on("connection",(socket:any)=>{
-    console.log(`new connection: ${socket.id}`)
+
+
+let users: SocketUser[] = []
+
+const addUser = (userId: string, socketId: string) => {
+    !users.some((user: SocketUser)=> user?.userId === userId) && users.push({userId, socketId})
+}
+
+const removeUser = (socketId: string) => {
+    users = users.filter((user: SocketUser) => user.socketId !== socketId)
+}
+
+const getUser = (userId: string) => {
+    return users.find((user: SocketUser) => user.userId === userId)
+}
+
+io.on('connection', (socket: any) => {
+    console.log('User connected')
+    socket.on('addUser', (userId: string) =>{
+        addUser(userId, socket.id)
+        io.emit('getUsers', users)
+    })
+
+    socket.on('disconnect', () =>{
+        console.log('a user disconnected')
+        removeUser(socket.id)
+        io.emit('getUsers', users)
+    })
+
+    socket.on('sendMessage', ({senderId, receiverId, text}: Socket) => {
+        const user = getUser(receiverId)
+        io.to(user?.socketId).emit('getMessage', {
+            senderId, text
+        })
+    })
 })

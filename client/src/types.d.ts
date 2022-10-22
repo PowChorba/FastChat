@@ -50,3 +50,9 @@ export type DeleteUser = {
     userId: string
     contactId: string
 }
+
+//SOCKET io DATA
+export interface SocketUser {
+    userId: string
+    socketId: string
+}

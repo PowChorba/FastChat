@@ -30,7 +30,7 @@
 }
 
 .divAside{
-    border: 1px solid rgba(0, 0, 0, 0.37);
+    /* border: 1px solid rgba(0, 0, 0, 0.37); */
     text-align: center;
 }
 
@@ -47,14 +47,16 @@
 
 .imagenes {
     border-radius: 50%;
-    max-width: 48px;
-    max-height: 48px;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
 }
 
 .imagenPerfil{
     border-radius: 50%;
-    max-width: 48px;
-    max-height: 48px;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
     cursor: pointer;
 }
 

@@ -8,6 +8,9 @@
 }
 
 .imagen {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
     border-radius: 50%;
     margin-right: 5px;
 }
@@ -22,4 +25,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.probando{
+    height: 60px;
+    width: 60px;
 }

@@ -16,3 +16,14 @@ export interface Message{
     messageAuthor: User
     messageTime: string
 }
+
+export interface Socket {
+    senderId: string
+    receiverId: string
+    text: string
+}
+
+export interface SocketUser {
+    userId: string
+    socketId: string
+}

@@ -1,12 +1,14 @@
 import { Button, Input } from "@chakra-ui/react"
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { User } from "../../../types"
+import { SocketUser, User } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
+import {io} from 'socket.io-client'
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
+
 interface Props {
     currentUser: User
     currentChat: string
@@ -17,6 +19,7 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     const filterMessages = allMessages?.filter(e => e.chatId === currentChat)
+    const socket: any = useRef()
     
     const [messages, setMessages] = useState({
         textMessage: '',
@@ -34,6 +37,13 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
     
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        socket.current.emit('sendMessage', {
+            senderId: currentUser?._id,
+            receiverId: friendId?._id,
+            text: messages.textMessage
+        })
+
         dispatch(NEW_MESSAGE(messages))
         setMessages({
             textMessage: '',
@@ -70,6 +80,24 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
         dispatch(USER_CONTACTS(contactData))
     }
     
+    useEffect(() => {
+        socket.current = io('ws://localhost:3002')
+        socket.current.on('getMessage', (data: any) => {
+        })
+    }, [])
+
+    const [online, setOnline ] = useState<string[]>([])
+
+    useEffect(() => {
+        socket.current?.emit('addUser', currentUser?._id)
+        socket.current?.on('getUsers', (users: SocketUser[]) => {
+            console.log(users)
+            setOnline(users?.map((e) => e.userId))
+        })
+    }, [currentUser]) 
+
+    // console.log(online)
+
     return(
         <div>
             {
@@ -80,9 +108,18 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
             :
             <div className={profileChat ? s.contenedor : s.asd}>
             <div className={s.divMensajes}>
-                <div className={s.divDatosUserChat } onClick={handleProfileChat}><img src={friendId?.image} alt="asd"  width="48px" className={s.imagenes}/> {friendId?.nickName}</div>
+                <div className={s.divDatosUserChat } onClick={handleProfileChat}><img src={friendId?.image} alt="asd" className={s.imagenes}/> 
+                    <div>
+                    <p>{friendId?.nickName}</p>
+                    <p className={s.conection}>
+                        {
+                        online.filter(e => e === friendId._id).length === 1 ? 'online' : 'offline'
+                        }
+                    </p>
+                    </div>
+                </div>
                 <div className={s.contenedorMensajes}>
-                <div>
+                <div className={s.buttonsAddBloq}>
                     {
                         prueba?.length !== 0 ? <span></span>
                         : <div className={s.divAgregarBloquear}>
@@ -94,7 +131,7 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
                 </div>
                     {
                         filterMessages?.length === 0 ? <p>Today</p>
-                        : filterMessages?.map(e => { 
+                        : filterMessages?.map((e:any) => { 
                             return(
                                 <div key={e._id}>
                                     <Message mensajes={[e]} currentUser={currentUser}/>

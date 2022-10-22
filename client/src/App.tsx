@@ -1,5 +1,4 @@
 import s from './App.module.css';
-import  io  from 'socket.io-client';
 import Home from './Components/Home/Home';
 import { Routes, Route } from 'react-router-dom'
 import AuthRoute from './Firebase/useContext';
@@ -9,20 +8,22 @@ import Register from './Components/Register/register';
 import Login from './Components/Login/Login';
 import { ChakraProvider } from '@chakra-ui/react'
 
-const socket = io("http://localhost:3001");
 initializeApp(firebaseConfig)
 
 
 function App() {
   return (
-    <div className={s.contenedor}>
+    <div>
+    <div className={s.fondoChat}>
     <ChakraProvider>
         <Routes>
           <Route path='/home' element={<AuthRoute><Home/></AuthRoute>}/>
           <Route path='/register' element={<Register/>}/>
-          <Route path='/login' element={<Login/>}/>      
+          <Route path='/' element={<Login/>}/>      
         </Routes>
     </ChakraProvider>
+    </div>
+    <div className={s.contenedor}></div>
     </div>
   );
 }

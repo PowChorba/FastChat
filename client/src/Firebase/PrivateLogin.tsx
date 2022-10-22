@@ -1,20 +1,19 @@
-import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { RaceBy } from "@uiball/loaders";
-import s from './Context.module.css'
+
 export interface AuthRouteProps {
     children: React.ReactNode
 }
 
-const AuthRoute: React.FunctionComponent<AuthRouteProps> = ({children}: AuthRouteProps) =>{
+const AuthRoutee: React.FunctionComponent<AuthRouteProps> = ({children}: AuthRouteProps) =>{
     const auth = getAuth()
     const [loading, setLoading ] = useState(true)
     const navigte = useNavigate()
 
-    useEffect(() => {
-        AuthCheck()
-    })
+    // useEffect(() =>{
+    //     AuthCheck()
+    // })
 
     const AuthCheck = onAuthStateChanged(auth, (user) => {
         if(user){
@@ -25,11 +24,13 @@ const AuthRoute: React.FunctionComponent<AuthRouteProps> = ({children}: AuthRout
         }
     })
 
-    if(loading){
-        return <div className={s.loading}><RaceBy size={200} lineWeight={10} speed={1.5} color='black'/></div>
+
+    if(!loading){
+        navigte('/home')
     }
 
     return <>{children}</>
+
 }
 
-export default AuthRoute
+export default AuthRoutee

@@ -1,6 +1,7 @@
+import { useEffect, useRef } from "react"
 import { Messages, User } from "../../../types"
 import s from './Message.module.css'
-
+import {io} from 'socket.io-client'
 interface Props {
     mensajes: Messages[]
     currentUser: User
@@ -16,17 +17,18 @@ export default function Message({mensajes, currentUser}: Props){
         return (hours + ':' + minutes)
     }
 
-    const day = (e: string) => {
-        const date = new Date(e)
-        const dia = date.getDay()
-        return dia
-    }
+    // const day = (e: string) => {
+    //     const date = new Date(e)
+    //     const dia = date.getDay()
+    //     return dia
+    // }
 
-    const date = new Date()
+    // const date = new Date()
+
 
     return(
         <div className={s.contenedorMensajes}>
-            {
+            {/* {
                 mensajes.map((e) => {
                     return(<div>
                         {
@@ -34,7 +36,7 @@ export default function Message({mensajes, currentUser}: Props){
                         }
                     </div>)
                 })
-            }
+            } */}
             {mensajes.map((e) => {
                 return(
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>

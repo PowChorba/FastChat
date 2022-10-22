@@ -33,7 +33,7 @@ export default function PrivateChat({chatUser, currentUser}: Props ) {
 
     return(
         <div className={s.chat}>
-            <img src={secondUserId?.image} alt="asd" width='60px' height='60px' className={s.imagen}/>
+            <img src={secondUserId?.image} alt="asd" width='50px' className={s.imagen}/>
                 <div className={s.overFlow}>
                     <span>{secondUserId?.nickName}  </span>
                     <p className={s.lastMessage}>{allMessages[allMessages.length -1]?.textMessage}</p>

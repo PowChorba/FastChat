@@ -13,18 +13,28 @@
     border: 1px solid rgba(0, 0, 0, 0.486);
 }
 
-.tituloLogin{
-    font-size: 30px;
+.buttonRegister{
+    margin-top: 10px;
 }
 
-.divsForm {
+.imagePorfile{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
     margin: 10px auto;
-}   
-
-.linkRegister{
-    border-bottom: 1px solid black;
+    border-radius: 100%;
+    cursor: pointer;
 }
 
-.divLinkRegister{
-    margin-top: 15px;
+.inputNone{
+    display: none;
+}
+
+.labelRegister{
+    margin: 10px;
+}
+
+.arrowBack{
+    font-size: 30px;
+    cursor: pointer;
 }
