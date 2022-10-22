@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
+import { io } from "socket.io-client"
 import { ALL_MESSAGES, NEW_MESSAGE } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
+
+const socket = io("http://localhost:3001");
 
 interface Props {
     currentUser: User
@@ -36,6 +39,7 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
     
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        socket.emit("message",messages)
         dispatch(NEW_MESSAGE(messages))
         setMessages({
             textMessage: '',

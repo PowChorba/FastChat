@@ -45,4 +45,7 @@ const io = new Server(server,{
 })
 io.on("connection",(socket:any)=>{
     console.log(`new connection: ${socket.id}`)
+    socket.on("message",(message:string)=>{
+        console.log(message)
+    })
 })
