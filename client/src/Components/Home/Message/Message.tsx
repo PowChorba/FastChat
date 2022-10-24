@@ -1,12 +1,14 @@
+import { useEffect } from "react"
 import { Messages, User } from "../../../types"
 import s from './Message.module.css'
 interface Props {
     mensajes: Messages[]
     currentUser: User
     actualDayMessages: Messages[]
+    pows: boolean
 }
 
-export default function Message({mensajes, currentUser, actualDayMessages}: Props){
+export default function Message({mensajes, currentUser, actualDayMessages,pows}: Props){
     
     const newDate = (e: string) => {
         const date = new Date(e)
@@ -15,7 +17,10 @@ export default function Message({mensajes, currentUser, actualDayMessages}: Prop
         if(minutes < 10) return (hours + ':0' + minutes)
         return (hours + ':' + minutes)
     }
+    console.log("MENSAJES",mensajes)
+    // useEffect(()=>{
 
+    // },[pows])
     return(
         <div className={s.contenedorMensajes}>
             {
@@ -33,7 +38,7 @@ export default function Message({mensajes, currentUser, actualDayMessages}: Prop
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>
                         <div className={e.messageAuthor === currentUser?._id ? s.divSubRight : s.divSubLeft}>
                             <p className={s.textoMensajes}>{e.textMessage}</p>
-                            <p className={s.textoMensajesHora}>{newDate(e.createdAt)}</p>
+                            {/* <p className={s.textoMensajesHora}>{newDate(e.createdAt)}</p> */}
                         </div>
                     </div>)
             })}

@@ -56,3 +56,11 @@ export interface SocketUser {
     userId: string
     socketId: string
 }
+export interface GetMessageData {
+    senderId: string,
+    text: string,
+    senderChat: string
+}
+createdAt: number
+export interface MessageLocalState extends GetMessageData{
+}

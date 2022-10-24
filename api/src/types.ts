@@ -21,6 +21,7 @@ export interface Socket {
     senderId: string
     receiverId: string
     text: string
+    senderChat: string
 }
 
 export interface SocketUser {
