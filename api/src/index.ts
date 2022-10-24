@@ -67,10 +67,11 @@ io.on('connection', (socket: any) => {
         io.emit('getUsers', users)
     })
 
-    socket.on('sendMessage', ({senderId, receiverId, text}: Socket) => {
+    socket.on('sendMessage', ({senderId, receiverId, text,senderChat}: Socket) => {
         const user = getUser(receiverId)
         io.to(user?.socketId).emit('getMessage', {
-            senderId, text
+            senderId, text , senderChat
         })
+        console.log("text",text)
     })
 })
