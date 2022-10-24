@@ -20,7 +20,7 @@ export default function Message({mensajes, currentUser, actualDayMessages}: Prop
         <div className={s.contenedorMensajes}>
             {
                 mensajes.map((e) => {
-                    return(<div>
+                    return(<div key={e._id}>
                         {
                            actualDayMessages[0] === e ? <div className={s.today}><p>Today</p></div> : ''
                         }

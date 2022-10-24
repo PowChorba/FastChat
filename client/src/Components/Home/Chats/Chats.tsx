@@ -27,6 +27,12 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
         chatId: ''
     })
 
+    // const [arrivalMessage, setArrivalMessage] = useState({
+    //     sender: '',
+    //     text: '',
+    //     createdAt: ''
+    // })
+
     const handleMessage = (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
         setMessages({
             messageAuthor: e.target.id,
@@ -80,18 +86,11 @@ export default function Chats({currentUser, currentChat, friendId}: Props) {
         dispatch(USER_CONTACTS(contactData))
     }
     
-    useEffect(() => {
-        socket.current = io('ws://localhost:3002')
-        socket.current.on('getMessage', (data: any) => {
-        })
-    }, [])
-
     const [online, setOnline ] = useState<string[]>([])
 
     useEffect(() => {
         socket.current?.emit('addUser', currentUser?._id)
         socket.current?.on('getUsers', (users: SocketUser[]) => {
-            console.log(users)
             setOnline(users?.map((e) => e.userId))
         })
     }, [currentUser]) 

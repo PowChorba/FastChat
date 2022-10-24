@@ -13,7 +13,6 @@
   height: 15.2%;
   background: #008069;
   z-index: -10;
-  /* transform: skewY(0deg); */
   transform-origin: top right;
 }
 
