@@ -20,6 +20,7 @@ interface Props {
 
 export default function Chats({ currentUser, currentChat, friendId }: Props) {
     const [pows, setPows] = useState<any>(true)
+    const [test, setTest] = useState<any>([])
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
@@ -30,10 +31,6 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
         senderChat: ""
         // createdAt: ""
     })
-
-    const [allMessagesArray, setAllMessagesArray] = useState<any>([...filterMessages])
-    // console.log("fileter", filterMessages)
-    // console.log("allmessa", allMessagesArray)
 
     const [messages, setMessages] = useState({
         textMessage: '',
@@ -118,22 +115,47 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                 text: data.text,
                 senderChat: data.senderChat
             })
+            // console.log(currentChat,"CHAAT CURRENT")
+            // if(currentChat === data.senderChat){
+            console.log(test, "TEST PRIMERO")
+            setTest((prev: any) => [...prev, {
+                _id: "5",
+                textMessage: data.text,
+                messageAuthor: data.senderChat,
+                chatId: currentChat,
+                createdAt: fechaActual(new Date().toString()),
+            }])
+            // filterMessages.push({
+            //     _id: "5",
+            //     textMessage: data.text,
+            //     messageAuthor: data.senderChat,
+            //     chatId: currentChat,
+            //     createdAt: fechaActual(new Date().toString()),
+            // })
+            // }
         })
     }, [])
     console.log("MESSAGE RECEIVED", messageReceived)
 
     useEffect(() => {
-        filterMessages.push({
-            _id: "5",
-            textMessage: messageReceived.text,
-            messageAuthor: messageReceived.senderId,
-            chatId: currentChat,
-            createdAt: fechaActual(new Date().toString()),
-        })
-        setPows(!pows)
-        console.log("estoy aca", filterMessages)
+        console.log("ENTREEE")
+        if (messageReceived.text !== "" && currentChat === messageReceived.senderChat) {
+            filterMessages = [...filterMessages, ...test]
+            console.log("lo acabo de setear",filterMessages)
+            setPows(!pows)
+            console.log("ENTREEXXX2")
+        }
+        // filterMessages.push({
+        //     _id: "5",
+        //     textMessage: messageReceived.text,
+        //     messageAuthor: messageReceived.senderId,
+        //     chatId: currentChat,
+        //     createdAt: fechaActual(new Date().toString()),
+        // })
+        // setPows(!pows)
+        // console.log("estoy aca", filterMessages)
     }, [messageReceived, currentChat])
-
+        console.log("estoy aca", filterMessages)
     const [online, setOnline] = useState<string[]>([])
 
     useEffect(() => {
@@ -154,17 +176,29 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
     const date = new Date()
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
-    console.log("MEnsaje final", messageReceived)
-    console.log(filterMessages[filterMessages.length - 1], "ULTIMO FILTER")
+    // console.log("MEnsaje final", messageReceived)
+    // console.log(test, "estadi local")
+    // console.log(filterMessages[filterMessages.length - 1], "ULTIMO FILTER")
     if(messageReceived.text !== "" && currentChat === messageReceived.senderChat ){
-        filterMessages.push({
-            _id: "5",
-            textMessage: messageReceived.text,
-            messageAuthor: messageReceived.senderId,
-            chatId: currentChat,
-            createdAt: fechaActual(new Date().toString()),
-        })
+        // setTest([...test,{
+        //     _id: "5",
+        //     textMessage: messageReceived.text,
+        //     messageAuthor: messageReceived.senderId,
+        //     chatId: currentChat,
+        //     createdAt: fechaActual(new Date().toString()),
+        // }])
+        if(!filterMessages.includes(test[0])){
+            filterMessages = [...filterMessages,...test]
+        }
+        // filterMessages.push({
+        //     _id: "5",
+        //     textMessage: messageReceived.text,
+        //     messageAuthor: messageReceived.senderId,
+        //     chatId: currentChat,
+        //     createdAt: fechaActual(new Date().toString()),
+        // })
     }
+    console.log(filterMessages)
 
     return (
         <div>
