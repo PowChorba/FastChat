@@ -123,7 +123,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                 textMessage: data.text,
                 messageAuthor: data.senderChat,
                 chatId: currentChat,
-                createdAt: fechaActual(new Date().toString()),
+                createdAt: new Date().toISOString(),
             }])
             // filterMessages.push({
             //     _id: "5",
@@ -190,6 +190,11 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
         if(!filterMessages.includes(test[0])){
             filterMessages = [...filterMessages,...test]
         }
+        filterMessages = filterMessages.sort((a,b)=>{
+            if (a.createdAt < b.createdAt) return -1
+            if (a.createdAt > b.createdAt) return 1
+            else return 0
+        })
         // filterMessages.push({
         //     _id: "5",
         //     textMessage: messageReceived.text,
