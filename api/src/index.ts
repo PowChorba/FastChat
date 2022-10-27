@@ -72,6 +72,13 @@ io.on('connection', (socket: any) => {
         io.to(user?.socketId).emit('getMessage', {
             senderId, text , senderChat
         })
-        console.log("text",text)
+    })
+
+    socket.on("sendEscribiendo",({senderId, receiverId, text, senderChat}:Socket)=>{
+        const user = getUser(receiverId)
+        io.to(user?.socketId).emit("getUserWritting",{
+            senderId,text, senderChat
+        })
+        console.log(text)
     })
 })

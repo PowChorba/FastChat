@@ -17,6 +17,7 @@ interface Props {
 export default function Chats({ currentUser, currentChat, friendId }: Props) {
     const [pows, setPows] = useState<any>(true)
     const [test, setTest] = useState<any>([])
+    const [writting, setWritting] = useState(false)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
@@ -36,6 +37,12 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
 
 
     const handleMessage = (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
+        socket.current.emit('sendEscribiendo', {
+            senderId: currentUser?._id,
+            receiverId: friendId?._id,
+            text: e.target.value,
+            senderChat: currentChat
+        })
         setMessages({
             messageAuthor: e.target.id,
             textMessage: e.target.value,
@@ -92,15 +99,11 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
     useEffect(() => {
         socket.current = io('ws://localhost:3002')
         socket.current?.on('getMessage', (data: GetMessageData) => {
-            console.log("dataFlaco", data)
             setMessageReceived({
                 senderId: data.senderId,
                 text: data.text,
                 senderChat: data.senderChat
             })
-            // console.log(currentChat,"CHAAT CURRENT")
-            // if(currentChat === data.senderChat){
-            console.log(test, "TEST PRIMERO")
             setTest((prev: any) => [...prev, {
                 _id: "5",
                 textMessage: data.text,
@@ -108,46 +111,26 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                 chatId: currentChat,
                 createdAt: new Date().toISOString(),
             }])
-            // filterMessages.push({
-            //     _id: "5",
-            //     textMessage: data.text,
-            //     messageAuthor: data.senderChat,
-            //     chatId: currentChat,
-            //     createdAt: fechaActual(new Date().toString()),
-            // })
-            // }
+        })
+        socket.current?.on("getUserWritting",(data: GetMessageData)=>{
+            console.log("DataFlaco",data)
+            if (data.text) setWritting(true)
+            else setWritting(false)
         })
     }, [])
-    console.log("MESSAGE RECEIVED", messageReceived)
 
 
     useEffect(() => {
-        console.log("ENTREEE")
         if (messageReceived.text !== "" && currentChat === messageReceived.senderChat) {
             filterMessages = [...filterMessages, ...test]
-            console.log("lo acabo de setear",filterMessages)
             setPows(!pows)
-            console.log("ENTREEXXX2")
         }
-        // filterMessages.push({
-        //     _id: "5",
-        //     textMessage: messageReceived.text,
-        //     messageAuthor: messageReceived.senderId,
-        //     chatId: currentChat,
-        //     createdAt: fechaActual(new Date().toString()),
-        // })
-        // setPows(!pows)
-        // console.log("estoy aca", filterMessages)
     }, [messageReceived, currentChat])
-        console.log("estoy aca", filterMessages)
     const [online, setOnline] = useState<string[]>([])
 
     useEffect(() => {
         socket.current?.emit('addUser', currentUser?._id)
         socket.current?.on('getUsers', (users: SocketUser[]) => {
-
-            // console.log(users)
-
             setOnline(users?.map((e) => e.userId))
         })
     }, [currentUser])
@@ -162,17 +145,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
     const date = new Date()
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
-    // console.log("MEnsaje final", messageReceived)
-    // console.log(test, "estadi local")
-    // console.log(filterMessages[filterMessages.length - 1], "ULTIMO FILTER")
     if(messageReceived.text !== "" && currentChat === messageReceived.senderChat ){
-        // setTest([...test,{
-        //     _id: "5",
-        //     textMessage: messageReceived.text,
-        //     messageAuthor: messageReceived.senderId,
-        //     chatId: currentChat,
-        //     createdAt: fechaActual(new Date().toString()),
-        // }])
         if(!filterMessages.includes(test[0])){
             filterMessages = [...filterMessages,...test]
         }
@@ -181,15 +154,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
             if (a.createdAt > b.createdAt) return 1
             else return 0
         })
-        // filterMessages.push({
-        //     _id: "5",
-        //     textMessage: messageReceived.text,
-        //     messageAuthor: messageReceived.senderId,
-        //     chatId: currentChat,
-        //     createdAt: fechaActual(new Date().toString()),
-        // })
     }
-    console.log(filterMessages)
 
     //BLOQUEAR CONTACTOS
     const [block, setBlock] = useState({
@@ -229,7 +194,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                                     <p>{friendId?.nickName}</p>
                                     <p className={s.conection}>
                                         {
-                                            online.filter(e => e === friendId._id).length === 1 ? 'online' : 'offline'
+                                            writting ? "Writting..." : (online.filter(e => e === friendId._id).length === 1 ? 'online' : 'offline')
                                         }
                                     </p>
                                 </div>
