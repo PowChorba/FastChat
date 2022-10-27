@@ -18,7 +18,6 @@ export default function Home(){
     const dispatch = useAppDispatch()
     const auth = getAuth()
     const navigate = useNavigate()
-    console.log(auth.currentUser)
     //DESLOGEAR
     const logOut = () => {
         signOut(auth)
@@ -53,7 +52,6 @@ export default function Home(){
         }
     }, [dispatch, currentUser?._id])
     
-    console.log(currentUser)
     //SETTEAR VALOR DEL CURRENT CHAT
     const handleChat = (e: string ) => {
         if(e) {

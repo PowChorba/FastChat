@@ -38,6 +38,12 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
         chatId: ''
     })
 
+    // const [arrivalMessage, setArrivalMessage] = useState({
+    //     sender: '',
+    //     text: '',
+    //     createdAt: ''
+    // })
+
     const handleMessage = (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
         setMessages({
             messageAuthor: e.target.id,

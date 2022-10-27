@@ -27,7 +27,6 @@ export default function Profile({currentUser}: Props){
         if(currentUser._id){
             setUser({
                 ...user,
-                userId: currentUser._id,
                 [e.target.name]: e.target.value
             })
         }
@@ -54,6 +53,11 @@ export default function Profile({currentUser}: Props){
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if(user.userId === '') user.userId = currentUser?._id
+        if(user.image === '') user.image = currentUser?.image
+        if(user.nickName === '') user.nickName = currentUser?.nickName
+        if(user.password === '') user.password = currentUser?.password
+
         dispatch(USER_CONTACTS(user))
         setUser({
             userId: '',
@@ -61,6 +65,9 @@ export default function Profile({currentUser}: Props){
             nickName: '',
             password: ''
         })
+        setTimeout(() =>{
+            window.location.reload()
+        }, 1500)
     }
 
     // const [hover,setHover] = useState(false)
