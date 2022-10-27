@@ -1,6 +1,6 @@
 import { Button, Input } from "@chakra-ui/react"
 import React, { useEffect, useRef, useState } from "react"
-import { NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
+import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { GetMessageData, SocketUser, User } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
@@ -8,10 +8,6 @@ import Message from "../Message/Message"
 import { io } from 'socket.io-client'
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
-import { async } from "@firebase/util"
-import axios from "axios"
-import { current } from "@reduxjs/toolkit"
-
 interface Props {
     currentUser: User
     currentChat: string
@@ -19,7 +15,6 @@ interface Props {
 }
 
 export default function Chats({ currentUser, currentChat, friendId }: Props) {
-    const [pows, setPows] = useState<any>(true)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
@@ -31,9 +26,6 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
         // createdAt: ""
     })
 
-    const [allMessagesArray, setAllMessagesArray] = useState<any>([...filterMessages])
-    // console.log("fileter", filterMessages)
-    // console.log("allmessa", allMessagesArray)
 
     const [messages, setMessages] = useState({
         textMessage: '',
@@ -41,11 +33,6 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
         chatId: ''
     })
 
-    // const [arrivalMessage, setArrivalMessage] = useState({
-    //     sender: '',
-    //     text: '',
-    //     createdAt: ''
-    // })
 
     const handleMessage = (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
         setMessages({
@@ -100,24 +87,6 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
     const handleNewContact = () => {
         dispatch(USER_CONTACTS(contactData))
     }
-<<<<<<< HEAD
-    
-    const [online, setOnline ] = useState<string[]>([])
-=======
-    // useEffect(() => {
-    //     let prueba = async () => {
-    //         try {
-    //             let pow = await axios.get("http://localhost:3001/chats/" + currentUser?._id)
-    //              pow = pow.data?.filter((e:any) => e.chatId === currentChat)
-    //             setPows(pow.data)
-    //             console.log(pow.data, "res")
-    //         } catch (e) {
-    //             console.log(e)
-    //         }
-    //     }
-    //     prueba()
-    // }, [currentUser])
-    // console.log(pows)
 
     useEffect(() => {
         socket.current = io('ws://localhost:3002')
@@ -132,28 +101,14 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
     }, [])
     console.log("MESSAGE RECEIVED", messageReceived)
 
-    useEffect(() => {
-        filterMessages.push({
-            _id: "5",
-            textMessage: messageReceived.text,
-            messageAuthor: messageReceived.senderId,
-            chatId: currentChat,
-            createdAt: fechaActual(new Date().toString()),
-        })
-        setPows(!pows)
-        console.log("estoy aca", filterMessages)
-    }, [messageReceived, currentChat])
-
     const [online, setOnline] = useState<string[]>([])
->>>>>>> origin/inaki
 
     useEffect(() => {
         socket.current?.emit('addUser', currentUser?._id)
         socket.current?.on('getUsers', (users: SocketUser[]) => {
-<<<<<<< HEAD
-=======
+
             // console.log(users)
->>>>>>> origin/inaki
+
             setOnline(users?.map((e) => e.userId))
         })
     }, [currentUser])
@@ -168,8 +123,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
     const date = new Date()
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
-    console.log("MEnsaje final", messageReceived)
-    console.log(filterMessages[filterMessages.length - 1], "ULTIMO FILTER")
+
     if(messageReceived.text !== "" && currentChat === messageReceived.senderChat ){
         filterMessages.push({
             _id: "5",
@@ -178,6 +132,29 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
             chatId: currentChat,
             createdAt: fechaActual(new Date().toString()),
         })
+    }
+
+    //BLOQUEAR CONTACTOS
+    const [block, setBlock] = useState({
+        userId: '',
+        bloqUserId: ''
+    })
+
+    const handleBlockId = (e: string) => {
+        if (currentUser?._id) {
+            setBlock({
+                userId: currentUser._id,
+                bloqUserId: e
+            })
+        }
+    }
+
+    const bloqUser = () => {
+        dispatch(BLOCK_USER(block))
+        dispatch(DELETE_CHAT(currentChat))
+        setTimeout(() => {
+            window.location.reload()
+        },2000)
     }
 
     return (
@@ -207,7 +184,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                                             : <div className={s.divAgregarBloquear}>
                                                 <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
                                                 <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
-                                                <Button variant='outline' colorScheme='red'>Block User</Button>
+                                                <Button variant='outline' colorScheme='red' onMouseEnter={() => handleBlockId(friendId?._id)} onClick={bloqUser}>Block User</Button>
                                             </div>
                                     }
                                 </div>
@@ -216,7 +193,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                                         : filterMessages?.map((e: any) => {
                                             return (
                                                 <div key={e._id}>
-                                                    <Message pows={pows} mensajes={[e]} currentUser={currentUser} actualDayMessages={actualDayMessages} />
+                                                    <Message mensajes={[e]} currentUser={currentUser} actualDayMessages={actualDayMessages} />
                                                 </div>)
                                         })
                                 }

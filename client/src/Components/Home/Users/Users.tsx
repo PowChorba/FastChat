@@ -12,8 +12,7 @@ interface Props {
 
 export default function Users({currentUser}: Props){    
     const allUsers = useAppSelector(state => state.clientReducer.users)
-    const filterUsers = allUsers.filter(e => e._id !== currentUser?._id)
-
+    const filterUsers = allUsers.filter(e => e._id !== currentUser?._id && !currentUser.bloqUsers.includes(e._id))
     const dispatch = useAppDispatch()
 
     //BUSQUEDA DE CONTACTOS

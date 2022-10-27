@@ -135,3 +135,14 @@ export const DELETE_CONTACT = createAsyncThunk(
         }
     }
 )
+
+export const BLOCK_USER = createAsyncThunk(
+    'BLOCK_USER',async (data: any) => {
+        try {
+            const response = await axios.put('http://localhost:3001/users', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)

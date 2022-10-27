@@ -7,6 +7,7 @@ export type User = {
     password: string
     image: string
     contacts?: User[]
+    bloqUsers: string[]
 }
 
 export type CreateUser = {
@@ -61,6 +62,6 @@ export interface GetMessageData {
     text: string,
     senderChat: string
 }
-createdAt: number
+// createdAt: number
 export interface MessageLocalState extends GetMessageData{
 }
