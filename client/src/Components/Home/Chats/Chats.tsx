@@ -16,7 +16,7 @@ interface Props {
 
 export default function Chats({ currentUser, currentChat, friendId }: Props) {
     const [pows, setPows] = useState<any>(true)
-    const [test, setTest] = useState<any>([])
+    const [test, setTest] = useState<any>([])   
     const [writting, setWritting] = useState(false)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
@@ -52,7 +52,13 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
+        
+        socket.current.emit('sendEscribiendo', {
+            senderId: currentUser?._id,
+            receiverId: friendId?._id,
+            text: "",
+            senderChat: currentChat
+        })
         socket.current.emit('sendMessage', {
             senderId: currentUser?._id,
             receiverId: friendId?._id,
@@ -112,11 +118,6 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                 createdAt: new Date().toISOString(),
             }])
         })
-        socket.current?.on("getUserWritting",(data: GetMessageData)=>{
-            console.log("DataFlaco",data)
-            if (data.text) setWritting(true)
-            else setWritting(false)
-        })
     }, [])
 
 
@@ -125,6 +126,12 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
             filterMessages = [...filterMessages, ...test]
             setPows(!pows)
         }
+        socket.current?.on("getUserWritting",(data: GetMessageData)=>{
+            if(data.senderChat === currentChat){
+                if (data.text) setWritting(true)
+                else setWritting(false)
+            }
+        })
     }, [messageReceived, currentChat])
     const [online, setOnline] = useState<string[]>([])
 
@@ -155,6 +162,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
             else return 0
         })
     }
+    
 
     //BLOQUEAR CONTACTOS
     const [block, setBlock] = useState({

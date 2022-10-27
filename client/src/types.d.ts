@@ -62,6 +62,3 @@ export interface GetMessageData {
     text: string,
     senderChat: string
 }
-// createdAt: number
-export interface MessageLocalState extends GetMessageData{
-}

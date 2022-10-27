@@ -56,7 +56,6 @@ export default function Home(){
     const handleChat = (e: string ) => {
         if(e) {
             setCurrentChat(e)
-            console.log(e)
         }
     }
     
