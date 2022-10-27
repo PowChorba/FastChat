@@ -5,6 +5,7 @@ export interface User {
     password: string
     image: string
     contacts?: User[]
+    bloqUsers: User[]
 }
 
 export interface ChatsType {

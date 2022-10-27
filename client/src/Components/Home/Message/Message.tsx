@@ -1,14 +1,12 @@
-import { useEffect } from "react"
 import { Messages, User } from "../../../types"
 import s from './Message.module.css'
 interface Props {
     mensajes: Messages[]
     currentUser: User
     actualDayMessages: Messages[]
-    pows: boolean
 }
 
-export default function Message({mensajes, currentUser, actualDayMessages,pows}: Props){
+export default function Message({mensajes, currentUser, actualDayMessages}: Props){
     
     const newDate = (e: string) => {
         const date = new Date(e)
@@ -17,10 +15,7 @@ export default function Message({mensajes, currentUser, actualDayMessages,pows}:
         if(minutes < 10) return (hours + ':0' + minutes)
         return (hours + ':' + minutes)
     }
-    console.log("MENSAJES",mensajes)
-    // useEffect(()=>{
 
-    // },[pows])
     return(
         <div className={s.contenedorMensajes}>
             {

@@ -20,7 +20,7 @@ export const allUsers = async (req: Request, res: Response) => {
     const { nickName } = req.query
     try {
         if(nickName){
-            const findUser = await Users.findOne({nickName: nickName}).populate('contacts')
+            const findUser = await Users.findOne({nickName: nickName}).populate(['contacts', 'bloqUsers'])
             if(findUser){
                 return res.send([findUser])
             }else {
@@ -36,19 +36,22 @@ export const allUsers = async (req: Request, res: Response) => {
 }
 
 export const updateUsers = async (req: Request, res: Response) => {
-    const { userId,contactId, contact, nickName,password,image } = req.body
+    const { userId,contactId, contact, nickName,password,image, bloqUserId } = req.body
     try {
         const findUser = await Users.findById(userId).populate('contacts')
         const findUserDos = await Users.findById(contact)
         const alreadyAdded = findUser?.contacts?.filter(e => e._id?.toString() === contact)
+        const alreadyBloq = findUser?.bloqUsers?.filter(e => e._id?.toString() === contact)
         if(findUser && findUserDos) {
             if(alreadyAdded?.length !== 0) {
                 return res.send('Contact already on list')
-            }else {
+            }else if(alreadyBloq?.length !== 0){
+                return res.send('Contact already blocked')
+            }else{
                 await findUser.updateOne({$push: {contacts: contact}})
                 return res.send(findUser)
             }
-        }else if(!contact && findUser && !contactId){
+        }else if(!contact && findUser && !contactId && !bloqUserId){
             await findUser.updateOne({image,password,nickName})
             return res.send('User updated')
         }else if(findUser && contactId){
@@ -58,6 +61,16 @@ export const updateUsers = async (req: Request, res: Response) => {
                 return res.send('Contact deleted successfully')
             }else {
                 return res.send('Esta rompiendo')
+            }
+        }else if(findUser && bloqUserId){
+            const filterBlocks = findUser.bloqUsers?.filter(e => e._id?.toString() === bloqUserId)
+            if(filterBlocks?.length === 0){
+                await findUser.updateOne({$push: {bloqUsers: bloqUserId}})
+                console.log('asd')
+                return res.send('Contact blocked successfully')
+            }else {
+                console.log('error')
+                return res.send('Contact already blocked')
             }
         }
         else{
