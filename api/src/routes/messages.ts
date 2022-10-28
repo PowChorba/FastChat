@@ -35,3 +35,17 @@ export const allMessages = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
+
+export const deleteMessages = async (req: Request, res: Response) => {
+  const { messageId } = req.body
+  try {
+    const filterMessages = await Messages.findById(messageId)
+    if(filterMessages){
+      await filterMessages.updateOne({textMessage: 'Message deleted', isDeleted: true})
+      return res.send('Message deleted')
+    }
+    return res.send('Rompiste todo')
+  } catch (error) {
+    console.log(error)
+  }
+}

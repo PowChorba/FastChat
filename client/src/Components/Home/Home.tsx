@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
-import { useEffect, useState} from 'react'
+import { useEffect, useRef, useState} from 'react'
 import { ALL_CHATS, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
@@ -13,11 +13,15 @@ import { Grid, GridItem, Input, Text } from '@chakra-ui/react'
 import { FiUsers } from 'react-icons/fi'
 import { BsChatSquare } from 'react-icons/bs'
 import { HiLogout } from 'react-icons/hi'
+import BlockUsers from "./BlockUsers/BlockUsers"
+import { TbUserOff } from 'react-icons/tb'
+import { io } from "socket.io-client"
 
 export default function Home(){
     const dispatch = useAppDispatch()
     const auth = getAuth()
     const navigate = useNavigate()
+    const socket: any = useRef()
     //DESLOGEAR
     const logOut = () => {
         signOut(auth)
@@ -46,9 +50,11 @@ export default function Home(){
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
+        socket.current = io('ws://localhost:3002')
         if(currentUser?._id){
             dispatch(USER_CHATS(currentUser._id))
             dispatch(ALL_CHATS())
+            socket.current?.emit('addUser', currentUser?._id)
         }
     }, [dispatch, currentUser?._id])
     
@@ -67,6 +73,7 @@ export default function Home(){
     const [contacts, setContacts ] = useState(true)
     const [usuarios, setUsuarios] = useState(true)
     const [profile, setProfile] = useState(true)
+    const [block, setBlock] = useState(true)
 
     const handleContacts = () => {
         setContacts(!contacts)
@@ -80,15 +87,20 @@ export default function Home(){
         setProfile(!profile)
     }
 
+    const handleBlock = () => {
+        setBlock(!block)
+    }
+
     return(
     <Grid templateColumns='1fr 3fr' className={s.contenedor}>
         <GridItem className={s.divAside}>
             {/* DEFAULT UI  */}
-            <div className={!contacts || !usuarios || !profile ? s.none : s.asdasd}>
+            <div className={!contacts || !usuarios || !profile || !block ? s.none : s.asdasd}>
                 <div className={s.perfilAside}>
                     <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
                     <div>
                         <button onClick={handleContacts}><BsChatSquare className={s.iconos}/></button>
+                        <button onClick={handleBlock}><TbUserOff className={s.iconos}/></button>
                         <button onClick={handleUsuarios}><FiUsers className={s.iconos}/></button>
                         <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
                     </div>
@@ -102,13 +114,13 @@ export default function Home(){
                     ? filterUserChats && filterUserChats.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
                     : userChats && userChats.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     }) 
                 }
@@ -137,9 +149,17 @@ export default function Home(){
                 </div>
                 <Users currentUser={currentUser}/>
             </div>
+            {/* {BLOCK USERS} */}
+            <div className={block ? s.contactosHide : s.div}>
+                <div className={s.divProfile}> 
+                    <button onClick={handleBlock} className={s.botonAtras}>{'<'}</button>
+                    <Text fontSize='20px'>Block Users</Text>
+                </div>
+                <BlockUsers currentUser={currentUser}/>
+            </div>
         </GridItem>
         <div>
-            <Chats currentChat={currentChat} currentUser={currentUser} friendId={friendId}/>
+            <Chats currentChat={currentChat} currentUser={currentUser} friendId={friendId} socket={socket}/>
         </div>
     </Grid>)
 }

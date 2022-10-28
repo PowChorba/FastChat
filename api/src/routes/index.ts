@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import { allChats, deleteChat, newChat, userChat } from './chats'
-import { allMessages, messageChat, newMessage } from './messages'
+import { allMessages, deleteMessages, messageChat, newMessage } from './messages'
 import { allUsers, updateUsers, newUser, userById } from './user'
 
 const router = Router()
@@ -21,5 +21,6 @@ router.delete('/chats/:chatId', deleteChat)
 router.post('/messages', newMessage)
 router.get('/messages/:chatId', messageChat)
 router.get('/messages', allMessages)
+router.put('/messages', deleteMessages)
 
 export default router

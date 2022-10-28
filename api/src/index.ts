@@ -55,7 +55,7 @@ const getUser = (userId: string) => {
 }
 
 io.on('connection', (socket: any) => {
-    console.log('User connected')
+    console.log(`User connected ${socket.id}`, )
     socket.on('addUser', (userId: string) =>{
         addUser(userId, socket.id)
         io.emit('getUsers', users)
@@ -79,6 +79,5 @@ io.on('connection', (socket: any) => {
         io.to(user?.socketId).emit("getUserWritting",{
             senderId,text, senderChat
         })
-        console.log(text)
     })
 })

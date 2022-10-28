@@ -146,3 +146,15 @@ export const BLOCK_USER = createAsyncThunk(
         }
     }
 )
+
+export const DELETE_MESSAGE = createAsyncThunk(
+    'DELETE_MESSAGE', async (messageId: any) => {
+        let data = {messageId}
+        try {
+            const response = await axios.put('http://localhost:3001/messages', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)

@@ -27,7 +27,7 @@ export const allUsers = async (req: Request, res: Response) => {
                 return res.send('We could not find that user')
             }
         }else {
-            const allUsers = await Users.find().populate('contacts')
+            const allUsers = await Users.find().populate(['contacts', 'bloqUsers'])
             return res.json(allUsers)
         }
     } catch (error) {

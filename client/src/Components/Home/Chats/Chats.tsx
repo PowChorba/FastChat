@@ -5,23 +5,23 @@ import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { GetMessageData, SocketUser, User } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
-import { io } from 'socket.io-client'
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 interface Props {
     currentUser: User
     currentChat: string
     friendId: User
+    socket: any
 }
 
-export default function Chats({ currentUser, currentChat, friendId }: Props) {
-    const [pows, setPows] = useState<any>(true)
+export default function Chats({ currentUser, currentChat, friendId, socket }: Props) {
+    const [pows, setPows] = useState(true)
     const [test, setTest] = useState<any>([])   
     const [writting, setWritting] = useState(false)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
-    const socket: any = useRef()
+
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",
@@ -100,10 +100,10 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
 
     const handleNewContact = () => {
         dispatch(USER_CONTACTS(contactData))
+        setPows(false)
     }
 
     useEffect(() => {
-        socket.current = io('ws://localhost:3002')
         socket.current?.on('getMessage', (data: GetMessageData) => {
             setMessageReceived({
                 senderId: data.senderId,
@@ -118,29 +118,23 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                 createdAt: new Date().toISOString(),
             }])
         })
-    }, [])
-
+    }, [socket, currentChat])
 
     useEffect(() => {
-        if (messageReceived.text !== "" && currentChat === messageReceived.senderChat) {
-            filterMessages = [...filterMessages, ...test]
-            setPows(!pows)
-        }
         socket.current?.on("getUserWritting",(data: GetMessageData)=>{
             if(data.senderChat === currentChat){
                 if (data.text) setWritting(true)
                 else setWritting(false)
             }
         })
-    }, [messageReceived, currentChat])
+    }, [messageReceived, currentChat, socket])
     const [online, setOnline] = useState<string[]>([])
 
     useEffect(() => {
-        socket.current?.emit('addUser', currentUser?._id)
         socket.current?.on('getUsers', (users: SocketUser[]) => {
             setOnline(users?.map((e) => e.userId))
         })
-    }, [currentUser])
+    }, [currentUser, socket])
 
     //ARRAY PARA
 
@@ -210,7 +204,7 @@ export default function Chats({ currentUser, currentChat, friendId }: Props) {
                             <div className={s.contenedorMensajes}>
                                 <div className={s.buttonsAddBloq}>
                                     {
-                                        prueba?.length !== 0 ? <span></span>
+                                        prueba?.length !== 0 || !pows ? <span></span>
                                             : <div className={s.divAgregarBloquear}>
                                                 <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
                                                 <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}

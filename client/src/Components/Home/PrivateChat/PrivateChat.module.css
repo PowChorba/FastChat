@@ -31,3 +31,10 @@
     height: 60px;
     width: 60px;
 }
+
+.writtingMessage {
+    color: #1fa855;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

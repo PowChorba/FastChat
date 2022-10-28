@@ -1,5 +1,10 @@
 import { Messages, User } from "../../../types"
 import s from './Message.module.css'
+import { BiBlock } from 'react-icons/bi'
+import { IoIosArrowDown } from 'react-icons/io'
+import { useState } from "react"
+import DeleteMessage from "./Dialog"
+
 interface Props {
     mensajes: Messages[]
     currentUser: User
@@ -8,6 +13,13 @@ interface Props {
 
 export default function Message({mensajes, currentUser, actualDayMessages}: Props){
     
+    const [dialog, setDialog] = useState(false)
+
+    const handleDialog = () => {
+        setDialog(!dialog)
+    }
+
+
     const newDate = (e: string) => {
         const date = new Date(e)
         const hours = date.getHours()
@@ -32,8 +44,17 @@ export default function Message({mensajes, currentUser, actualDayMessages}: Prop
                 return(
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>
                         <div className={e.messageAuthor === currentUser?._id ? s.divSubRight : s.divSubLeft}>
-                            <p className={s.textoMensajes}>{e.textMessage}</p>
+                            {
+                                e.isDeleted ? <p className={s.deletedMessage}><BiBlock/>{e.textMessage}</p>
+                                : <p className={s.textoMensajes}>{e.textMessage}</p>
+                            }
                             <p className={s.textoMensajesHora}>{newDate(e.createdAt)}</p>
+                            {
+                                e.messageAuthor === currentUser?._id ? <button className={s.arrowDown} onClick={handleDialog}><span><IoIosArrowDown/></span></button> : <span></span>
+                            }
+                            {
+                                dialog ? <DeleteMessage setDialog={setDialog} messageId={e._id}/> : ''
+                            }
                         </div>
                     </div>)
             })}

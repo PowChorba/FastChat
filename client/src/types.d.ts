@@ -7,7 +7,7 @@ export type User = {
     password: string
     image: string
     contacts?: User[]
-    bloqUsers: string[]
+    bloqUsers: User[]
 }
 
 export type CreateUser = {
@@ -38,6 +38,7 @@ export type Messages = {
     messageAuthor: string
     chatId: string
     createdAt: string
+    isDeleted?: boolean
 }
 
 export type CreateMessages = {
@@ -62,3 +63,6 @@ export interface GetMessageData {
     text: string,
     senderChat: string
 }
+
+//BLOCK USERS
+
