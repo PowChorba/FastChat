@@ -66,11 +66,12 @@ export const updateUsers = async (req: Request, res: Response) => {
             const filterBlocks = findUser.bloqUsers?.filter(e => e._id?.toString() === bloqUserId)
             if(filterBlocks?.length === 0){
                 await findUser.updateOne({$push: {bloqUsers: bloqUserId}})
-                console.log('asd')
                 return res.send('Contact blocked successfully')
+            }else if(filterBlocks?.length === 1){
+                await findUser.updateOne({$pull: {bloqUsers: bloqUserId}})
+                return res.send('Contact unblocked successfully')
             }else {
-                console.log('error')
-                return res.send('Contact already blocked')
+                return res.send('Contact blocked successfully ')
             }
         }
         else{

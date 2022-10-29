@@ -1,8 +1,8 @@
 import { Button, Input } from "@chakra-ui/react"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { GetMessageData, SocketUser, User } from "../../../types"
+import { GetMessageData, Messages, SocketUser, User } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
@@ -16,8 +16,9 @@ interface Props {
 
 export default function Chats({ currentUser, currentChat, friendId, socket }: Props) {
     const [pows, setPows] = useState(true)
-    const [test, setTest] = useState<any>([])   
+    const [test, setTest] = useState<Messages[]>([])   
     const [writting, setWritting] = useState(false)
+    let [contador, setContador] = useState(0)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
@@ -26,7 +27,6 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
         senderId: "",
         text: "",
         senderChat: ""
-        // createdAt: ""
     })
 
     const [messages, setMessages] = useState({
@@ -110,15 +110,16 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
                 text: data.text,
                 senderChat: data.senderChat
             })
-            setTest((prev: any) => [...prev, {
-                _id: "5",
+            setTest((prev: Messages[]) => [...prev, {
+                _id: contador.toString(),
                 textMessage: data.text,
                 messageAuthor: data.senderChat,
                 chatId: currentChat,
                 createdAt: new Date().toISOString(),
             }])
         })
-    }, [socket, currentChat])
+        setContador(contador++)
+    }, [socket, currentChat, contador])
 
     useEffect(() => {
         socket.current?.on("getUserWritting",(data: GetMessageData)=>{
@@ -156,7 +157,6 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
             else return 0
         })
     }
-    
 
     //BLOQUEAR CONTACTOS
     const [block, setBlock] = useState({
@@ -214,7 +214,7 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
                                 </div>
                                 {
                                     filterMessages?.length === 0 ? <p>Today</p>
-                                        : filterMessages?.map((e: any) => {
+                                        : filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id}>
                                                     <Message mensajes={[e]} currentUser={currentUser} actualDayMessages={actualDayMessages} />

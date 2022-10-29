@@ -1,5 +1,7 @@
 import { Input } from "@chakra-ui/react"
 import { useState } from "react"
+import { UNBLOCK_USER } from "../../../Redux/actions/actions"
+import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './BlockUsers.module.css'
 
@@ -8,8 +10,12 @@ interface Props {
 }
 
 export default function BlockUsers({currentUser}: Props){
-    
+    const dispatch = useAppDispatch()
     const [busqueda, setBusqueda] = useState('')
+    const [unblock, setUnBlock] = useState({
+        userId: '',
+        bloqUserId: ''
+    })
 
     const handleBusqueda = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBusqueda(e.target.value)
@@ -19,6 +25,20 @@ export default function BlockUsers({currentUser}: Props){
         || e.nickName.toLowerCase() === busqueda
         || e.nickName.toUpperCase() === busqueda)
     
+    
+    const getUserId = (e: string) => {
+        if (currentUser?._id !== undefined && e) {
+            setUnBlock({
+                userId: currentUser._id,
+                bloqUserId: e
+            })
+        }
+    }    
+
+    const deleteBlockUser = () => {
+        dispatch(UNBLOCK_USER(unblock))
+    }
+
     return(
         <div>
             <div className={s.formInput}>
@@ -30,7 +50,7 @@ export default function BlockUsers({currentUser}: Props){
                     ? busquedaBlock?.map(e => {
                         return(
                             <div key={e._id}>
-                                <button value={e._id} className={s.profileUsers}>
+                                <button value={e._id} className={s.profileUsers} onMouseEnter={() => getUserId(e._id)} onClick={deleteBlockUser}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
                                 <br />
@@ -39,8 +59,8 @@ export default function BlockUsers({currentUser}: Props){
                     })
                     : currentUser?.bloqUsers?.map((e) => {
                         return(
-                            <div key={e._id}>
-                                <button value={e._id} className={s.profileUsers}>
+                            <div key={e._id} className={s.profileUsers}>
+                                <button value={e._id} className={s.profileUsers} onMouseEnter={() => getUserId(e._id)} onClick={deleteBlockUser}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
                                 <br />
@@ -50,5 +70,3 @@ export default function BlockUsers({currentUser}: Props){
                 }
         </div>)
 }
-
-// onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}

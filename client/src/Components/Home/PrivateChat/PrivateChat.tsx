@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { ALL_MESSAGES, USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { GetMessageData, User } from "../../../types"
+import { GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
 
 interface Props {
@@ -18,7 +18,7 @@ export default function PrivateChat({chatUser, currentUser, socket}: Props ) {
         senderChat: ""
     })
     let [contador, setContador] = useState(0)
-    const [inaki, setInaki] = useState<any>([])
+    const [inaki, setInaki] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
 
     //PARA AGARRAR MENSAJES DE CADA CHAT
@@ -50,8 +50,8 @@ export default function PrivateChat({chatUser, currentUser, socket}: Props ) {
                 text: data.text,
                 senderChat: data.senderChat
             })
-            setInaki((prev: any) => [...prev, {
-                _id: contador,
+            setInaki((prev: Messages[]) => [...prev, {
+                _id: contador.toString(),
                 textMessage: data.text,
                 messageAuthor: data.senderChat,
                 chatId: allChats[0]?._id,
