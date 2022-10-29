@@ -12,10 +12,6 @@ const GroupsSchema = new Schema({
     admin: [{
         type: Schema.Types.ObjectId,
         ref: "User"
-    }],
-    chats: {
-        type: Schema.Types.ObjectId,
-        ref: "Chats"
-    }
+    }], 
 })
-module.exports = model('Groups', GroupsSchema)
+export const Groups = model('Groups', GroupsSchema)

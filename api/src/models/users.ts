@@ -22,6 +22,10 @@ contacts: [{
     type: Schema.Types.ObjectId,
     ref: "Users",
 }],
+groups: [{
+    type: Schema.Types.ObjectId,
+    ref: "Groups",
+}],
 bloqUsers: [{
     type: Schema.Types.ObjectId,
     ref: "Users", 
