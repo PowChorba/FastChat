@@ -2,18 +2,20 @@ import { Request, Response } from 'express'
 import { Groups } from '../models/groups'
 
 export const newGroup = async (req: Request, res: Response) => {
-    const { groupName, members, admin } = req.body
+    const { groupName, members, admin, img } = req.body
     try {
         const groupsCreated = await Groups.create({
             groupName,
             members,
-            admin
+            admin,
+            img
         })
         res.json({ ok: true, message: groupsCreated })
     } catch (e) {
         res.json({ ok: false, message: e })
     }
 }
+
 export const updateGroup = async (req: Request, res: Response) => {
     const { groupId, members, admin, groupName, leaveGroup, removeAdmin } = req.body
     try {
@@ -59,6 +61,7 @@ export const allGroups = async (req:Request,res:Response)=>{
     try{
         const allGroups = await Groups.find()
         return res.json({ok:true,msg:allGroups})
+        // return res.json(allGroups)
     }catch(e){
         res.status(404).json({ok:false,msg:"error"})
     }

@@ -1,15 +1,16 @@
 import { createReducer} from '@reduxjs/toolkit'
-import { Chats, Messages, NewChat, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER } from '../actions/actions'
+import { Chats, CombinedChats, CreateGroup, Messages, NewChat, User } from "../../types";
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, ALL_GROUPS_CHATS, CREATE_GROUP_CHAT } from '../actions/actions'
 
 interface Reducer {
     users: User[],
     newUser: User[]
     chats: Chats[]
-    newChat: NewChat[]
+    newChat: Chats[]
     messages: Messages[]
     userChats: Chats[]
-    searchUser: User[] 
+    searchUser: User[]
+    groupChats: CombinedChats[]
 }
 
 const initialState: Reducer = {
@@ -19,7 +20,8 @@ const initialState: Reducer = {
     messages: [],
     newChat: [],
     userChats: [],
-    searchUser: []
+    searchUser: [],
+    groupChats: [],
 }
 
 export const clientReducer = createReducer(initialState, (callback) => {
@@ -49,5 +51,8 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(USER_FILTER.fulfilled, (state, action) => {
         state.searchUser = action.payload
+    })
+    callback.addCase(ALL_GROUPS_CHATS.fulfilled, (state, action) => {
+        state.groupChats = action.payload
     })
 })

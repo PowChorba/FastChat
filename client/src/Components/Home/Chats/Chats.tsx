@@ -2,19 +2,22 @@ import { Button, Input } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { GetMessageData, Messages, SocketUser, User } from "../../../types"
+import { Chats, GetMessageData, Messages, SocketUser, User } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
+import AddUsers from "./AddUsers"
+import ProfileGroup from "../Extras/ProfileGroup"
 interface Props {
     currentUser: User
     currentChat: string
     friendId: User
     socket: any
+    allChats: Chats[]
 }
 
-export default function Chats({ currentUser, currentChat, friendId, socket }: Props) {
+export default function Chatss({ currentUser, currentChat, friendId, socket, allChats }: Props) {
     const [pows, setPows] = useState(true)
     const [test, setTest] = useState<Messages[]>([])   
     const [writting, setWritting] = useState(false)
@@ -22,7 +25,10 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
+    //PARA PODER RENDERIZAR BIEN LOS GRUPOS
+    const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
 
+    console.log(filterGroupChat)
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",
@@ -36,7 +42,7 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
     })
 
 
-    const handleMessage = (e: React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLInputElement>) => {
+    const handleMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
         socket.current.emit('sendEscribiendo', {
             senderId: currentUser?._id,
             receiverId: friendId?._id,
@@ -181,6 +187,13 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
         },2000)
     }
 
+    //PROPIEDADES PARA AGERGAR USUARIOS AL CHAT
+    const [dialog, setDialog] = useState(false)
+
+    const handleClickDialog = () => {
+        setDialog(!dialog)
+    }
+
     return (
         <div>
             {
@@ -191,12 +204,13 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
                     :
                     <div className={profileChat ? s.contenedor : s.asd}>
                         <div className={s.divMensajes}>
-                            <div className={s.divDatosUserChat} onClick={handleProfileChat}><img src={friendId?.image} alt="asd" className={s.imagenes} />
+                            <div className={s.divDatosUserChat} onClick={handleProfileChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
                                 <div>
-                                    <p>{friendId?.nickName}</p>
+                                    <p>{filterGroupChat.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
                                     <p className={s.conection}>
                                         {
-                                            writting ? "Writting..." : (online.filter(e => e === friendId._id).length === 1 ? 'online' : 'offline')
+                                            filterGroupChat.groupName ? <span></span>
+                                            : writting ? "Writting..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
                                         }
                                     </p>
                                 </div>
@@ -204,12 +218,13 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
                             <div className={s.contenedorMensajes}>
                                 <div className={s.buttonsAddBloq}>
                                     {
-                                        prueba?.length !== 0 || !pows ? <span></span>
-                                            : <div className={s.divAgregarBloquear}>
-                                                <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
-                                                <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
-                                                <Button variant='outline' colorScheme='red' onMouseEnter={() => handleBlockId(friendId?._id)} onClick={bloqUser}>Block User</Button>
-                                            </div>
+                                        filterGroupChat.groupName ? <span></span>
+                                        : prueba?.length !== 0 || !pows ? <span></span>
+                                        : <div className={s.divAgregarBloquear}>
+                                            <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
+                                            <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
+                                            <Button variant='outline' colorScheme='red' onMouseEnter={() => handleBlockId(friendId?._id)} onClick={bloqUser}>Block User</Button>
+                                        </div>
                                     }
                                 </div>
                                 {
@@ -217,7 +232,7 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
                                         : filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id}>
-                                                    <Message mensajes={[e]} currentUser={currentUser} actualDayMessages={actualDayMessages} />
+                                                    <Message mensajes={[e]} currentUser={currentUser} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat}/>
                                                 </div>)
                                         })
                                 }
@@ -234,7 +249,10 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
                                 <button onClick={handleProfileChat} className={s.botonCerrarInfo}><GrClose /></button>
                                 <span>{' '}Contact info</span>
                             </div>
-                            <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser} />
+                            {
+                                filterGroupChat.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser}/>
+                                : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser} />
+                            }
                         </div>
                     </div>
             }
