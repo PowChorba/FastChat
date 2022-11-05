@@ -8,7 +8,7 @@ import {
     Button,
   } from '@chakra-ui/react'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { ADD_USER_GROUP } from '../../../Redux/actions/actions'
+import { UPDATE_GROUP } from '../../../Redux/actions/actions'
 import { useAppDispatch } from '../../../Redux/hooks'
 import { User } from '../../../types'
 
@@ -42,12 +42,11 @@ export default function AddUsers({setDialog, currentUser, currentChat}: Props) {
     }
 
     const handleAddUser = () => {
-        dispatch(ADD_USER_GROUP(addUser))
+        dispatch(UPDATE_GROUP(addUser))
         setOpen(false)
         setDialog(false)
     }
 
-    console.log(addUser)
 
     return (
         <>

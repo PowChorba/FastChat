@@ -8,7 +8,7 @@ import {
     Button,
   } from '@chakra-ui/react'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { REMOVE_USER_GROUP } from '../../../Redux/actions/actions'
+import { UPDATE_GROUP } from '../../../Redux/actions/actions'
 import { useAppDispatch } from '../../../Redux/hooks'
 import { Chats, User } from '../../../types'
 
@@ -16,7 +16,7 @@ interface Props {
     setDeleteDialog: Dispatch<SetStateAction<boolean>>
     filterGroupChat: Chats
     currentChat: string
-    userRemove: User
+    userRemove: string
 }
 
 export default function RemoveUser({setDeleteDialog, filterGroupChat, currentChat, userRemove}: Props) {
@@ -37,13 +37,13 @@ export default function RemoveUser({setDeleteDialog, filterGroupChat, currentCha
         if(currentChat){
             setRemoveUser({
                 groupId: currentChat,
-                leaveGroup: userRemove?._id
+                leaveGroup: userRemove
             })
         }
     }
 
     const handleAddUser = () => {
-        dispatch(REMOVE_USER_GROUP(removeUser))
+        dispatch(UPDATE_GROUP(removeUser))
         setOpen(false)
         setDeleteDialog(false)
     }
@@ -60,7 +60,7 @@ export default function RemoveUser({setDeleteDialog, filterGroupChat, currentCha
               <AlertDialogContent>
                    
                 <AlertDialogBody>
-                  {`You wish to remove ${userRemove?.nickName} from '${filterGroupChat?.groupName}'?`}
+                  {`You wish to remove this user from '${filterGroupChat?.groupName}'?`}
                 </AlertDialogBody>
     
                 <AlertDialogFooter>

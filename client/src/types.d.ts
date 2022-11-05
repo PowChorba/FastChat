@@ -22,6 +22,7 @@ export type CreateUser = {
 export type Chats = {
     _id: string
     chatsUsers: User[]
+    creator: User
     img?: string
     groupName?: string
     admin?: User[]
@@ -78,6 +79,7 @@ export interface GroupsChats {
 
 export interface CreateGroup {
     groupName: string
+    creator: string
     admin: string
     img: string
     chatsUsersId: string
@@ -88,19 +90,14 @@ export interface RemoveUser {
     leaveGroup: string
 }
 
-export interface AddUser {
+export interface UpdateGroup {
     groupId: string
-    members: string
-}
-
-export interface MakeAdmin {
-    groupId: string
-    admin: string
-}
-
-export interface RemoveAdmin {
-    groupId: string
-    removeAdmin: string
+    members?: string
+    admin?: string
+    removeAdmin?: string
+    groupName?: string
+    img?: string
+    leaveGroup?: string
 }
 
 export type CombinedChats = Chats & GroupsChats

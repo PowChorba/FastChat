@@ -4,7 +4,7 @@ import { useState } from "react"
 import { CREATE_GROUP_CHAT } from "../../../Redux/actions/actions"
 import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
-import defaultImage from '../../../assets/deafultImage.png'
+import defaultImage from '../../../assets/deaflutGroupImg.png'
 import s from './ChatGroups.module.css'
 
 interface Props {
@@ -16,6 +16,7 @@ export default function ChatGroups({currentUser}: Props){
     const [group, setGroup] = useState({
         img: '',
         groupName: '',
+        creator: '',
         admin: '',
         chatsUsersId: ''
     })
@@ -25,6 +26,7 @@ export default function ChatGroups({currentUser}: Props){
             setGroup({
                 ...group,
                 groupName: e.target.value,
+                creator: currentUser?._id,
                 admin: currentUser?._id,
                 chatsUsersId: currentUser?._id
             })
@@ -49,9 +51,9 @@ export default function ChatGroups({currentUser}: Props){
         }
     };
 
-    console.log(group?.img)
     const handleCreateGroup = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if(!group.img) group.img = defaultImage
         dispatch(CREATE_GROUP_CHAT(group))
         setTimeout(() => {
             window.location.reload()

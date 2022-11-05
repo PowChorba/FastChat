@@ -46,7 +46,6 @@ export default function PrivateChat({chatUser, currentUser, socket, allChatData}
 
     useEffect(() => {
         socket.current?.on('getMessage', (data: GetMessageData) => {
-            console.log(data)
             setMessageReceived({
                 senderId: data.senderId,
                 text: data.text,

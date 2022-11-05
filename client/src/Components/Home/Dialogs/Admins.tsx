@@ -7,14 +7,13 @@ import {
     Button,
   } from '@chakra-ui/react'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { MAKE_ADMIN_GROUP } from '../../../Redux/actions/actions'
+import {  UPDATE_GROUP } from '../../../Redux/actions/actions'
 import { useAppDispatch } from '../../../Redux/hooks'
-import { Chats, User } from '../../../types'
 
 interface Props {
     setAddAdmin: Dispatch<SetStateAction<boolean>>
     currentChat: string
-    userRemove: User
+    userRemove: string
 }
 
 export default function Admins({setAddAdmin, currentChat, userRemove}: Props) {
@@ -25,7 +24,7 @@ export default function Admins({setAddAdmin, currentChat, userRemove}: Props) {
         groupId: '',
         admin: ''
     })
-
+    
     const onClose = () => {
         setOpen(false)
         setAddAdmin(false)
@@ -35,13 +34,13 @@ export default function Admins({setAddAdmin, currentChat, userRemove}: Props) {
         if(currentChat){
             setAdmin({
                 groupId: currentChat,
-                admin: userRemove?._id
+                admin: userRemove
             })
         }
     }
 
     const handleAddUser = () => {
-        dispatch(MAKE_ADMIN_GROUP(admin))
+        dispatch(UPDATE_GROUP(admin))
         setOpen(false)
         setAddAdmin(false)
     }
@@ -58,7 +57,7 @@ export default function Admins({setAddAdmin, currentChat, userRemove}: Props) {
               <AlertDialogContent>
                    
                 <AlertDialogBody>
-                  {`Upgrade ${userRemove?.nickName} to admin?`}
+                  {`Upgrade user to admin?`}
                 </AlertDialogBody>
     
                 <AlertDialogFooter>

@@ -1,0 +1,15 @@
+.imagen {
+    width: 200px;
+    height: 200px;
+    margin: 25px auto;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.hide {
+    display: none;
+}
+
+.footer{
+    margin: 0px auto;
+}

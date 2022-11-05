@@ -98,7 +98,6 @@ export default function Home(){
     const handleGroups = () => {
         setCreateGroup(!createGroup)
     }
-    console.log(userChats)
 
     return(
     <Grid templateColumns='1fr 3fr' className={s.contenedor}>

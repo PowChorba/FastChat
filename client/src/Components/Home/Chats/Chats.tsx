@@ -7,7 +7,6 @@ import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
-import AddUsers from "./AddUsers"
 import ProfileGroup from "../Extras/ProfileGroup"
 interface Props {
     currentUser: User
@@ -28,7 +27,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     //PARA PODER RENDERIZAR BIEN LOS GRUPOS
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
 
-    console.log(filterGroupChat)
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",
@@ -83,7 +81,11 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const [profileChat, setProfileChat] = useState(false)
 
     const handleProfileChat = () => {
-        setProfileChat(!profileChat)
+        setProfileChat(true)
+    }
+
+    const handleCloseProfileChat = () => {
+        setProfileChat(false)
     }
 
     //PROBANDO SI EL USUARIO TIENE A LA PERSONA QUE LE ENVIO EL MENSAJE
@@ -187,13 +189,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         },2000)
     }
 
-    //PROPIEDADES PARA AGERGAR USUARIOS AL CHAT
-    const [dialog, setDialog] = useState(false)
-
-    const handleClickDialog = () => {
-        setDialog(!dialog)
-    }
-
     return (
         <div>
             {
@@ -246,8 +241,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                         </div>
                         <div className={profileChat ? s.divMensajes : s.displayNone}>
                             <div className={s.divCerrarInfo}>
-                                <button onClick={handleProfileChat} className={s.botonCerrarInfo}><GrClose /></button>
-                                <span>{' '}Contact info</span>
+                                <button onClick={handleCloseProfileChat} className={s.botonCerrarInfo}><GrClose /></button>
+                                <span>{' '}{filterGroupChat.groupName ? 'Group info' : 'Contact info'}</span>
                             </div>
                             {
                                 filterGroupChat.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser}/>

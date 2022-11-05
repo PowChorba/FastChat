@@ -11,6 +11,11 @@ groupName: {
     type: String,
     require: true
 },
+creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'Users',
+    autopopulate: true
+},
 admin: [{
     type: Schema.Types.ObjectId,
     ref: "Users",

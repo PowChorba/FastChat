@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { AddUser, CreateGroup, CreateMessages, CreateUser, DeleteUser, MakeAdmin, NewChat, RemoveAdmin, RemoveUser } from '../../types'
+import { CreateGroup, CreateMessages, CreateUser, DeleteUser, NewChat, UpdateGroup } from '../../types'
 
 export const ALL_USERS = createAsyncThunk(
     'ALL_USERS', async () => {
@@ -126,7 +126,6 @@ export const DELETE_CHAT = createAsyncThunk(
 
 export const DELETE_CONTACT = createAsyncThunk(
     'DELETE_CONTACT' , async (deleteData: DeleteUser) => {
-        console.log(deleteData)
         try {
             const response = await axios.put(`http://localhost:3001/users`, deleteData)
             return response.data
@@ -186,9 +185,7 @@ export const ALL_GROUPS_CHATS = createAsyncThunk(
 export const CREATE_GROUP_CHAT = createAsyncThunk(
     'CREATE_GROUP_CHAT',async (data: CreateGroup) => {
         try {
-            console.log(data)
             const response = await axios.post('http://localhost:3001/chats', data)
-            console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)
@@ -196,8 +193,8 @@ export const CREATE_GROUP_CHAT = createAsyncThunk(
     }
 )
 
-export const ADD_USER_GROUP = createAsyncThunk(
-    'ADD_USER_GROUP',async (data: AddUser) => {
+export const UPDATE_GROUP = createAsyncThunk(
+    'ADD_USER_GROUP',async (data: UpdateGroup) => {
         try {
             const response = await axios.put('http://localhost:3001/chats', data)
             return response.data
@@ -207,36 +204,5 @@ export const ADD_USER_GROUP = createAsyncThunk(
     }
 )
 
-export const REMOVE_USER_GROUP = createAsyncThunk(
-    'REMOVE_USER_GROUP',async (data: RemoveUser) => {
-        try {
-            const response = await axios.put('http://localhost:3001/chats', data)
-            return response.data
-        } catch (error) {
-            
-        }
-    }
-)
 
-export const MAKE_ADMIN_GROUP = createAsyncThunk(
-    'MAKE_ADMIN_GROUP',async (data: MakeAdmin) => {
-        try {
-            const response = await axios.put('http://localhost:3001/chats', data)
-            return response.data
-        } catch (error) {
-            
-        }
-    }
-)
-
-export const REMOVE_ADMIN_GROUP = createAsyncThunk(
-    'REMOVE_ADMIN_GROUP',async (data: RemoveAdmin) => {
-        try {
-            const response = await axios.put('http://localhost:3001/chats', data)
-            return response.data
-        } catch (error) {
-            
-        }
-    }
-)
  

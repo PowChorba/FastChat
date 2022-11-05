@@ -1,10 +1,13 @@
-
 .imagen {
-    width: 250px;
-    height: 250px;
-    margin: 0px auto;
+    width: 200px;
+    height: 200px;
+    margin: 25px auto;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.hide {
+    display: none;
 }
 
 .divUsuarios{
@@ -84,4 +87,21 @@
 
 .listOfUsers::-webkit-scrollbar-thumb{
     background-color: #EDF2F7;
+}
+
+.groupNameForm{
+    display: flex;
+    position: relative;
+}
+
+.botonesGroupNameCheck{
+    position: absolute;
+    top: 10px;
+    right: 25px;
+}
+
+.botonesGroupNameClose{
+    position: absolute;
+    top: 10px;
+    right: 5px;
 }

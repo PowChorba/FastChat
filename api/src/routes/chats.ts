@@ -1,8 +1,8 @@
-import {Request, Response} from 'express'
+import e, {Request, Response} from 'express'
 import { Chats } from '../models/chats'
 
 export const newChat = async (req: Request,res: Response) => {
-    const { firstUser, secondUser, groupName, chatsUsersId , admin, img } = req.body
+    const { firstUser, secondUser, groupName, chatsUsersId , admin, creator , img } = req.body
     try {
         const alreadyChatOne = await Chats.findOne({
             chatsUsers: [firstUser, secondUser]
@@ -13,6 +13,7 @@ export const newChat = async (req: Request,res: Response) => {
         if(!firstUser && !secondUser){
             const groupsCreated = await Chats.create({
                 groupName,
+                creator,
                 chatsUsers: [chatsUsersId],
                 admin,
                 img
@@ -54,16 +55,12 @@ export const userChat =async (req: Request, res: Response) => {
 }
 
 export const deleteChat =async (req:Request, res: Response) => {
-    const { chatId, userId } = req.params
+    const { chatId } = req.params
     try {
         const findChat = await Chats.findById(chatId)
-        const admin = findChat?.admin?.filter(e=> e._id?.toString() === userId)
-        if(findChat && admin){
+        if(findChat){
             findChat.deleteOne({_id : chatId})
-        }else if(findChat && !admin){
-            return res.send('Must be admin to delete group')
-        }else {
-            findChat?.deleteOne({_id : chatId})
+            return res.send('Chat deleted successfully')
         }
     } catch (error) {
         console.log(error)
@@ -71,7 +68,7 @@ export const deleteChat =async (req:Request, res: Response) => {
 }
 
 export const updateGroup = async (req: Request, res: Response) => {
-    const { groupId, members, admin, groupName, leaveGroup, removeAdmin } = req.body
+    const { groupId, members, admin, groupName, leaveGroup, removeAdmin, img } = req.body
     try {
         const groupSearch = await Chats.findById(groupId)
         if (groupSearch) {
@@ -93,6 +90,8 @@ export const updateGroup = async (req: Request, res: Response) => {
             }else if (removeAdmin){
                 await groupSearch.updateOne({ $pull: { admin: removeAdmin }})
                 return res.json({ ok: true, msg: "succesfully removed" })
+            }else if (img){
+                await groupSearch.updateOne({ img })
             }
         } else return res.json({ ok: false, msg: "error" })
     } catch (e) {

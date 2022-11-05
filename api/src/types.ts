@@ -35,6 +35,7 @@ export interface ChatsModel {
     _id?: string
     chatsUsers?: User[]
     groupName?: string
+    creator: User
     admin?: User[]
     img?: string
 }

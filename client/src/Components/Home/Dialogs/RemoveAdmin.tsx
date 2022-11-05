@@ -7,14 +7,13 @@ import {
     Button,
   } from '@chakra-ui/react'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { MAKE_ADMIN_GROUP, REMOVE_ADMIN_GROUP } from '../../../Redux/actions/actions'
+import { UPDATE_GROUP } from '../../../Redux/actions/actions'
 import { useAppDispatch } from '../../../Redux/hooks'
-import { User } from '../../../types'
 
 interface Props {
     setRemoveAdmin: Dispatch<SetStateAction<boolean>>
     currentChat: string
-    userRemove: User
+    userRemove: string
 }
 
 export default function RemoveAdmins({setRemoveAdmin, currentChat, userRemove}: Props) {
@@ -35,13 +34,13 @@ export default function RemoveAdmins({setRemoveAdmin, currentChat, userRemove}: 
         if(currentChat){
             setRemoveeAdmin({
                 groupId: currentChat,
-                removeAdmin: userRemove?._id
+                removeAdmin: userRemove
             })
         }
     }
 
     const handleAddUser = () => {
-        dispatch(REMOVE_ADMIN_GROUP(removeAdmin))
+        dispatch(UPDATE_GROUP(removeAdmin))
         setOpen(false)
         setRemoveAdmin(false)
     }
@@ -58,7 +57,7 @@ export default function RemoveAdmins({setRemoveAdmin, currentChat, userRemove}: 
               <AlertDialogContent>
                    
                 <AlertDialogBody>
-                  {`Remove ${userRemove?.nickName} from admins?`}
+                  {`Remove this user from admins?`}
                 </AlertDialogBody>
     
                 <AlertDialogFooter>
