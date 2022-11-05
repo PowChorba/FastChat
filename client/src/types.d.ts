@@ -61,8 +61,15 @@ export interface SocketUser {
 export interface GetMessageData {
     senderId: string,
     text: string,
-    senderChat: string
+    senderChat: string,
+    messageId: string
 }
+
+export interface GetMessageDeleted extends GetMessageData {
+    messageId: string,
+    createdAt: string
+}
+
 
 //BLOCK USERS
 

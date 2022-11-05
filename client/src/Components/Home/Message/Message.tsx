@@ -9,9 +9,12 @@ interface Props {
     mensajes: Messages[]
     currentUser: User
     actualDayMessages: Messages[]
+    socket: any
+    currentChat: string
+    friendId: string
 }
 
-export default function Message({mensajes, currentUser, actualDayMessages}: Props){
+export default function Message({mensajes, currentUser, actualDayMessages, socket, currentChat, friendId}: Props){
     
     const [dialog, setDialog] = useState(false)
 
@@ -53,7 +56,7 @@ export default function Message({mensajes, currentUser, actualDayMessages}: Prop
                                 e.messageAuthor === currentUser?._id ? <button className={s.arrowDown} onClick={handleDialog}><span><IoIosArrowDown/></span></button> : <span></span>
                             }
                             {
-                                dialog ? <DeleteMessage setDialog={setDialog} messageId={e._id}/> : ''
+                                dialog ? <DeleteMessage createdAt={e.createdAt} friendId={friendId} currentChat={currentChat} currentUser={currentUser._id} socket={socket} setDialog={setDialog} messageId={e._id}/> : ''
                             }
                         </div>
                     </div>)

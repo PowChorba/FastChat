@@ -14,9 +14,14 @@ import { useAppDispatch } from '../../../Redux/hooks'
 interface Props {
     setDialog: Dispatch<SetStateAction<boolean>>
     messageId: string
+    socket: any
+    currentUser: string
+    currentChat: string
+    friendId: string
+    createdAt: string
 }
 
-export default function DeleteMessage({setDialog, messageId}: Props) {
+export default function DeleteMessage({setDialog, messageId, socket, currentUser, currentChat, friendId, createdAt}: Props) {
     const [open, setOpen] = useState(true)
     const cancelRef: any = useRef()
     const dispatch = useAppDispatch()
@@ -27,6 +32,14 @@ export default function DeleteMessage({setDialog, messageId}: Props) {
     }
 
     const deleteMessage = () => {
+      socket.current.emit('deleteMessage', {
+        senderId: currentUser,
+        receiverId: friendId,
+        text: "Message Deleted",
+        senderChat: currentChat,
+        messageId: messageId,
+        createdAt: createdAt
+    })
         dispatch(DELETE_MESSAGE(messageId))
         setOpen(false)
     }

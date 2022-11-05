@@ -1,6 +1,6 @@
 import { createReducer} from '@reduxjs/toolkit'
 import { Chats, Messages, NewChat, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER } from '../actions/actions'
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE } from '../actions/actions'
 
 interface Reducer {
     users: User[],
@@ -49,5 +49,17 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(USER_FILTER.fulfilled, (state, action) => {
         state.searchUser = action.payload
+    })
+    callback.addCase(DELETE_MESSAGE.fulfilled, (state, action) => {
+        let msgDeleted = {
+            textMessage:"Message deleted",
+            messageAuthor: action.payload.msgDeleted.messageAuthor,
+            chatId: action.payload.msgDeleted.chatId,
+            isDeleted: true,
+            _id: action.payload.msgDeleted._id,
+            createdAt: action.payload.msgDeleted.createdAt
+        }
+        state.messages = state.messages.filter(msg=> msg._id !== action.payload.msgDeleted._id)
+        state.messages.push(msgDeleted)
     })
 })
