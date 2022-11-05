@@ -1,6 +1,10 @@
 import { Schema, model, SchemaType } from "mongoose";
 
 const MessageSchema = new Schema({
+_id :{
+    type: String,
+    required: true
+},
 textMessage: {
     type: String,
     required: true,
@@ -17,7 +21,8 @@ isDeleted: {
     default: false
 }
 }, {
-    timestamps: true
+    timestamps: true,
+    _id: false
 })
 
 export const Messages = model('Messages', MessageSchema)

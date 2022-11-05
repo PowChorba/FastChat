@@ -67,10 +67,10 @@ io.on('connection', (socket: any) => {
         io.emit('getUsers', users)
     })
 
-    socket.on('sendMessage', ({senderId, receiverId, text,senderChat}: Socket) => {
+    socket.on('sendMessage', ({senderId, receiverId, text,senderChat, messageId}: Socket) => {
         const user = getUser(receiverId)
         io.to(user?.socketId).emit('getMessage', {
-            senderId, text , senderChat
+            senderId, text , senderChat, messageId
         })
     })
 
@@ -78,6 +78,12 @@ io.on('connection', (socket: any) => {
         const user = getUser(receiverId)
         io.to(user?.socketId).emit("getUserWritting",{
             senderId,text, senderChat
+        })
+    })
+    socket.on("deleteMessage",({senderId, receiverId, text, senderChat, messageId, createdAt}:Socket)=>{
+        const user = getUser(receiverId)
+        io.to(user?.socketId).emit("getDeleteMessage",{
+            senderId,text, senderChat, messageId, receiverId, createdAt
         })
     })
 })

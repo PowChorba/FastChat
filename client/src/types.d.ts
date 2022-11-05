@@ -65,7 +65,8 @@ export interface SocketUser {
 export interface GetMessageData {
     senderId: string,
     text: string,
-    senderChat: string
+    senderChat: string,
+    messageId: string
 }
 
 //GROUPS CHATS
@@ -76,6 +77,12 @@ export interface GroupsChats {
     members: User[]
     admin: User[]
 }
+
+export interface GetMessageDeleted extends GetMessageData {
+    messageId: string,
+    createdAt: string
+}
+
 
 export interface CreateGroup {
     groupName: string

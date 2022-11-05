@@ -2,12 +2,20 @@ import { Button, Input } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
+<<<<<<< HEAD
 import { Chats, GetMessageData, Messages, SocketUser, User } from "../../../types"
+=======
+import { GetMessageData, GetMessageDeleted, Messages, SocketUser, User } from "../../../types"
+>>>>>>> origin/inaki
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
+<<<<<<< HEAD
 import ProfileGroup from "../Extras/ProfileGroup"
+=======
+import { v4 as uuidv4 } from 'uuid';
+>>>>>>> origin/inaki
 interface Props {
     currentUser: User
     currentChat: string
@@ -18,9 +26,10 @@ interface Props {
 
 export default function Chatss({ currentUser, currentChat, friendId, socket, allChats }: Props) {
     const [pows, setPows] = useState(true)
-    const [test, setTest] = useState<Messages[]>([])   
-    const [writting, setWritting] = useState(false)
-    let [contador, setContador] = useState(0)
+    const [test, setTest] = useState<Messages[]>([])
+    const [writting, setWritting] = useState(true)
+    const [deleteMessage, setDeleteMessage] = useState<Messages>()
+    // const [visible, setVisible] = useState(false)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
@@ -30,7 +39,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",
-        senderChat: ""
+        senderChat: "",
+        id: ""
     })
 
     const [messages, setMessages] = useState({
@@ -56,7 +66,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        
+        let id = uuidv4()
         socket.current.emit('sendEscribiendo', {
             senderId: currentUser?._id,
             receiverId: friendId?._id,
@@ -67,10 +77,17 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             senderId: currentUser?._id,
             receiverId: friendId?._id,
             text: messages.textMessage,
-            senderChat: currentChat
+            senderChat: currentChat,
+            messageId: id
         })
+        let messageComplete = {
+            textMessage: messages.textMessage,
+            messageAuthor: messages.messageAuthor,
+            chatId: messages.chatId,
+            _id: id
+        }
 
-        dispatch(NEW_MESSAGE(messages))
+        dispatch(NEW_MESSAGE(messageComplete))
         setMessages({
             textMessage: '',
             messageAuthor: '',
@@ -114,27 +131,51 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     useEffect(() => {
         socket.current?.on('getMessage', (data: GetMessageData) => {
             setMessageReceived({
+                id: data.messageId || uuidv4(),
                 senderId: data.senderId,
                 text: data.text,
                 senderChat: data.senderChat
             })
             setTest((prev: Messages[]) => [...prev, {
-                _id: contador.toString(),
+                _id: data.messageId || uuidv4(),
                 textMessage: data.text,
                 messageAuthor: data.senderChat,
                 chatId: currentChat,
                 createdAt: new Date().toISOString(),
             }])
         })
-        setContador(contador++)
-    }, [socket, currentChat, contador])
+    }, [socket, currentChat])
 
     useEffect(() => {
-        socket.current?.on("getUserWritting",(data: GetMessageData)=>{
-            if(data.senderChat === currentChat){
+        socket.current?.on("getUserWritting", (data: GetMessageData) => {
+            if (data.senderChat === currentChat) {
                 if (data.text) setWritting(true)
                 else setWritting(false)
             }
+        })
+        socket.current?.on("getDeleteMessage", (data: GetMessageDeleted) => {
+            if (data.senderChat === currentChat) {
+                setDeleteMessage({
+                    _id: data.messageId,
+                    textMessage: "Message Deleted",
+                    messageAuthor: data.senderId,
+                    chatId: data.senderChat,
+                    createdAt: data.createdAt,
+                    isDeleted: true
+                })
+            }
+            setTest((prevState) => {
+                let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
+                deleteSocketMessage.push({
+                    _id: data.messageId,
+                    textMessage: "Message Deleted",
+                    messageAuthor: data.senderId,
+                    chatId: data.senderChat,
+                    createdAt: data.createdAt,
+                    isDeleted: true
+                })
+                return deleteSocketMessage
+            })
         })
     }, [messageReceived, currentChat, socket])
     const [online, setOnline] = useState<string[]>([])
@@ -155,16 +196,19 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const date = new Date()
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
-    if(messageReceived.text !== "" && currentChat === messageReceived.senderChat ){
-        if(!filterMessages.includes(test[0])){
-            filterMessages = [...filterMessages,...test]
-        }
-        filterMessages = filterMessages.sort((a,b)=>{
-            if (a.createdAt < b.createdAt) return -1
-            if (a.createdAt > b.createdAt) return 1
-            else return 0
+    if ((messageReceived.text !== "" || deleteMessage?.isDeleted) && currentChat === messageReceived.senderChat) {
+        test.forEach((msgState) => {
+            filterMessages = filterMessages.filter(ele => ele._id !== msgState._id)
         })
+        filterMessages = [...filterMessages, ...test]
     }
+
+    // ORDENA LOS MENSAJES POR FECHA
+    filterMessages = filterMessages.sort((a, b) => {
+        if (a.createdAt < b.createdAt) return -1
+        if (a.createdAt > b.createdAt) return 1
+        else return 0
+    })
 
     //BLOQUEAR CONTACTOS
     const [block, setBlock] = useState({
@@ -186,9 +230,9 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         dispatch(DELETE_CHAT(currentChat))
         setTimeout(() => {
             window.location.reload()
-        },2000)
+        }, 2000)
     }
-
+    console.log(test)
     return (
         <div>
             {
@@ -227,7 +271,11 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         : filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id}>
+<<<<<<< HEAD
                                                     <Message mensajes={[e]} currentUser={currentUser} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat}/>
+=======
+                                                    <Message friendId={friendId._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} />
+>>>>>>> origin/inaki
                                                 </div>)
                                         })
                                 }
