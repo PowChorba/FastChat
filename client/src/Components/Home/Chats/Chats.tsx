@@ -2,20 +2,13 @@ import { Button, Input } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-<<<<<<< HEAD
-import { Chats, GetMessageData, Messages, SocketUser, User } from "../../../types"
-=======
-import { GetMessageData, GetMessageDeleted, Messages, SocketUser, User } from "../../../types"
->>>>>>> origin/inaki
+import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
-<<<<<<< HEAD
 import ProfileGroup from "../Extras/ProfileGroup"
-=======
 import { v4 as uuidv4 } from 'uuid';
->>>>>>> origin/inaki
 interface Props {
     currentUser: User
     currentChat: string
@@ -271,11 +264,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         : filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id}>
-<<<<<<< HEAD
-                                                    <Message mensajes={[e]} currentUser={currentUser} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat}/>
-=======
-                                                    <Message friendId={friendId._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} />
->>>>>>> origin/inaki
+                                                    <Message friendId={friendId._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat}/>
                                                 </div>)
                                         })
                                 }
