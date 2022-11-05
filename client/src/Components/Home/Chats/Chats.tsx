@@ -181,6 +181,8 @@ export default function Chats({ currentUser, currentChat, friendId, socket }: Pr
     const date = new Date()
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
+
+    // PARA BORRAR MENSAGES Y AGREGAR NUEVOS
     if ((messageReceived.text !== "" || deleteMessage?.isDeleted) && currentChat === messageReceived.senderChat) {
         test.forEach((msgState) => {
             filterMessages = filterMessages.filter(ele => ele._id !== msgState._id)
