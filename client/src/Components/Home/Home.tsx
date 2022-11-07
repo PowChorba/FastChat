@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
 import { useEffect, useRef, useState} from 'react'
-import { ALL_CHATS, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
+import { ALL_CHATS, ALL_GROUPS_CHATS, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
@@ -13,9 +13,12 @@ import { Grid, GridItem, Input, Text } from '@chakra-ui/react'
 import { FiUsers } from 'react-icons/fi'
 import { BsChatSquare } from 'react-icons/bs'
 import { HiLogout } from 'react-icons/hi'
+import { GrGroup } from 'react-icons/gr'
 import BlockUsers from "./BlockUsers/BlockUsers"
 import { TbUserOff } from 'react-icons/tb'
 import { io } from "socket.io-client"
+import ChatGroups from "./ChatGroups/ChatGroups"
+import Chatss from "./Chats/Chats"
 
 export default function Home(){
     const dispatch = useAppDispatch()
@@ -29,7 +32,7 @@ export default function Home(){
     }
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
-    let userChats = useAppSelector(state => state.clientReducer.userChats)
+    const userChats = useAppSelector(state => state.clientReducer.userChats)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
     //FILTER USER CHATS
     const [searchChat, setSearchChat] = useState('')
@@ -37,13 +40,13 @@ export default function Home(){
     const handleSearchChat = (e: React.ChangeEvent<HTMLInputElement>) =>{ 
         setSearchChat(e.target.value)
     }
-    
-    const filterUserChats = userChats.filter(e => e.chatsUsers[0].nickName === searchChat 
-        || e.chatsUsers[1].nickName === searchChat 
-        || e.chatsUsers[0].nickName.toLowerCase() === searchChat 
-        || e.chatsUsers[1].nickName.toLowerCase() === searchChat 
-        || e.chatsUsers[0].nickName.toUpperCase() === searchChat 
-        || e.chatsUsers[1].nickName.toUpperCase() === searchChat)    
+
+    // const filterUserChats = userChats.filter(e => e.chatsUsers[0].nickName === searchChat 
+    //     || e.chatsUsers[1].nickName === searchChat 
+    //     || e.chatsUsers[0].nickName.toLowerCase() === searchChat 
+    //     || e.chatsUsers[1].nickName.toLowerCase() === searchChat 
+    //     || e.chatsUsers[0].nickName.toUpperCase() === searchChat 
+    //     || e.chatsUsers[1].nickName.toUpperCase() === searchChat)    
 
     //USE STATE
     const [currentChat, setCurrentChat] = useState('')
@@ -74,6 +77,7 @@ export default function Home(){
     const [usuarios, setUsuarios] = useState(true)
     const [profile, setProfile] = useState(true)
     const [block, setBlock] = useState(true)
+    const [createGroup, setCreateGroup] = useState(true)
 
     const handleContacts = () => {
         setContacts(!contacts)
@@ -91,15 +95,20 @@ export default function Home(){
         setBlock(!block)
     }
 
+    const handleGroups = () => {
+        setCreateGroup(!createGroup)
+    }
+
     return(
     <Grid templateColumns='1fr 3fr' className={s.contenedor}>
         <GridItem className={s.divAside}>
             {/* DEFAULT UI  */}
-            <div className={!contacts || !usuarios || !profile || !block ? s.none : s.asdasd}>
+            <div className={!contacts || !usuarios || !profile || !block || !createGroup ? s.none : s.asdasd}>
                 <div className={s.perfilAside}>
                     <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
                     <div>
                         <button onClick={handleContacts}><BsChatSquare className={s.iconos}/></button>
+                        <button onClick={handleGroups}><GrGroup className={s.iconos}/></button>
                         <button onClick={handleBlock}><TbUserOff className={s.iconos}/></button>
                         <button onClick={handleUsuarios}><FiUsers className={s.iconos}/></button>
                         <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
@@ -110,18 +119,19 @@ export default function Home(){
                     </div>
                 <div className={s.divChatsDefault}>
                 {   
-                    filterUserChats.length !== 0 
-                    ? filterUserChats && filterUserChats.map(e => {
+                    userChats.length !== 0 
+                    ? userChats && userChats.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
                     : userChats && userChats.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
-                            </div>)
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                            </div>
+                            )
                     }) 
                 }
                 </div>
@@ -157,9 +167,17 @@ export default function Home(){
                 </div>
                 <BlockUsers currentUser={currentUser}/>
             </div>
+            {/* CREATE GROUP */}
+            <div className={createGroup ? s.contactosHide : s.div}>
+                <div className={s.divProfile}> 
+                    <button onClick={handleGroups} className={s.botonAtras}>{'<'}</button>
+                    <Text fontSize='20px'>Create Group</Text>
+                </div>
+                <ChatGroups currentUser={currentUser}/>
+            </div>
         </GridItem>
         <div>
-            <Chats currentChat={currentChat} currentUser={currentUser} friendId={friendId} socket={socket}/>
+            <Chatss currentChat={currentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
         </div>
     </Grid>)
 }

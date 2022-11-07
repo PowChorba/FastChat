@@ -112,3 +112,7 @@
     margin: 0px auto;
     border-radius: 20px;
 }
+
+.addUsersToGroup{
+    justify-content: right;
+}

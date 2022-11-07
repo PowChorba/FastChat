@@ -12,6 +12,10 @@ const GroupsSchema = new Schema({
     admin: [{
         type: Schema.Types.ObjectId,
         ref: "User"
-    }], 
+    }],
+    img: {
+        type: String,
+        require: true
+    } 
 })
 export const Groups = model('Groups', GroupsSchema)

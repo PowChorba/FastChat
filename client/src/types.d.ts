@@ -22,6 +22,10 @@ export type CreateUser = {
 export type Chats = {
     _id: string
     chatsUsers: User[]
+    creator: User
+    img?: string
+    groupName?: string
+    admin?: User[]
 }
 
 export type NewChat = {
@@ -65,11 +69,42 @@ export interface GetMessageData {
     messageId: string
 }
 
+//GROUPS CHATS
+export interface GroupsChats {
+    _id: string
+    img: string
+    groupName: string
+    members: User[]
+    admin: User[]
+}
+
 export interface GetMessageDeleted extends GetMessageData {
     messageId: string,
     createdAt: string
 }
 
 
-//BLOCK USERS
+export interface CreateGroup {
+    groupName: string
+    creator: string
+    admin: string
+    img: string
+    chatsUsersId: string
+}
 
+export interface RemoveUser {
+    groupId: string
+    leaveGroup: string
+}
+
+export interface UpdateGroup {
+    groupId: string
+    members?: string
+    admin?: string
+    removeAdmin?: string
+    groupName?: string
+    img?: string
+    leaveGroup?: string
+}
+
+export type CombinedChats = Chats & GroupsChats

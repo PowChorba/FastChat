@@ -70,11 +70,6 @@ export default function Profile({currentUser}: Props){
         }, 1500)
     }
 
-    // const [hover,setHover] = useState(false)
-
-    // const onHover = () => {
-    //     setHover(!hover)
-    // }
 
     return(
         <div>

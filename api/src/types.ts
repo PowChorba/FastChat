@@ -32,3 +32,12 @@ export interface SocketUser {
     userId: string
     socketId: string
 }
+
+export interface ChatsModel {
+    _id?: string
+    chatsUsers?: User[]
+    groupName?: string
+    creator: User
+    admin?: User[]
+    img?: string
+}

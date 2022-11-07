@@ -6,10 +6,10 @@ interface Reducer {
     users: User[],
     newUser: User[]
     chats: Chats[]
-    newChat: NewChat[]
+    newChat: Chats[]
     messages: Messages[]
     userChats: Chats[]
-    searchUser: User[] 
+    searchUser: User[]
 }
 
 const initialState: Reducer = {
@@ -19,7 +19,7 @@ const initialState: Reducer = {
     messages: [],
     newChat: [],
     userChats: [],
-    searchUser: []
+    searchUser: [],
 }
 
 export const clientReducer = createReducer(initialState, (callback) => {
@@ -61,5 +61,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
         }
         state.messages = state.messages.filter(msg=> msg._id !== action.payload.msgDeleted._id)
         state.messages.push(msgDeleted)
+
     })
 })

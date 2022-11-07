@@ -50,3 +50,15 @@ export const deleteMessages = async (req: Request, res: Response) => {
     console.log(error)
   }
 }
+
+export const deleteAllMessagesChat =async (req:Request, res:Response) => {
+  const { chatId } = req.params
+  try {
+    const messagess = await Messages.find({chatId})
+    if(messagess){
+      // await messagess.map(e => e.delete)
+    }
+  } catch (error) {
+    
+  }
+}

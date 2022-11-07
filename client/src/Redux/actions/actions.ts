@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { CreateMessages, CreateUser, DeleteUser, NewChat } from '../../types'
+import { CreateGroup, CreateMessages, CreateUser, DeleteUser, NewChat, UpdateGroup } from '../../types'
 
 export const ALL_USERS = createAsyncThunk(
     'ALL_USERS', async () => {
@@ -126,7 +126,6 @@ export const DELETE_CHAT = createAsyncThunk(
 
 export const DELETE_CONTACT = createAsyncThunk(
     'DELETE_CONTACT' , async (deleteData: DeleteUser) => {
-        console.log(deleteData)
         try {
             const response = await axios.put(`http://localhost:3001/users`, deleteData)
             return response.data
@@ -169,3 +168,41 @@ export const DELETE_MESSAGE = createAsyncThunk(
         }
     }
 )
+
+export const ALL_GROUPS_CHATS = createAsyncThunk(
+    'ALL_GROUPS_CHATS', async () => {
+        console.log( 'asd')
+        try {
+            const response = await axios.get('http://localhost:3001/groups')
+            return response.data.msg
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+
+export const CREATE_GROUP_CHAT = createAsyncThunk(
+    'CREATE_GROUP_CHAT',async (data: CreateGroup) => {
+        try {
+            const response = await axios.post('http://localhost:3001/chats', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+export const UPDATE_GROUP = createAsyncThunk(
+    'ADD_USER_GROUP',async (data: UpdateGroup) => {
+        try {
+            const response = await axios.put('http://localhost:3001/chats', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+
+ 

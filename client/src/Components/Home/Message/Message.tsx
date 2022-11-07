@@ -1,4 +1,4 @@
-import { Messages, User } from "../../../types"
+import { Chats, Messages, User } from "../../../types"
 import s from './Message.module.css'
 import { BiBlock } from 'react-icons/bi'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -9,13 +9,17 @@ interface Props {
     mensajes: Messages[]
     currentUser: User
     actualDayMessages: Messages[]
+    filterGroupChat: Chats
     socket: any
     currentChat: string
     friendId: string
 }
 
-export default function Message({mensajes, currentUser, actualDayMessages, socket, currentChat, friendId}: Props){
+export default function Message({mensajes, currentUser, actualDayMessages, socket, currentChat, friendId, filterGroupChat}: Props){
     
+    //PARA PODER AGREGAR EL NOMBRE ARRIBA DEL MENSAJE CUANDO NO ES DEL USUARIO LOGEADO
+    const idOfUsers = filterGroupChat.chatsUsers.map(e => e._id)
+    const nameOfUsers = filterGroupChat.chatsUsers.map(e => e.nickName)
     const [dialog, setDialog] = useState(false)
 
     const handleDialog = () => {
@@ -49,6 +53,11 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
                         <div className={e.messageAuthor === currentUser?._id ? s.divSubRight : s.divSubLeft}>
                             {
                                 e.isDeleted ? <p className={s.deletedMessage}><BiBlock/>{e.textMessage}</p>
+                                : filterGroupChat?.groupName 
+                                ?   <div>
+                                        <p>{e.messageAuthor === currentUser?._id ? '' : nameOfUsers[idOfUsers.indexOf(e.messageAuthor)]}</p>
+                                        <p className={s.textoMensajes}>{e.textMessage}</p>
+                                    </div> 
                                 : <p className={s.textoMensajes}>{e.textMessage}</p>
                             }
                             <p className={s.textoMensajesHora}>{newDate(e.createdAt)}</p>

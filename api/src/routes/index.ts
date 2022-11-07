@@ -1,6 +1,6 @@
 import {Router} from 'express'
-import { allChats, deleteChat, newChat, userChat } from './chats'
-import { allGroups, deleteGroup, newGroup, updateGroup } from './groups'
+import { allChats, deleteChat, newChat, updateGroup, userChat } from './chats'
+// import { allGroups, deleteGroup, newGroup, updateGroup } from './groups'
 import { allMessages, deleteMessages, messageChat, newMessage } from './messages'
 import { allUsers, updateUsers, newUser, userById } from './user'
 
@@ -17,6 +17,7 @@ router.post('/chats', newChat)
 router.get('/chats', allChats)
 router.get('/chats/:userId', userChat)
 router.delete('/chats/:chatId', deleteChat)
+router.put("/chats",updateGroup)    
 
 //MESSAGES
 router.post('/messages', newMessage)
@@ -24,10 +25,10 @@ router.get('/messages/:chatId', messageChat)
 router.get('/messages', allMessages)
 router.put('/messages', deleteMessages)
 
-// GROUPS
-router.get("/groups",allGroups)
-router.put("/groups",updateGroup)
-router.post("/groups",newGroup)
-router.delete("/groups",deleteGroup)
+//GROUPS
+// router.get("/groups",allGroups)
+// router.put("/groups",updateGroup)
+// router.post("/groups",newGroup)
+// router.delete("/groups",deleteGroup)
 
 export default router
