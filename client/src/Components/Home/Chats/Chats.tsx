@@ -137,16 +137,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                 createdAt: new Date().toISOString(),
             }])
         })
-    }, [socket, currentChat])
-
-    useEffect(() => {
-        socket.current?.on("getUserWritting", (data: GetMessageData) => {
-            if (data.senderChat === currentChat) {
-                if (data.text) setWritting(true)
-                else setWritting(false)
-            }
-        })
         socket.current?.on("getDeleteMessage", (data: GetMessageDeleted) => {
+            console.log("deleteMessage")
             if (data.senderChat === currentChat) {
                 setDeleteMessage({
                     _id: data.messageId,
@@ -170,6 +162,39 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                 return deleteSocketMessage
             })
         })
+    }, [socket, currentChat])
+
+    useEffect(() => {
+        socket.current?.on("getUserWritting", (data: GetMessageData) => {
+            if (data.senderChat === currentChat) {
+                if (data.text) setWritting(true)
+                else setWritting(false)
+            }
+        })
+        // socket.current?.on("getDeleteMessage", (data: GetMessageDeleted) => {
+        //     if (data.senderChat === currentChat) {
+        //         setDeleteMessage({
+        //             _id: data.messageId,
+        //             textMessage: "Message Deleted",
+        //             messageAuthor: data.senderId,
+        //             chatId: data.senderChat,
+        //             createdAt: data.createdAt,
+        //             isDeleted: true
+        //         })
+        //     }
+        //     setTest((prevState) => {
+        //         let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
+        //         deleteSocketMessage.push({
+        //             _id: data.messageId,
+        //             textMessage: "Message Deleted",
+        //             messageAuthor: data.senderId,
+        //             chatId: data.senderChat,
+        //             createdAt: data.createdAt,
+        //             isDeleted: true
+        //         })
+        //         return deleteSocketMessage
+        //     })
+        // })
     }, [messageReceived, currentChat, socket])
     const [online, setOnline] = useState<string[]>([])
 
@@ -189,7 +214,10 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const date = new Date()
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
-    if ((messageReceived.text !== "" || deleteMessage?.isDeleted) && currentChat === messageReceived.senderChat) {
+
+    // BORRA O AGREGA MENSAJE 
+    // (messageReceived.text !== "" || deleteMessage?.isDeleted) &&
+    if ( currentChat === messageReceived.senderChat || currentChat === deleteMessage?.chatId) {
         test.forEach((msgState) => {
             filterMessages = filterMessages.filter(ele => ele._id !== msgState._id)
         })
