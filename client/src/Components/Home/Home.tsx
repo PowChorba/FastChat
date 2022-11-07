@@ -19,6 +19,7 @@ import { TbUserOff } from 'react-icons/tb'
 import { io } from "socket.io-client"
 import ChatGroups from "./ChatGroups/ChatGroups"
 import Chatss from "./Chats/Chats"
+import { Messages } from "../../types"
 
 export default function Home(){
     const dispatch = useAppDispatch()
@@ -50,6 +51,7 @@ export default function Home(){
 
     //USE STATE
     const [currentChat, setCurrentChat] = useState('')
+    const [pendingMessages, setPendingMessages] = useState<Messages[]>([])
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
@@ -123,13 +125,13 @@ export default function Home(){
                     ? userChats && userChats.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages = {setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
                     : userChats && userChats.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages = {setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>
                             )
                     }) 
@@ -177,7 +179,7 @@ export default function Home(){
             </div>
         </GridItem>
         <div>
-            <Chatss currentChat={currentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
+            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
         </div>
     </Grid>)
 }
