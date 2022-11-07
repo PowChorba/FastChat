@@ -20,7 +20,7 @@ interface Props {
 export default function Chatss({ currentUser, currentChat, friendId, socket, allChats }: Props) {
     const [pows, setPows] = useState(true)
     const [test, setTest] = useState<Messages[]>([])
-    const [writting, setWritting] = useState(true)
+    const [writting, setWritting] = useState(false)
     const [deleteMessage, setDeleteMessage] = useState<Messages>()
     // const [visible, setVisible] = useState(false)
     const dispatch = useAppDispatch()
@@ -167,6 +167,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     useEffect(() => {
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
+                console.log(data)
                 if (data.text) setWritting(true)
                 else setWritting(false)
             }
