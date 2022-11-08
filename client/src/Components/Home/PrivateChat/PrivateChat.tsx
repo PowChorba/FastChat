@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { ALL_MESSAGES, USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
@@ -10,9 +10,10 @@ interface Props {
     currentUser: User 
     socket: any
     allChatData: Chats
-}
+    setPendingMessages: Dispatch<SetStateAction<Messages[]>>
+}   
 
-export default function PrivateChat({chatUser, currentUser, socket, allChatData}: Props ) {
+export default function PrivateChat({chatUser, currentUser, socket, allChatData, setPendingMessages}: Props ) {
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",
@@ -51,6 +52,18 @@ export default function PrivateChat({chatUser, currentUser, socket, allChatData}
                 text: data.text,
                 senderChat: data.senderChat
             })
+            setPendingMessages((prevState) => {
+                let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
+                getSocketMessage.push({
+                    _id: data.messageId,
+                    textMessage: data.text,
+                    messageAuthor: data.senderId,
+                    chatId: data.senderChat,
+                    createdAt: new Date().toISOString(),
+                })
+                return getSocketMessage
+            })
+            
             setInaki((prev: Messages[]) => [...prev, {
                 _id: contador.toString(),
                 textMessage: data.text,

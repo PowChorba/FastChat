@@ -1,5 +1,5 @@
 import { Button, Input } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User } from "../../../types"
@@ -9,15 +9,19 @@ import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
+import { setConstantValue } from "typescript"
+import { current } from "@reduxjs/toolkit"
 interface Props {
     currentUser: User
     currentChat: string
     friendId: User
     socket: any
     allChats: Chats[]
+    setPendingMessages: Dispatch<SetStateAction<Messages[]>>
+    pendingMessages: Messages[]
 }
 
-export default function Chatss({ currentUser, currentChat, friendId, socket, allChats }: Props) {
+export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
     const [pows, setPows] = useState(true)
     const [test, setTest] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
@@ -122,23 +126,45 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     }
 
     useEffect(() => {
+        let myPendingMsg = pendingMessages.filter(msg=> msg.chatId === currentChat)
+
+        setTest((prevState)=>{
+            return [...myPendingMsg,...prevState]
+        })
+        setPendingMessages((prevState)=>{
+            let deletePendingMsg = prevState.filter(msg=> msg.chatId !== currentChat)
+            return deletePendingMsg
+        })
+
+        setMessageReceived({
+            id: myPendingMsg[myPendingMsg.length-1]?._id,
+            senderId: myPendingMsg[myPendingMsg.length-1]?.messageAuthor,
+            text: myPendingMsg[myPendingMsg.length-1]?.textMessage,
+            senderChat: myPendingMsg[myPendingMsg.length-1]?.chatId
+        })
+
         socket.current?.on('getMessage', (data: GetMessageData) => {
-            setMessageReceived({
-                id: data.messageId || uuidv4(),
-                senderId: data.senderId,
-                text: data.text,
-                senderChat: data.senderChat
-            })
-            setTest((prev: Messages[]) => [...prev, {
-                _id: data.messageId || uuidv4(),
-                textMessage: data.text,
-                messageAuthor: data.senderChat,
-                chatId: currentChat,
-                createdAt: new Date().toISOString(),
-            }])
+            if (data.senderChat === currentChat) {
+                setMessageReceived({
+                    id: data.messageId || uuidv4(),
+                    senderId: data.senderId,
+                    text: data.text,
+                    senderChat: data.senderChat
+                })
+                setTest((prevState) => {
+                    let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
+                    getSocketMessage.push({
+                        _id: data.messageId,
+                        textMessage: data.text,
+                        messageAuthor: data.senderId,
+                        chatId: data.senderChat,
+                        createdAt: new Date().toISOString(),
+                    })
+                    return getSocketMessage
+                })
+            }
         })
         socket.current?.on("getDeleteMessage", (data: GetMessageDeleted) => {
-            console.log("deleteMessage")
             if (data.senderChat === currentChat) {
                 setDeleteMessage({
                     _id: data.messageId,
@@ -172,30 +198,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                 else setWritting(false)
             }
         })
-        // socket.current?.on("getDeleteMessage", (data: GetMessageDeleted) => {
-        //     if (data.senderChat === currentChat) {
-        //         setDeleteMessage({
-        //             _id: data.messageId,
-        //             textMessage: "Message Deleted",
-        //             messageAuthor: data.senderId,
-        //             chatId: data.senderChat,
-        //             createdAt: data.createdAt,
-        //             isDeleted: true
-        //         })
-        //     }
-        //     setTest((prevState) => {
-        //         let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-        //         deleteSocketMessage.push({
-        //             _id: data.messageId,
-        //             textMessage: "Message Deleted",
-        //             messageAuthor: data.senderId,
-        //             chatId: data.senderChat,
-        //             createdAt: data.createdAt,
-        //             isDeleted: true
-        //         })
-        //         return deleteSocketMessage
-        //     })
-        // })
     }, [messageReceived, currentChat, socket])
     const [online, setOnline] = useState<string[]>([])
 
@@ -217,8 +219,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
 
     // BORRA O AGREGA MENSAJE 
-    // (messageReceived.text !== "" || deleteMessage?.isDeleted) &&
-    if ( currentChat === messageReceived.senderChat || currentChat === deleteMessage?.chatId) {
+    if (currentChat === messageReceived.senderChat || currentChat === deleteMessage?.chatId) {
         test.forEach((msgState) => {
             filterMessages = filterMessages.filter(ele => ele._id !== msgState._id)
         })
@@ -255,6 +256,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         }, 2000)
     }
     console.log(test)
+    console.log(pendingMessages, "pending")
     return (
         <div>
             {
@@ -271,7 +273,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                     <p className={s.conection}>
                                         {
                                             filterGroupChat.groupName ? <span></span>
-                                            : writting ? "Writting..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
+                                                : writting ? "Writting..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
                                         }
                                     </p>
                                 </div>
@@ -280,12 +282,12 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                 <div className={s.buttonsAddBloq}>
                                     {
                                         filterGroupChat.groupName ? <span></span>
-                                        : prueba?.length !== 0 || !pows ? <span></span>
-                                        : <div className={s.divAgregarBloquear}>
-                                            <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
-                                            <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
-                                            <Button variant='outline' colorScheme='red' onMouseEnter={() => handleBlockId(friendId?._id)} onClick={bloqUser}>Block User</Button>
-                                        </div>
+                                            : prueba?.length !== 0 || !pows ? <span></span>
+                                                : <div className={s.divAgregarBloquear}>
+                                                    <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
+                                                    <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
+                                                    <Button variant='outline' colorScheme='red' onMouseEnter={() => handleBlockId(friendId?._id)} onClick={bloqUser}>Block User</Button>
+                                                </div>
                                     }
                                 </div>
                                 {
@@ -293,7 +295,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         : filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id}>
-                                                    <Message friendId={friendId._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat}/>
+                                                    <Message friendId={friendId._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat} />
                                                 </div>)
                                         })
                                 }
@@ -311,8 +313,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                 <span>{' '}{filterGroupChat.groupName ? 'Group info' : 'Contact info'}</span>
                             </div>
                             {
-                                filterGroupChat.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser}/>
-                                : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser} />
+                                filterGroupChat.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
+                                    : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser} />
                             }
                         </div>
                     </div>
