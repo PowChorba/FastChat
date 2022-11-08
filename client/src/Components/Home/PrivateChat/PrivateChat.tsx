@@ -81,7 +81,7 @@ export default function PrivateChat({chatUser, currentUser, socket, allChatData,
                 else setWritting(false)
             }
         })
-    }, [socket, allChats, contador])
+    }, [socket, allChats, contador, setPendingMessages])
 
     //PARA RENDERIZAR EL ULTIMO MENSAJE DE SOCKET
     if(messageReceived.text !== "" && allChats[0]?._id === messageReceived.senderChat ){
