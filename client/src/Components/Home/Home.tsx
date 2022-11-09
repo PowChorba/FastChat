@@ -1,13 +1,12 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
 import { useEffect, useRef, useState} from 'react'
-import { ALL_CHATS, ALL_GROUPS_CHATS, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
+import { ALL_CHATS, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
 import { useNavigate } from "react-router-dom"
 import Users from "./Users/Users"
 import Contacts from "./Contacts/Contacts"
-import Chats from "./Chats/Chats"
 import Profile from "./Profile/Profile"
 import { Grid, GridItem, Input, Text } from '@chakra-ui/react'
 import { FiUsers } from 'react-icons/fi'
@@ -42,12 +41,16 @@ export default function Home(){
         setSearchChat(e.target.value)
     }
 
-    // const filterUserChats = userChats.filter(e => e.chatsUsers[0].nickName === searchChat 
-    //     || e.chatsUsers[1].nickName === searchChat 
-    //     || e.chatsUsers[0].nickName.toLowerCase() === searchChat 
-    //     || e.chatsUsers[1].nickName.toLowerCase() === searchChat 
-    //     || e.chatsUsers[0].nickName.toUpperCase() === searchChat 
-    //     || e.chatsUsers[1].nickName.toUpperCase() === searchChat)    
+    const filterUserChats = userChats.filter(e => e.chatsUsers[0]?.nickName === searchChat 
+        || e.chatsUsers[1]?.nickName === searchChat 
+        || e.chatsUsers[0]?.nickName.toLowerCase() === searchChat 
+        || e.chatsUsers[1]?.nickName.toLowerCase() === searchChat 
+        || e.chatsUsers[0]?.nickName.toUpperCase() === searchChat 
+        || e.chatsUsers[1]?.nickName.toUpperCase() === searchChat
+        || e.groupName === searchChat
+        || e.groupName?.toLowerCase() === searchChat
+        || e.groupName?.toUpperCase() === searchChat 
+        )    
 
     //USE STATE
     const [currentChat, setCurrentChat] = useState('')
@@ -73,7 +76,7 @@ export default function Home(){
     //PERFIL DEL CONTACTO QUE TIENE EL CHAT ABIERTO
     let allChats = useAppSelector(state => state.clientReducer.chats)
     allChats = allChats?.filter(e => e._id === currentChat)
-    const friendId = allChats[0]?.chatsUsers.filter(e => e._id !== currentUser?._id)[0]
+    const friendId = allChats[0]?.chatsUsers?.filter(e => e._id !== currentUser?._id)[0]
     //PARA MOSTRASR LA INTERFAZ DE CONTACTOS O LA DE USUARIOS
     const [contacts, setContacts ] = useState(true)
     const [usuarios, setUsuarios] = useState(true)
@@ -121,14 +124,14 @@ export default function Home(){
                     </div>
                 <div className={s.divChatsDefault}>
                 {   
-                    userChats.length !== 0 
-                    ? userChats && userChats.map(e => {
+                    filterUserChats.length !== 0 
+                    ? filterUserChats && filterUserChats?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
                                 <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages = {setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
-                    : userChats && userChats.map(e => {
+                    : userChats && userChats?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
                                 <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages = {setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
@@ -136,6 +139,9 @@ export default function Home(){
                             )
                     }) 
                 }
+                </div>
+                <div className={s.textoCreadores}>
+                    <p>Created by Iñaki Elhaiek & Agop Chorbadjian</p>
                 </div>
             </div> 
             {/* CONTACTS UI  */}

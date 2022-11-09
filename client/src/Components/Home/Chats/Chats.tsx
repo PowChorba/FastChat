@@ -1,5 +1,5 @@
 import { Button, Input } from "@chakra-ui/react"
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User } from "../../../types"
@@ -9,8 +9,6 @@ import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
-import { setConstantValue } from "typescript"
-import { current } from "@reduxjs/toolkit"
 interface Props {
     currentUser: User
     currentChat: string
@@ -26,12 +24,18 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const [test, setTest] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
     const [deleteMessage, setDeleteMessage] = useState<Messages>()
+    const scroll = useRef<HTMLDivElement>(null)
+    // const [visible, setVisible] = useState(false)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
     //PARA PODER RENDERIZAR BIEN LOS GRUPOS
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
     console.log(friendId)
+
+    useEffect(() => {
+        scroll.current?.scrollIntoView({behavior: 'smooth'})
+    })
 
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
@@ -256,8 +260,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             window.location.reload()
         }, 2000)
     }
-    // console.log(test)
-    // console.log(pendingMessages, "pending")
     return (
         <div>
             {
@@ -295,7 +297,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                     filterMessages?.length === 0 ? <p>Today</p>
                                         : filterMessages?.map((e) => {
                                             return (
-                                                <div key={e._id}>
+                                                <div key={e._id} ref={scroll}>
                                                     <Message friendId={friendId._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat} />
                                                 </div>)
                                         })

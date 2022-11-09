@@ -1,6 +1,7 @@
-import { Input } from "@chakra-ui/react"
+import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
-import { NEW_CHAT } from "../../../Redux/actions/actions"
+import { IoIosArrowDown } from "react-icons/io"
+import { DELETE_CONTACT, NEW_CHAT } from "../../../Redux/actions/actions"
 import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './Contacts.module.css'
@@ -40,34 +41,66 @@ export default function Contacts({currentUser}: Props) {
         dispatch(NEW_CHAT(newChat))
     }
 
+    //PARA BORRAR CONTACTO
+    const [deleteData, setDeleteContacts] = useState({
+        userId: '',
+        contactId: ''
+    })
+
+    const loadData = (e: string) => {
+        setDeleteContacts({
+            userId: currentUser?._id,
+            contactId: e
+        })
+    }
+
+    const deleteContact = async () => {
+        dispatch(DELETE_CONTACT(deleteData))
+    }
+
     return(
         <div>
                 <div className={s.formInput}>
                     <Input variant='filled' type="text" placeholder="Seach contacts" value={busqueda} onChange={handleBusqueda}/>
                 </div>
+                <div className={s.divContactsMap}>
                 {
                     currentUser && currentUser.contacts?.length === 0 ? <p>No tienes contactos.</p>
                     : busquedaContacts?.length !== 0 
                     ? busquedaContacts?.map(e => {
                         return(
-                            <div key={e._id}>
-                                <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat} className={s.profileUsers}>
+                            <div key={e._id} className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
-                                <br />
-                                </button>
+                                <div className={s.arrowDown}>
+                                    <Menu>
+                                        <MenuButton><IoIosArrowDown/></MenuButton>
+                                        <MenuList>
+                                            <MenuItem onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}>New chat</MenuItem>
+                                            <MenuItem onMouseEnter={()=> loadData(e._id)} onClick={deleteContact}>Delete contact</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </div>
                             </div>)
                     })
                     : currentUser?.contacts?.map((e) => {
                         return(
-                            <div key={e._id}>
-                                <button value={e._id} onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat} className={s.profileUsers}>
+                            <div key={e._id} className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
-                                <br />
-                                </button>
+                                <div className={s.arrowDown}>
+                                    <Menu>
+                                        <MenuButton><IoIosArrowDown/></MenuButton>
+                                        <MenuList>
+                                            <MenuItem onMouseEnter={()=> handleDatosChat(e._id)} onClick={handleNewChat}>New chat</MenuItem>
+                                            <MenuItem onMouseEnter={()=> loadData(e._id)} onClick={deleteContact}>Delete contact</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </div>
                             </div>)
                     })
                 }
+                </div>
         </div>)
 }
+

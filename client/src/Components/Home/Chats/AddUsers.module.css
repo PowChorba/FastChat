@@ -1,0 +1,64 @@
+.contenedorMap {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #EDF2F7;
+}
+
+
+
+.contenedorMap:hover {
+    background-color: #EDF2F7;
+}
+
+.listOverFlow{
+    overflow-y: scroll;
+    height: 40vh;
+    max-height: 40vh;
+}
+
+.listOverFlow::-webkit-scrollbar{
+    width: 6px;
+}
+
+.listOverFlow::-webkit-scrollbar-track{
+    background: rgba(255, 0, 0, 0);
+}
+
+.listOverFlow::-webkit-scrollbar-thumb{
+    background-color: #EDF2F7;
+}
+
+.contenedorImg {
+    margin: 5px;
+    border-radius: 50%;
+    width: 48px;
+    object-fit: cover;
+}
+
+.divNickText{
+    display: flex;
+    flex-direction: column;
+}
+
+.textAlready{
+    color: rgb(146, 149, 150);
+}
+
+.inputSearch{
+    margin: 10px 0px;
+    padding: 10px;
+}
+
+.closeSpan{
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.alertHeader{
+    background-color: #EDF2F7;
+}
+
+.inputCheckBox {
+    accent-color: #008069;
+}

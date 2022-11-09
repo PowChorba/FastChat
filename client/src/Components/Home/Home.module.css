@@ -29,20 +29,10 @@
     display: none;
 }
 
-.divAside{
-    /* border: 1px solid rgba(0, 0, 0, 0.37); */
-    text-align: center;
-}
-
-.botonesChats {
-    display: flex;
-    margin: 5px;
-    width: 100%;
-}
 
 .abrirChat{
-    width: 95%;
-    max-width: 375px;
+    width: 100%;
+    /* max-width: 425px; */
 }
 
 .imagenes {
@@ -65,7 +55,7 @@
     margin-bottom: 20px;
     background-color: #008069;
     width: 100%;
-    padding: 40px;
+    padding: 42px;
     display: flex;
     color: #fff;
 }
@@ -91,9 +81,32 @@
 .divChatsDefault{
     width: 100%;
     margin: 20px auto;
+    overflow-y: scroll;
+    height: 72vh;
+    max-height: 72vh;
+
+}
+
+.divChatsDefault::-webkit-scrollbar{
+    width: 6px;
+}
+
+.divChatsDefault::-webkit-scrollbar-track{
+    background: rgba(255, 0, 0, 0);
+}
+
+.divChatsDefault::-webkit-scrollbar-thumb{
+    background-color: #EDF2F7;
 }
 
 .botonesChats:hover{
     background-color: #EDF2F7;
+}
+
+.textoCreadores{
+    padding: 10px;
+    width: 90%;
+    border-top: 1px solid #000;
+    text-align: center;
 }
 

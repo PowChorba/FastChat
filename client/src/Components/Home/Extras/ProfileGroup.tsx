@@ -162,6 +162,7 @@ export default function ProfileGroup({
           setDialog={setDialog}
           currentUser={currentUser}
           currentChat={currentChat}
+          filterGroupChat={filterGroupChat}
         />
       ) : (
         ""
