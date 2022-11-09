@@ -26,12 +26,12 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const [test, setTest] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
     const [deleteMessage, setDeleteMessage] = useState<Messages>()
-    // const [visible, setVisible] = useState(false)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
     //PARA PODER RENDERIZAR BIEN LOS GRUPOS
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
+    console.log(friendId)
 
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
@@ -75,7 +75,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             receiverId: friendId?._id,
             text: messages.textMessage,
             senderChat: currentChat,
-            messageId: id
+            messageId: id,
+            isGroup: filterGroupChat?._id
         })
         let messageComplete = {
             textMessage: messages.textMessage,
@@ -255,8 +256,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             window.location.reload()
         }, 2000)
     }
-    console.log(test)
-    console.log(pendingMessages, "pending")
+    // console.log(test)
+    // console.log(pendingMessages, "pending")
     return (
         <div>
             {
