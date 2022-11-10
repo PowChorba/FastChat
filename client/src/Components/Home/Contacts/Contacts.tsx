@@ -1,4 +1,4 @@
-import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
+import { filter, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
 import { IoIosArrowDown } from "react-icons/io"
 import { DELETE_CONTACT, NEW_CHAT } from "../../../Redux/actions/actions"
@@ -13,7 +13,8 @@ interface Props {
 
 export default function Contacts({currentUser}: Props) {
     const dispatch = useAppDispatch()
-    
+    const filterBloqUsers = currentUser?.bloqUsers.map(e => e._id)
+    const filterContactsUsers = currentUser?.contacts?.filter(e => !filterBloqUsers.includes(e._id))
     const [newChat, setNewChat] = useState({
         firstUser: '',
         secondUser: ''
@@ -83,7 +84,7 @@ export default function Contacts({currentUser}: Props) {
                                 </div>
                             </div>)
                     })
-                    : currentUser?.contacts?.map((e) => {
+                    : filterContactsUsers?.map((e) => {
                         return(
                             <div key={e._id} className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>

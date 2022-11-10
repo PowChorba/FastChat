@@ -24,3 +24,20 @@
 .profileUsers:hover {
     background-color: #EDF2F7;
 }
+
+.arrowDown span{
+    visibility: hidden;
+    display: flex;
+    align-items: flex-start;
+}
+
+.arrowDown:hover span{
+    visibility: visible;
+    font-size: 20px;
+}
+
+.textNotBlock{
+    text-align: center;
+    padding: 20px;
+    font-size: 20px;
+}

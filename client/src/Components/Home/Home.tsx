@@ -104,6 +104,7 @@ export default function Home(){
         setCreateGroup(!createGroup)
     }
 
+
     return(
     <Grid templateColumns='1fr 3fr' className={s.contenedor}>
         <GridItem className={s.divAside}>

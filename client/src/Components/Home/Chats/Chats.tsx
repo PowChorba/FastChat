@@ -36,6 +36,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         scroll.current?.scrollIntoView({behavior: 'smooth'})
     })
 
+
+
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",

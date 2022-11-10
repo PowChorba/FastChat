@@ -1,10 +1,11 @@
-import { Input } from "@chakra-ui/react"
+import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
-import { USER_CONTACTS } from "../../../Redux/actions/actions"
+import { BLOCK_USER, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './Users.module.css'
 import { AiOutlineUserAdd } from 'react-icons/ai'
+import { IoIosArrowDown } from "react-icons/io"
 interface Props {
     currentUser: User
 }
@@ -45,6 +46,28 @@ export default function Users({currentUser}: Props){
         dispatch(USER_CONTACTS(addContact))
     }
 
+    //BLOQUEAR Usuario
+    const [block, setBlock] = useState({
+        userId: '',
+        bloqUserId: ''
+    })
+
+    const handleBlockId = (e: string) => {
+        if (currentUser?._id) {
+            setBlock({
+                userId: currentUser._id,
+                bloqUserId: e
+            })
+        }
+    }
+
+    const bloqUser = () => {
+        dispatch(BLOCK_USER(block))
+        // setTimeout(() => {
+        //     window.location.reload()
+        // }, 2000)
+    }
+
     return(
         <div className={s.contenedor}>
             <div className={s.formBusqueda}>
@@ -56,18 +79,36 @@ export default function Users({currentUser}: Props){
                         return(<div key={e._id} className={s.profileUsers}>
                             <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                             <span>{e.nickName}</span>
-                            <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>
+                            {/* <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>
                                 <AiOutlineUserAdd className={s.icono}/>
-                            </button>
+                            </button> */}
+                            <div className={s.arrowDown}>
+                                    <Menu>
+                                        <MenuButton><IoIosArrowDown/></MenuButton>
+                                        <MenuList>
+                                            <MenuItem onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add User</MenuItem>
+                                            <MenuItem onMouseEnter={() => handleBlockId(e._id)} onClick={bloqUser}>Bloq User</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                            </div>
                             </div>)
                     })
                     : filterUsers && filterUsers.map(e => {
                         return(<div key={e._id} className={s.profileUsers}>
                             <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                             <span>{e.nickName}</span>
-                            <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>
+                            {/* <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>
                                 <AiOutlineUserAdd className={s.icono}/>
-                            </button>
+                            </button> */}
+                            <div className={s.arrowDown}>
+                                    <Menu>
+                                        <MenuButton><IoIosArrowDown/></MenuButton>
+                                        <MenuList>
+                                            <MenuItem onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add User</MenuItem>
+                                            <MenuItem onMouseEnter={() => handleBlockId(e._id)} onClick={bloqUser}>Bloq User</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                            </div>
                             </div>)
                     })
                 }
