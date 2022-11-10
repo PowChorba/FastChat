@@ -65,7 +65,7 @@ export default function PrivateChat({chatUser, currentUser, socket, allChatData,
             })
             
             setInaki((prev: Messages[]) => [...prev, {
-                _id: contador.toString(),
+                _id: data.messageId,
                 textMessage: data.text,
                 messageAuthor: data.senderChat,
                 // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
@@ -73,7 +73,6 @@ export default function PrivateChat({chatUser, currentUser, socket, allChatData,
                 createdAt: new Date().toISOString(),
             }])
         })
-        setContador(contador++)
         socket.current?.on("getUserWritting",(data: GetMessageData)=>{
             // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
             if(data.senderChat === allChats[0]?._id){
@@ -81,6 +80,12 @@ export default function PrivateChat({chatUser, currentUser, socket, allChatData,
                 else setWritting(false)
             }
         })
+        if(allChatData.groupName){
+            socket.current.emit("join_room", {
+                room: allChatData._id,
+                userId: currentUser._id
+            })
+        }
     }, [socket, allChats, contador, setPendingMessages])
 
     //PARA RENDERIZAR EL ULTIMO MENSAJE DE SOCKET

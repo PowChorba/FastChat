@@ -31,6 +31,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
     //PARA PODER RENDERIZAR BIEN LOS GRUPOS
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
+    console.log(friendId)
 
     useEffect(() => {
         scroll.current?.scrollIntoView({behavior: 'smooth'})
@@ -80,7 +81,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             receiverId: friendId?._id,
             text: messages.textMessage,
             senderChat: currentChat,
-            messageId: id
+            messageId: id,
+            isGroup: filterGroupChat?._id
         })
         let messageComplete = {
             textMessage: messages.textMessage,
@@ -198,6 +200,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     useEffect(() => {
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
+                console.log(data)
                 if (data.text) setWritting(true)
                 else setWritting(false)
             }
@@ -259,7 +262,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             window.location.reload()
         }, 2000)
     }
-
     return (
         <div>
             {

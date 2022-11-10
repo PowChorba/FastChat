@@ -24,13 +24,22 @@ export interface Socket {
     receiverId: string
     text: string
     senderChat: string
+    isGroup: boolean
     messageId?: string
     createdAt?: string
+}
+export interface SocketRoom {
+    room: string,
+    userId: string
 }
 
 export interface SocketUser {
     userId: string
     socketId: string
+}
+export interface SocketGroup {
+    room: string,
+    users: string[]
 }
 
 export interface ChatsModel {
