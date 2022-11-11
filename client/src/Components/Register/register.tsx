@@ -14,6 +14,16 @@ interface FormState{
     inputValue: CreateUser
 }
 
+// function handleErrors(user: CreateUser){
+//     let error: ErrorsUser = {
+//         nickName: false,
+//         password: false
+//     }
+//     if(user.nickName === '') error.nickName = true
+//     else if(user.password === '') error.password = true 
+//     else if (user.password.length < 6 ) error.password = true
+//     return error
+// }
 
 
 export default function Register() {
@@ -23,7 +33,7 @@ export default function Register() {
         password: '',
         image: ''
     })
-
+    console.log(user.password)
     const auth = getAuth()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -61,6 +71,7 @@ export default function Register() {
         e.preventDefault()
         try {
             await signUp(user.userEmail, user.password)
+            if(user.image === '') user.image = defaultImage
             dispatch(NEW_USER(user))
             navigate('/home')
         } catch (error) {
@@ -74,8 +85,6 @@ export default function Register() {
 
     return(
         <div className={s.contenedor}>
-            <div>
-            </div>
             <form onSubmit={(e) => handleSubmit(e)} className={s.formLogin}>
                 <BsArrowLeft className={s.arrowBack} onClick={goBack}/>
                 <div>
@@ -84,19 +93,40 @@ export default function Register() {
                         <Input id="inputTag" type="file" accept="image/jpeg, image/png" name="image" onChange={handleImage} className={s.inputNone}/>
                     </label>
                 </div>
-                <div className={s.labelRegister}>
+                {
+                    user.nickName === '' || user.nickName.length > 2
+                    ? <div className={s.labelRegister}>
                     <label>Nickname: </label>
-                    <Input type="text" name="nickName" value={user.nickName} onChange={handleChange}/>
-                </div>
-                <div className={s.labelRegister}>
-                    <label>Email: </label>
-                    <Input type="email" name="userEmail" value={user.userEmail} onChange={handleChange}/>
-                </div>
-                <div className={s.labelRegister}>
-                    <label>Password: </label>
-                    <Input type="password" name="password" value={user.password} onChange={handleChange}/>
-                </div>
-                <Button type="submit" className={s.buttonRegister}>Register</Button>
+                    <Input type="text" name="nickName" focusBorderColor='teal.500' value={user.nickName} onChange={handleChange}/>
+                    </div>
+                    : <div className={s.labelRegister}>
+                        <label>Nickname: </label>
+                        <Input type="text" name="nickName" isInvalid focusBorderColor='teal.500' errorBorderColor='crimson' value={user.nickName} onChange={handleChange}/>
+                    </div>
+                }
+                {
+                    user.userEmail === '' || user.userEmail.length > 5
+                    ? <div className={s.labelRegister}>
+                        <label>Email: </label>
+                        <Input type="email" name="userEmail" focusBorderColor='teal.500' value={user.userEmail} onChange={handleChange}/>
+                      </div> 
+                    : <div className={s.labelRegister}>
+                        <label>Email: </label>
+                        <Input type="email" name="userEmail" isInvalid focusBorderColor='teal.500' errorBorderColor='crimson' value={user.userEmail} onChange={handleChange}/>
+                      </div>  
+                }
+                {
+                    user.password === '' || user.password.length > 5 
+                    ? <div className={s.labelRegister}>
+                        <label>Password: </label>
+                        <Input type="password" name="password" focusBorderColor='teal.500' value={user.password} onChange={handleChange}/>
+                    </div>
+                    : <div className={s.labelRegister}>
+                        <label>Password: </label>
+                        <Input type="password" isInvalid focusBorderColor='teal.500' errorBorderColor='crimson' name="password" value={user.password} onChange={handleChange}/>
+                      </div>
+                }
+                <Button type="submit" className={s.buttonRegister} disabled={user.nickName === '' || user.password === '' || user.userEmail === '' || user.password.length < 6 ? true : false}>Register</Button>
             </form>
         </div>)
 }

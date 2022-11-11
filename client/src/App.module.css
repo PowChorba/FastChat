@@ -1,6 +1,6 @@
 .fondoChat { 
   height: 100vh;
-  display: flex;
+  padding: 25px;
 }
 
 .contenedor {
@@ -10,7 +10,7 @@
   right: 0;
   left: 0;
   width: 100%;
-  height: 15.2%;
+  height: 13.8%;
   background: #008069;
   z-index: -10;
   transform-origin: top right;

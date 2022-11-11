@@ -106,7 +106,7 @@ export default function PrivateChat({chatUser, currentUser, socket, allChatData,
                 <div className={s.overFlow}>
                     <span>{allChatData.groupName ? allChatData.groupName : secondUserId?.nickName}</span>
                     {
-                        writting ? <p className={s.writtingMessage}>Writting...</p>
+                        writting && !allChatData.groupName ? <p className={s.writtingMessage}>Writting...</p>
                         : <p className={s.lastMessage}>{allMessages[allMessages.length -1]?.textMessage }</p>
                     }
                 </div>

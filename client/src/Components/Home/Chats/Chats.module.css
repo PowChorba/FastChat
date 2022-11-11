@@ -9,7 +9,13 @@
 .contenedor {
     display: grid;
     grid-template-columns: 2fr 1fr;
+    height: 95vh;
 }
+
+.contenedorPerfil{
+    width: 100%;
+}
+
 /* MENSAJES */
 .divMensajes {  
     text-align: center;
@@ -59,7 +65,10 @@
 
 .conection{
     font-size: 12px;
-    /* text-align: center; */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 75%;
 }
 
 /* FORM PARA ENVIAR EL MENSAJE  */
@@ -115,4 +124,9 @@
 
 .addUsersToGroup{
     justify-content: right;
+}
+
+.iconos{
+    margin-left: 5px ;
+    font-size: 24px;
 }

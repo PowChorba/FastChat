@@ -4,6 +4,7 @@
     margin: 25px auto;
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
 }
 
 .hide {

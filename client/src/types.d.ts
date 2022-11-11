@@ -17,6 +17,11 @@ export type CreateUser = {
     image: string
 }
 
+export type ErrorsUser = {
+    nickName: boolean
+    password: boolean
+}
+
 //TYPES PARA LOS CHATS
 
 export type Chats = {

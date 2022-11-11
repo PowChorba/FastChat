@@ -91,11 +91,11 @@ export default function Profile({currentUser}: Props){
                 <InputGroup>
                     <Input type={show ? 'text' : 'password'} placeholder='New password' name="password" value={user.password} onChange={handleChange}/>
                     <InputRightElement>
-                        <Button onClick={handleShow} colorScheme='blue' variant='outline' size='xs' className={s.inputPassword}>{show ? 'Hide' : 'Show'}</Button>
+                        <Button onClick={handleShow} colorScheme='teal' variant='outline' size='xs' className={s.inputPassword}>{show ? 'Hide' : 'Show'}</Button>
                     </InputRightElement>
                 </InputGroup>
                 </div>
-                <Button type="submit" colorScheme='blue' variant='outline'>Update</Button>
+                <Button type="submit" colorScheme='teal' variant='outline'>Update</Button>
             </form>
         </div>)
 }

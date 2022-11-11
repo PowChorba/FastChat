@@ -9,6 +9,7 @@ import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
+import { AiOutlineSend } from "react-icons/ai"
 interface Props {
     currentUser: User
     currentChat: string
@@ -70,20 +71,20 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         let id = uuidv4()
-        socket.current.emit('sendEscribiendo', {
-            senderId: currentUser?._id,
-            receiverId: friendId?._id,
-            text: "",
-            senderChat: currentChat
-        })
-        socket.current.emit('sendMessage', {
-            senderId: currentUser?._id,
-            receiverId: friendId?._id,
-            text: messages.textMessage,
-            senderChat: currentChat,
-            messageId: id,
-            isGroup: filterGroupChat?._id
-        })
+            socket.current.emit('sendMessage', {
+                senderId: currentUser?._id,
+                receiverId: friendId?._id,
+                text: messages.textMessage,
+                senderChat: currentChat,
+                messageId: id,
+                isGroup: filterGroupChat?._id
+            })
+            socket.current.emit('sendEscribiendo', {
+                senderId: currentUser?._id,
+                receiverId: friendId?._id,
+                text: messages.textMessage,
+                senderChat: currentChat
+            })
         let messageComplete = {
             textMessage: messages.textMessage,
             messageAuthor: messages.messageAuthor,
@@ -200,7 +201,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     useEffect(() => {
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
-                console.log(data)
                 if (data.text) setWritting(true)
                 else setWritting(false)
             }
@@ -273,12 +273,15 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                     <div className={profileChat ? s.contenedor : s.asd}>
                         <div className={s.divMensajes}>
                             <div className={s.divDatosUserChat} onClick={handleProfileChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
-                                <div>
+                                <div className={s.contenedorPerfil}>
                                     <p>{filterGroupChat.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
                                     <p className={s.conection}>
                                         {
-                                            filterGroupChat.groupName ? <span></span>
-                                                : writting ? "Writting..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
+                                            filterGroupChat.groupName
+                                            ? filterGroupChat.chatsUsers.map(e => {
+                                                return(<span>{e.nickName}{' '}</span>)
+                                            })
+                                            : writting ? "Writting..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
                                         }
                                     </p>
                                 </div>
@@ -308,7 +311,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                             <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                 <div className={s.divInputSend}>
                                     <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
-                                    <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}>Send</button>
+                                    <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}><AiOutlineSend className={s.iconos}/></button>
                                 </div>
                             </form>
                         </div>
@@ -319,7 +322,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                             </div>
                             {
                                 filterGroupChat.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
-                                    : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser} />
+                                    : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser}/>
                             }
                         </div>
                     </div>

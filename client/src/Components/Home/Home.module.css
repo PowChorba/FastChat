@@ -29,10 +29,8 @@
     display: none;
 }
 
-
 .abrirChat{
     width: 100%;
-    /* max-width: 425px; */
 }
 
 .imagenes {
@@ -55,7 +53,7 @@
     margin-bottom: 20px;
     background-color: #008069;
     width: 100%;
-    padding: 42px;
+    padding: 37.5px;
     display: flex;
     color: #fff;
 }

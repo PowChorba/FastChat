@@ -4,7 +4,6 @@ import { BLOCK_USER, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './Users.module.css'
-import { AiOutlineUserAdd } from 'react-icons/ai'
 import { IoIosArrowDown } from "react-icons/io"
 interface Props {
     currentUser: User
