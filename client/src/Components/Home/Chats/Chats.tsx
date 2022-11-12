@@ -31,10 +31,10 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
     //PARA PODER RENDERIZAR BIEN LOS GRUPOS
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
-    console.log(friendId)
+    // console.log(friendId)
 
     useEffect(() => {
-        scroll.current?.scrollIntoView({behavior: 'smooth'})
+        scroll.current?.scrollIntoView({ behavior: 'smooth' })
     })
 
     const [messageReceived, setMessageReceived] = useState({
@@ -80,7 +80,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             text: messages.textMessage,
             senderChat: currentChat,
             messageId: id,
-            isGroup: filterGroupChat?._id
+            isGroup: filterGroupChat?.groupName
         })
         let messageComplete = {
             textMessage: messages.textMessage,
@@ -131,21 +131,18 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     }
 
     useEffect(() => {
-        let myPendingMsg = pendingMessages.filter(msg=> msg.chatId === currentChat)
-
-        setTest((prevState)=>{
-            return [...myPendingMsg,...prevState]
+        setTest(()=>{
+            // CADA VEZ QUE ABREN UN CHAT LIMPIA EL ESTADO CON MENSAJES NUEVOS
+            let renewMsgState = pendingMessages.filter(msg=> msg.chatId === currentChat)
+            return renewMsgState
         })
-        setPendingMessages((prevState)=>{
-            let deletePendingMsg = prevState.filter(msg=> msg.chatId !== currentChat)
-            return deletePendingMsg
-        })
+        let myPendingMsg = pendingMessages.filter(msg => msg.chatId === currentChat)
 
         setMessageReceived({
-            id: myPendingMsg[myPendingMsg.length-1]?._id,
-            senderId: myPendingMsg[myPendingMsg.length-1]?.messageAuthor,
-            text: myPendingMsg[myPendingMsg.length-1]?.textMessage,
-            senderChat: myPendingMsg[myPendingMsg.length-1]?.chatId
+            id: myPendingMsg[myPendingMsg.length - 1]?._id,
+            senderId: myPendingMsg[myPendingMsg.length - 1]?.messageAuthor,
+            text: myPendingMsg[myPendingMsg.length - 1]?.textMessage,
+            senderChat: myPendingMsg[myPendingMsg.length - 1]?.chatId
         })
 
         socket.current?.on('getMessage', (data: GetMessageData) => {
@@ -180,6 +177,18 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                     isDeleted: true
                 })
             }
+            setPendingMessages((prevState) => {
+                let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
+                deleteSocketMessage.push({
+                    _id: data.messageId,
+                    textMessage: "Message Deleted",
+                    messageAuthor: data.senderId,
+                    chatId: data.senderChat,
+                    createdAt: data.createdAt,
+                    isDeleted: true
+                })
+                return deleteSocketMessage
+            })
             setTest((prevState) => {
                 let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
                 deleteSocketMessage.push({
@@ -198,7 +207,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     useEffect(() => {
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
-                console.log(data)
                 if (data.text) setWritting(true)
                 else setWritting(false)
             }
@@ -226,7 +234,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     // BORRA O AGREGA MENSAJE 
     if (currentChat === messageReceived.senderChat || currentChat === deleteMessage?.chatId) {
         test.forEach((msgState) => {
-            filterMessages = filterMessages.filter(ele => ele._id !== msgState._id)
+            filterMessages = filterMessages.filter(ele => ele._id !== msgState._id && ele.chatId === currentChat)
         })
         filterMessages = [...filterMessages, ...test]
     }
