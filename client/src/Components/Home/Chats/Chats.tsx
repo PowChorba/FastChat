@@ -2,13 +2,17 @@ import { Button, Input } from "@chakra-ui/react"
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User } from "../../../types"
+import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User, CreateMessages } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
+import Emojis from "./emojis/emojis"
+import { BiHappyAlt } from 'react-icons/bi'
+import { EmojiClickData } from "emoji-picker-react/dist/types/exposedTypes"
+
 interface Props {
     currentUser: User
     currentChat: string
@@ -21,6 +25,7 @@ interface Props {
 
 export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
     const [pows, setPows] = useState(true)
+    const [emoji, setEmoji] = useState(false)
     const [test, setTest] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
     const [deleteMessage, setDeleteMessage] = useState<Messages>()
@@ -67,6 +72,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if (emoji) setEmoji(false)
         let id = uuidv4()
         socket.current.emit('sendEscribiendo', {
             senderId: currentUser?._id,
@@ -310,9 +316,11 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                                 </div>)
                                         })
                                 }
+                                {emoji && <Emojis handleMessage={handleMessage} setMessages={setMessages}/>}
                             </div>
                             <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                 <div className={s.divInputSend}>
+                                    <BiHappyAlt size="3em" onClick={()=>setEmoji(!emoji)}/>
                                     <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
                                     <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}>Send</button>
                                 </div>

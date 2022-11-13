@@ -84,7 +84,6 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
             }
         })
         if (allChatData.groupName) {
-            console.log(allChatData._id)
             socket.current.emit("join_room", {
                 room: allChatData._id,
                 userId: currentUser._id
