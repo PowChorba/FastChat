@@ -7,15 +7,16 @@ interface Props {
         messageAuthor: string;
         chatId: string;
     }>>,
-    handleMessage: (e: React.ChangeEvent<HTMLInputElement>) => void
+    chat: string,
+    id: string
 }
 
-export default function Emojis ({setMessages, handleMessage}:Props){
+export default function Emojis ({setMessages, chat,id}:Props){
     const handleEmoji = (e:EmojiClickData)=>{
         setMessages((prevState)=>{
             let msg = {
-                chatId: prevState.chatId,
-                messageAuthor: prevState.messageAuthor,
+                chatId: chat,
+                messageAuthor: id,
                 textMessage: prevState.textMessage + e.emoji
             }
             return msg
