@@ -2,7 +2,7 @@ import { Button, Input } from "@chakra-ui/react"
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User } from "../../../types"
+import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User, CreateMessages } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
@@ -10,6 +10,10 @@ import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineSend } from "react-icons/ai"
+import Emojis from "./emojis/emojis"
+import { BiHappyAlt } from 'react-icons/bi'
+import { EmojiClickData } from "emoji-picker-react/dist/types/exposedTypes"
+
 interface Props {
     currentUser: User
     currentChat: string
@@ -22,6 +26,7 @@ interface Props {
 
 export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
     const [pows, setPows] = useState(true)
+    const [emoji, setEmoji] = useState(false)
     const [test, setTest] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
     const [deleteMessage, setDeleteMessage] = useState<Messages>()
@@ -32,10 +37,10 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
     //PARA PODER RENDERIZAR BIEN LOS GRUPOS
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
-    console.log(friendId)
+    // console.log(friendId)
 
     useEffect(() => {
-        scroll.current?.scrollIntoView({behavior: 'smooth'})
+        scroll.current?.scrollIntoView({ behavior: 'smooth' })
     })
 
 
@@ -70,21 +75,22 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if (emoji) setEmoji(false)
         let id = uuidv4()
-            socket.current.emit('sendMessage', {
-                senderId: currentUser?._id,
-                receiverId: friendId?._id,
-                text: messages.textMessage,
-                senderChat: currentChat,
-                messageId: id,
-                isGroup: filterGroupChat?._id
-            })
-            socket.current.emit('sendEscribiendo', {
-                senderId: currentUser?._id,
-                receiverId: friendId?._id,
-                text: messages.textMessage,
-                senderChat: currentChat
-            })
+        socket.current.emit('sendEscribiendo', {
+            senderId: currentUser?._id,
+            receiverId: friendId?._id,
+            text: "",
+            senderChat: currentChat
+        })
+        socket.current.emit('sendMessage', {
+            senderId: currentUser?._id,
+            receiverId: friendId?._id,
+            text: messages.textMessage,
+            senderChat: currentChat,
+            messageId: id,
+            isGroup: filterGroupChat?.groupName
+        })
         let messageComplete = {
             textMessage: messages.textMessage,
             messageAuthor: messages.messageAuthor,
@@ -134,21 +140,18 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     }
 
     useEffect(() => {
-        let myPendingMsg = pendingMessages.filter(msg=> msg.chatId === currentChat)
-
-        setTest((prevState)=>{
-            return [...myPendingMsg,...prevState]
+        setTest(()=>{
+            // CADA VEZ QUE ABREN UN CHAT LIMPIA EL ESTADO CON MENSAJES NUEVOS
+            let renewMsgState = pendingMessages.filter(msg=> msg.chatId === currentChat)
+            return renewMsgState
         })
-        setPendingMessages((prevState)=>{
-            let deletePendingMsg = prevState.filter(msg=> msg.chatId !== currentChat)
-            return deletePendingMsg
-        })
+        let myPendingMsg = pendingMessages.filter(msg => msg.chatId === currentChat)
 
         setMessageReceived({
-            id: myPendingMsg[myPendingMsg.length-1]?._id,
-            senderId: myPendingMsg[myPendingMsg.length-1]?.messageAuthor,
-            text: myPendingMsg[myPendingMsg.length-1]?.textMessage,
-            senderChat: myPendingMsg[myPendingMsg.length-1]?.chatId
+            id: myPendingMsg[myPendingMsg.length - 1]?._id,
+            senderId: myPendingMsg[myPendingMsg.length - 1]?.messageAuthor,
+            text: myPendingMsg[myPendingMsg.length - 1]?.textMessage,
+            senderChat: myPendingMsg[myPendingMsg.length - 1]?.chatId
         })
 
         socket.current?.on('getMessage', (data: GetMessageData) => {
@@ -183,6 +186,18 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                     isDeleted: true
                 })
             }
+            setPendingMessages((prevState) => {
+                let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
+                deleteSocketMessage.push({
+                    _id: data.messageId,
+                    textMessage: "Message Deleted",
+                    messageAuthor: data.senderId,
+                    chatId: data.senderChat,
+                    createdAt: data.createdAt,
+                    isDeleted: true
+                })
+                return deleteSocketMessage
+            })
             setTest((prevState) => {
                 let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
                 deleteSocketMessage.push({
@@ -228,7 +243,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     // BORRA O AGREGA MENSAJE 
     if (currentChat === messageReceived.senderChat || currentChat === deleteMessage?.chatId) {
         test.forEach((msgState) => {
-            filterMessages = filterMessages.filter(ele => ele._id !== msgState._id)
+            filterMessages = filterMessages.filter(ele => ele._id !== msgState._id && ele.chatId === currentChat)
         })
         filterMessages = [...filterMessages, ...test]
     }
@@ -307,9 +322,11 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                                 </div>)
                                         })
                                 }
+                                {emoji && <Emojis handleMessage={handleMessage} setMessages={setMessages}/>}
                             </div>
                             <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                 <div className={s.divInputSend}>
+                                    <BiHappyAlt size="3em" onClick={()=>setEmoji(!emoji)}/>
                                     <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
                                     <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}><AiOutlineSend className={s.iconos}/></button>
                                 </div>

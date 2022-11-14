@@ -81,6 +81,8 @@
 .divInputSend{
     margin: 10px;
     display: flex;
+    align-items: center;
+    gap: 1em;
     width: 50%;
 }
 
