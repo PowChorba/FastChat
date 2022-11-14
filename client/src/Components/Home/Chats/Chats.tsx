@@ -11,7 +11,9 @@ import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
-import { EmojiClickData } from "emoji-picker-react/dist/types/exposedTypes"
+import { ImAttachment } from 'react-icons/im'
+import IconsMenu from "./menu/Menu"
+import Webcamera from "./menu/camera/Camera"
 
 interface Props {
     currentUser: User
@@ -24,6 +26,7 @@ interface Props {
 }
 
 export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
+    const [cameraStatus, setCameraStatus] = useState(false)
     const [pows, setPows] = useState(true)
     const [emoji, setEmoji] = useState(false)
     const [test, setTest] = useState<Messages[]>([])
@@ -316,11 +319,13 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                                 </div>)
                                         })
                                 }
-                                {emoji && <Emojis handleMessage={handleMessage} setMessages={setMessages}/>}
+                                {cameraStatus && <Webcamera setCamera={setCameraStatus} />}
+                                {emoji && <Emojis id={currentUser?._id} chat={currentChat}  setMessages={setMessages}/>}
                             </div>
                             <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                 <div className={s.divInputSend}>
-                                    <BiHappyAlt size="3em" onClick={()=>setEmoji(!emoji)}/>
+                                    <BiHappyAlt size="2em" onClick={()=>setEmoji(!emoji)}/>
+                                    <IconsMenu setCamera={setCameraStatus}/>
                                     <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
                                     <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}>Send</button>
                                 </div>
