@@ -11,9 +11,11 @@ import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
-import { ImAttachment } from 'react-icons/im'
 import IconsMenu from "./menu/Menu"
 import Webcamera from "./menu/camera/Camera"
+import Audio from "./AudioRecorder/AudioRecorder"
+import { HiOutlineMicrophone } from 'react-icons/hi'
+
 
 interface Props {
     currentUser: User
@@ -26,6 +28,7 @@ interface Props {
 }
 
 export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
+    const [audioStatus, setAudioStatus] = useState(false)
     const [cameraStatus, setCameraStatus] = useState(false)
     const [pows, setPows] = useState(true)
     const [emoji, setEmoji] = useState(false)
@@ -319,6 +322,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                                 </div>)
                                         })
                                 }
+                                {audioStatus && <Audio/>}
                                 {cameraStatus && <Webcamera setCamera={setCameraStatus} />}
                                 {emoji && <Emojis id={currentUser?._id} chat={currentChat}  setMessages={setMessages}/>}
                             </div>
@@ -327,6 +331,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                     <BiHappyAlt size="2em" onClick={()=>setEmoji(!emoji)}/>
                                     <IconsMenu setCamera={setCameraStatus}/>
                                     <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
+                                    <HiOutlineMicrophone size="2em" onClick={()=> setAudioStatus(!audioStatus)}/>
                                     <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}>Send</button>
                                 </div>
                             </form>
