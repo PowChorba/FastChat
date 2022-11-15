@@ -19,6 +19,10 @@ chatId: {
 isDeleted: {
     type: Boolean,
     default: false
+},
+isImage: {
+    type: Boolean,
+    default: false
 }
 }, {
     timestamps: true,

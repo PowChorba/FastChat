@@ -72,18 +72,24 @@
 }
 
 /* FORM PARA ENVIAR EL MENSAJE  */
+
+.divGridForm {
+    display: grid;
+    grid-template-columns: 0.2fr 2.5fr;
+}
+
+.divImagenIconos{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .formMandarMensaje{
     display: flex;
     justify-content: center;
     align-items: center;
-}
+    margin: 10px 20px 10px 0px;
 
-.divInputSend{
-    margin: 10px;
-    display: flex;
-    align-items: center;
-    gap: 1em;
-    width: 50%;
 }
 
 .sendMensaje{

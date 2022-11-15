@@ -27,6 +27,7 @@ export interface Socket {
     isGroup: boolean
     messageId?: string
     createdAt?: string
+    isImage: boolean
 }
 export interface SocketRoom {
     room: string,

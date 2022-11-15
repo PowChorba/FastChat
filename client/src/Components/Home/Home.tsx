@@ -129,13 +129,13 @@ export default function Home(){
                     ? filterUserChats && filterUserChats?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages = {setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
                     : userChats && userChats?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages = {setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>
                             )
                     }) 

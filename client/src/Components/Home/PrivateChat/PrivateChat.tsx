@@ -1,5 +1,6 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { BiImageAlt } from "react-icons/bi"
 import { ALL_MESSAGES, USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
@@ -47,7 +48,6 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
 
     useEffect(() => {
         socket.current?.on('getMessage', (data: GetMessageData) => {
-            console.log("data", data.senderChat, allChatData._id)
             if (data.senderChat === allChatData._id) {
                 setMessageReceived({
                     senderId: data.senderId,
@@ -61,6 +61,7 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
                         textMessage: data.text,
                         messageAuthor: data.senderId,
                         chatId: data.senderChat,
+                        isImage: data?.isImage,
                         createdAt: new Date().toISOString(),
                     })
                     return getSocketMessage
@@ -72,6 +73,7 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
                     messageAuthor: data.senderChat,
                     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
                     chatId: allChats[0]?._id,
+                    isImage: data?.isImage,
                     createdAt: new Date().toISOString(),
                 }])
             }
@@ -84,13 +86,13 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
             }
         })
         if (allChatData.groupName) {
-            socket.current.emit("join_room", {
-                room: allChatData._id,
-                userId: currentUser._id
+            socket.current?.emit("join_room", {
+                room: allChatData?._id,
+                userId: currentUser?._id
             })
         }
     }, [socket, allChats, setPendingMessages])
-    // console.log(allChats[0])
+
     //PARA RENDERIZAR EL ULTIMO MENSAJE DE SOCKET
     if (messageReceived.text !== "" && allChatData._id === messageReceived.senderChat) {
         if (!allMessages.includes(inaki[0])) {
@@ -107,10 +109,16 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
         <div className={s.chat}>
             <img src={allChatData.img ? allChatData.img : secondUserId?.image} alt="asd" width='50px' className={s.imagen}/>
                 <div className={s.overFlow}>
-                    <span>{allChatData.groupName ? allChatData.groupName : secondUserId?.nickName}</span>
+                    <span>{allChatData.groupName ? allChatData?.groupName : secondUserId?.nickName}</span>
                     {
                         writting && !allChatData.groupName ? <p className={s.writtingMessage}>Writting...</p>
-                        : <p className={s.lastMessage}>{allMessages[allMessages.length -1]?.textMessage }</p>
+                        : <div>
+                            {
+                                allMessages[allMessages?.length - 1]?.isImage 
+                                ? <div className={s.lastImage}><BiImageAlt/>Image...</div> 
+                                : <p className={s.lastMessage}>{allMessages[allMessages.length -1]?.textMessage }</p>
+                            }
+                        </div>
                     }
                 </div>
                 <span>{allMessages.length !== 0 ? newDate(allMessages[allMessages.length -1]?.createdAt) : <p></p>}</span>

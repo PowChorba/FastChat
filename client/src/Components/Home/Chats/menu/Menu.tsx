@@ -1,32 +1,32 @@
-import { IconButton, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { ImAttachment } from 'react-icons/im'
 import { BsFillCameraFill } from 'react-icons/bs'
 import { IoMdContact } from 'react-icons/io'
 import { AiFillFileText } from 'react-icons/ai'
 import { useState } from "react";
-import Webcamera from "./camera/Camera";
+// import Webcamera from "./camera/Camera";
+import OpenCamera from "../../Dialogs/OpenCamera";
+import { CreateMessages, User } from "../../../../types";
 
 
 interface Props {
-  setCamera: React.Dispatch<React.SetStateAction<boolean>>
+  setCameraStatus: React.Dispatch<React.SetStateAction<boolean>>
+  setMessages: React.Dispatch<React.SetStateAction<CreateMessages>>
+  messages: CreateMessages
+  currentChat: string
+  currentUser: User
 }
-export default function IconsMenu({setCamera}: Props){
-    const handleCamera = ()=>{
-        setCamera(true)
+export default function IconsMenu({ currentChat, currentUser, setMessages, messages}: Props){
+    const [openCam, setOpenCam] = useState(false)
+
+    const handleCamera = () => {
+      setOpenCam(!openCam)
     }
     return(
         <Menu>
-  <MenuButton
-    as={IconButton}
-    aria-label='Options'
-    icon={<ImAttachment />}
-    backgroundColor= "transparent"
-    _hover={{
-        background: "transparent",
-      }}
-    />
+  <MenuButton><ImAttachment/></MenuButton>
   <MenuList>
-    <MenuItem onClick={()=>handleCamera()} icon={<BsFillCameraFill />} >
+    <MenuItem onClick={handleCamera} icon={<BsFillCameraFill />} >
       Camera
     </MenuItem>
     <MenuItem icon={<IoMdContact />} >
@@ -36,7 +36,9 @@ export default function IconsMenu({setCamera}: Props){
       Open File
     </MenuItem>
   </MenuList>
-  {/* {cameraStatus && <Webcamera setCameraStatus={setCameraStatus}/>} */}
+  {
+    openCam ? <OpenCamera setOpenCam={setOpenCam} currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/> : ''
+  }
 </Menu>
     )
 }

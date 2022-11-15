@@ -40,3 +40,8 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+.lastImage{
+    display: flex;
+    align-items: center;
+}
