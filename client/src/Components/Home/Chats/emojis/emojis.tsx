@@ -1,6 +1,6 @@
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import React, {Dispatch, SetStateAction} from 'react';
-
+import React from 'react';
+import s from './Emojis.module.css'
 interface Props {
     setMessages: React.Dispatch<React.SetStateAction<{
         textMessage: string;
@@ -23,8 +23,8 @@ export default function Emojis ({setMessages, chat,id}:Props){
         })
     }
     return (
-        <>
-        <EmojiPicker onEmojiClick={(e)=>handleEmoji(e)} />
-        </>
+        <div className={s.divEmojis}>
+            <EmojiPicker onEmojiClick={(e)=>handleEmoji(e)} />
+        </div>
     )
 }

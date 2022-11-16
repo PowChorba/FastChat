@@ -7,12 +7,9 @@ import {
   Button,
   AlertDialogHeader,
 } from "@chakra-ui/react";
-import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { NEW_MESSAGE } from "../../../Redux/actions/actions";
-import { useAppDispatch } from "../../../Redux/hooks";
 import { CreateMessages, User } from "../../../types";
 import s from "./ChangeImg.module.css";
 
@@ -27,8 +24,6 @@ interface Props {
 export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMessages, messages }: Props) {
   const [open, setOpen] = useState(true);
   const cancelRef: any = useRef();
-  const dispatch = useAppDispatch();
-  const id = uuidv4 
   const [image, setImage] = useState("");
 
   const videoConstraints = {
@@ -65,10 +60,6 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
       console.log(error);
     }
   };
-
-//   const handleSendMessage = () => {
-//     dispatch(NEW_MESSAGE(message))
-//   }
 
   const capturePhoto = () => {
     capture();
@@ -128,7 +119,6 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
                     <Button colorScheme="teal" ml={3} variant="outline" onClick={() => handleImage(image)}>Send Photo</Button>
                     </div>
               }
-              {/* <Button colorScheme="teal" ml={3} variant="outline" onClick={() => handleImage(image)}>Send Photo</Button> */}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>

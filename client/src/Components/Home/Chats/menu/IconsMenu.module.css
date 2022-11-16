@@ -1,0 +1,19 @@
+.displayNone {
+    display: none;
+}
+
+.divOpenFile{
+    display: flex;
+    align-items: center;
+    padding: 5px 0px;
+    cursor: pointer;
+}
+
+.divOpenFile:hover {
+    background-color: #EDF2F7;
+}
+
+.fillFile{
+    font-size: 14px;
+    margin: 0px 10px
+}

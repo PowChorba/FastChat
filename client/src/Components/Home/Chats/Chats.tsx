@@ -12,7 +12,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
-import { ImAttachment } from 'react-icons/im'
 import IconsMenu from "./menu/Menu"
 
 interface Props {
@@ -26,7 +25,6 @@ interface Props {
 }
 
 export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
-    const [cameraStatus, setCameraStatus] = useState(false)
     const [pows, setPows] = useState(true)
     const [emoji, setEmoji] = useState(false)
     const [test, setTest] = useState<Messages[]>([])
@@ -231,7 +229,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         })
     }, [currentUser, socket])
 
-    //ARRAY PARA
 
     const fechaActual = (e: string) => {
         const date = new Date(e)
@@ -329,8 +326,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                             </div>
                                <div className={s.divGridForm}>
                                     <div className={s.divImagenIconos}>
-                                        <BiHappyAlt size="2em" onClick={()=>setEmoji(!emoji)}/>
-                                        <IconsMenu setCameraStatus={setCameraStatus} currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
+                                        <BiHappyAlt size="1.5em" onClick={()=>setEmoji(!emoji)}/>
+                                        <IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
                                     </div>
                                     <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                             <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />

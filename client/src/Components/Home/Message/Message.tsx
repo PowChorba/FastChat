@@ -59,12 +59,12 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
                                 ?   <div>
                                         <p>{e.messageAuthor === currentUser?._id ? '' : nameOfUsers[idOfUsers.indexOf(e.messageAuthor)]}</p>
                                         {
-                                            e.textMessage.length > 20 ? <img src={e.textMessage} alt="asd" /> : <p className={s.textoMensajes}>{e.textMessage}</p> 
+                                            e.textMessage.length > 20 ? <img src={e.textMessage} alt="Not Found" /> : <p className={s.textoMensajes}>{e.textMessage}</p> 
                                         }
                                     </div> 
                                 : <div>
                                     {
-                                            e.isImage ? <img src={e.textMessage} alt="asd" /> : <p className={s.textoMensajes}>{e.textMessage}</p> 
+                                            e.isImage ? <img src={e.textMessage} alt="Not Found" /> : <p className={s.textoMensajes}>{e.textMessage}</p> 
                                     }
                                 </div>
                             }
