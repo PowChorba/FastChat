@@ -7,6 +7,7 @@ import { firebaseConfig } from './Firebase/Secret';
 import Register from './Components/Register/register';
 import Login from './Components/Login/Login';
 import { ChakraProvider } from '@chakra-ui/react'
+import Verification from './Components/Verification/Verification';
 
 initializeApp(firebaseConfig)
 
@@ -17,6 +18,7 @@ function App() {
     <div className={s.fondoChat}>
     <ChakraProvider>
         <Routes>
+          <Route path='/verification' element={<Verification/>}/>
           <Route path='/home' element={<AuthRoute><Home/></AuthRoute>}/>
           <Route path='/register' element={<Register/>}/>
           <Route path='/' element={<Login/>}/>      

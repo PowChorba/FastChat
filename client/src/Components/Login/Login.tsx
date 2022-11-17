@@ -26,7 +26,7 @@ export default function Login(){
         e.preventDefault()
         try {
             await login(user.userEmail,user.password)
-            navigate('/home')
+            navigate('/verification')
         } catch (error) {
             console.log(error)
         }    

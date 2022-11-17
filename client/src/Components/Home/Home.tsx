@@ -30,6 +30,7 @@ export default function Home(){
         signOut(auth)
         navigate('/')
     }
+    console.log(auth.currentUser)
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
     const userChats = useAppSelector(state => state.clientReducer.userChats)

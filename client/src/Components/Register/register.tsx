@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { CreateUser } from "../../types"
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth"
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from "firebase/auth"
 import { useAppDispatch } from "../../Redux/hooks"
 import { useNavigate } from 'react-router-dom'
 import { NEW_USER } from "../../Redux/actions/actions"
@@ -33,7 +33,8 @@ export default function Register() {
         password: '',
         image: ''
     })
-    console.log(user.password)
+
+    console.log(user.userEmail)
     const auth = getAuth()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -41,6 +42,7 @@ export default function Register() {
     const signUp = (email: string, password: string) => {
         return createUserWithEmailAndPassword(auth, email, password)
     }
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUser({
@@ -73,7 +75,7 @@ export default function Register() {
             await signUp(user.userEmail, user.password)
             if(user.image === '') user.image = defaultImage
             dispatch(NEW_USER(user))
-            navigate('/home')
+            navigate('/verification')
         } catch (error) {
             console.log(error)
         }

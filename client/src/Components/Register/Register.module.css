@@ -1,10 +1,9 @@
 .contenedor {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
-    width: 25%;
-    margin: 0px auto;
 }
 
 .formLogin {
