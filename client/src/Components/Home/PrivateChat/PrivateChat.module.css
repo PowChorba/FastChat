@@ -7,7 +7,6 @@
     align-items: center;
     cursor: pointer;
     border-bottom: 2px solid #EDF2F7;
-    /* background-color: red; */
 }
 
 .imagen {
@@ -40,4 +39,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.lastImage{
+    display: flex;
+    align-items: center;
 }

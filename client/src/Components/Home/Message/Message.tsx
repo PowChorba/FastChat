@@ -35,6 +35,8 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
         return (hours + ':' + minutes)
     }
 
+    console.log(mensajes, 'images')
+
     return(
         <div className={s.contenedorMensajes}>
             {
@@ -56,9 +58,15 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
                                 : filterGroupChat?.groupName 
                                 ?   <div>
                                         <p>{e.messageAuthor === currentUser?._id ? '' : nameOfUsers[idOfUsers.indexOf(e.messageAuthor)]}</p>
-                                        <p className={s.textoMensajes}>{e.textMessage}</p>
+                                        {
+                                            e.textMessage.length > 20 ? <img src={e.textMessage} alt="asd" /> : <p className={s.textoMensajes}>{e.textMessage}</p> 
+                                        }
                                     </div> 
-                                : <p className={s.textoMensajes}>{e.textMessage}</p>
+                                : <div>
+                                    {
+                                            e.isImage ? <img src={e.textMessage} alt="asd" /> : <p className={s.textoMensajes}>{e.textMessage}</p> 
+                                    }
+                                </div>
                             }
                             <p className={s.textoMensajesHora}>{newDate(e.createdAt)}</p>
                             {

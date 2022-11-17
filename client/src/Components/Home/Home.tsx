@@ -104,6 +104,7 @@ export default function Home(){
         setCreateGroup(!createGroup)
     }
 
+
     return(
     <Grid templateColumns='1fr 3fr' className={s.contenedor}>
         <GridItem className={s.divAside}>
@@ -128,13 +129,13 @@ export default function Home(){
                     ? filterUserChats && filterUserChats?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages = {setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
                     : userChats && userChats?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages = {setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>
                             )
                     }) 

@@ -9,13 +9,10 @@ import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
+import { AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
 import IconsMenu from "./menu/Menu"
-import Webcamera from "./menu/camera/Camera"
-import Audio from "./AudioRecorder/AudioRecorder"
-import { HiOutlineMicrophone } from 'react-icons/hi'
-
 
 interface Props {
     currentUser: User
@@ -42,7 +39,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
     //PARA PODER RENDERIZAR BIEN LOS GRUPOS
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
-    // console.log(friendId)
 
     useEffect(() => {
         scroll.current?.scrollIntoView({ behavior: 'smooth' })
@@ -55,10 +51,10 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         id: ""
     })
 
-    const [messages, setMessages] = useState({
+    const [messages, setMessages] = useState<CreateMessages>({
         textMessage: '',
         messageAuthor: '',
-        chatId: ''
+        chatId: '',
     })
 
 
@@ -92,12 +88,14 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             text: messages.textMessage,
             senderChat: currentChat,
             messageId: id,
-            isGroup: filterGroupChat?.groupName
+            isGroup: filterGroupChat?.groupName,
+            isImage: messages.isImage
         })
         let messageComplete = {
             textMessage: messages.textMessage,
             messageAuthor: messages.messageAuthor,
             chatId: messages.chatId,
+            isImage: messages.isImage,
             _id: id
         }
 
@@ -163,7 +161,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                     id: data.messageId || uuidv4(),
                     senderId: data.senderId,
                     text: data.text,
-                    senderChat: data.senderChat
+                    senderChat: data.senderChat,
                 })
                 setTest((prevState) => {
                     let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
@@ -172,6 +170,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                         textMessage: data.text,
                         messageAuthor: data.senderId,
                         chatId: data.senderChat,
+                        isImage: data.isImage,
                         createdAt: new Date().toISOString(),
                     })
                     return getSocketMessage
@@ -260,7 +259,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
 
     //BLOQUEAR CONTACTOS
     const [block, setBlock] = useState({
-        userId: '',
+        userId: '', 
         bloqUserId: ''
     })
 
@@ -280,6 +279,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             window.location.reload()
         }, 2000)
     }
+
     return (
         <div>
             {
@@ -291,12 +291,15 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                     <div className={profileChat ? s.contenedor : s.asd}>
                         <div className={s.divMensajes}>
                             <div className={s.divDatosUserChat} onClick={handleProfileChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
-                                <div>
+                                <div className={s.contenedorPerfil}>
                                     <p>{filterGroupChat.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
                                     <p className={s.conection}>
                                         {
-                                            filterGroupChat.groupName ? <span></span>
-                                                : writting ? "Writting..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
+                                            filterGroupChat.groupName
+                                            ? filterGroupChat.chatsUsers.map(e => {
+                                                return(<span>{e.nickName}{' '}</span>)
+                                            })
+                                            : writting ? "Writting..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
                                         }
                                     </p>
                                 </div>
@@ -322,19 +325,18 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                                 </div>)
                                         })
                                 }
-                                {audioStatus && <Audio/>}
-                                {cameraStatus && <Webcamera setCamera={setCameraStatus} />}
                                 {emoji && <Emojis id={currentUser?._id} chat={currentChat}  setMessages={setMessages}/>}
                             </div>
-                            <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
-                                <div className={s.divInputSend}>
-                                    <BiHappyAlt size="2em" onClick={()=>setEmoji(!emoji)}/>
-                                    <IconsMenu setCamera={setCameraStatus}/>
-                                    <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
-                                    <HiOutlineMicrophone size="2em" onClick={()=> setAudioStatus(!audioStatus)}/>
-                                    <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}>Send</button>
-                                </div>
-                            </form>
+                               <div className={s.divGridForm}>
+                                    <div className={s.divImagenIconos}>
+                                        <BiHappyAlt size="2em" onClick={()=>setEmoji(!emoji)}/>
+                                        <IconsMenu setCameraStatus={setCameraStatus} currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
+                                    </div>
+                                    <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
+                                            <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
+                                            <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}><AiOutlineSend className={s.iconos}/></button>
+                                    </form>
+                               </div>
                         </div>
                         <div className={profileChat ? s.divMensajes : s.displayNone}>
                             <div className={s.divCerrarInfo}>
@@ -343,7 +345,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                             </div>
                             {
                                 filterGroupChat.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
-                                    : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser} />
+                                    : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser}/>
                             }
                         </div>
                     </div>

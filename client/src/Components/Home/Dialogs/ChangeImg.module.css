@@ -4,6 +4,7 @@
     margin: 25px auto;
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
 }
 
 .hide {
@@ -13,3 +14,13 @@
 .footer{
     margin: 0px auto;
 }
+
+.closeDialog{
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.dialogHeader{
+    background-color: #EDF2F7;
+}
+

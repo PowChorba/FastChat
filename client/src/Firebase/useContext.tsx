@@ -19,6 +19,7 @@ const AuthRoute: React.FunctionComponent<AuthRouteProps> = ({children}: AuthRout
     const AuthCheck = onAuthStateChanged(auth, (user) => {
         if(user){
             setLoading(false)
+            console.log('asd')
         }else {
             console.log('Acceso denegado')
             navigte('/')

@@ -75,20 +75,15 @@ io.on('connection', (socket: any) => {
         io.emit('getUsers', users)
     })
 
-    socket.on('sendMessage', ({ senderId, receiverId, text, senderChat, messageId, isGroup }: Socket) => {
-        // console.log("group", isGroup, text)
+    socket.on('sendMessage', ({ senderId, receiverId, text, senderChat, messageId, isGroup, isImage }: Socket) => {
         if (!isGroup) {
-            console.log("usuario", isGroup, text, senderChat)
-
             const user = getUser(receiverId)
             io.to(user?.socketId).emit('getMessage', {
-                senderId, text, senderChat, messageId
+                senderId, text, senderChat, messageId, isImage
             })
         } else {
-            console.log("group", isGroup, text, senderChat)
-
             io.to(senderChat).emit("getMessage", {
-                senderId, text, senderChat, messageId
+                senderId, text, senderChat, messageId, isImage
             })
         }
     })

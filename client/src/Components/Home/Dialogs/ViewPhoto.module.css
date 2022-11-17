@@ -1,0 +1,35 @@
+.divCloseDialog{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    padding: 5px;
+}
+
+.close{
+    position: absolute;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.divImgGrande{
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.imgGrande{
+    width: 75vh;
+    height: 75vh;
+}
+
+.imgChica{
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    margin-right: 10px;
+}

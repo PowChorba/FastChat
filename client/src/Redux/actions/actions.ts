@@ -196,7 +196,9 @@ export const CREATE_GROUP_CHAT = createAsyncThunk(
 export const UPDATE_GROUP = createAsyncThunk(
     'ADD_USER_GROUP',async (data: UpdateGroup) => {
         try {
+            console.log(data)
             const response = await axios.put('http://localhost:3001/chats', data)
+            console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)

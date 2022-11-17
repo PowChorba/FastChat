@@ -1,5 +1,6 @@
-import { Input } from "@chakra-ui/react"
+import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
+import { IoIosArrowDown } from "react-icons/io"
 import { UNBLOCK_USER } from "../../../Redux/actions/actions"
 import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
@@ -45,26 +46,42 @@ export default function BlockUsers({currentUser}: Props){
                     <Input variant='filled' type="text" placeholder="Search Block Users" value={busqueda} onChange={handleBusqueda}/>
             </div>
             {
-                    currentUser && currentUser.bloqUsers?.length === 0 ? <p>Not block Users.</p>
+                    currentUser && currentUser.bloqUsers?.length === 0 ? <p className={s.textNotBlock}>Not block Users.</p>
                     : busquedaBlock?.length !== 0 
                     ? busquedaBlock?.map(e => {
                         return(
-                            <div key={e._id}>
-                                <button value={e._id} className={s.profileUsers} onMouseEnter={() => getUserId(e._id)} onClick={deleteBlockUser}>
+                            <div key={e._id} className={s.profileUsers}>
+                                <div className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
                                 <br />
-                                </button>
+                                <div className={s.arrowDown}>
+                                    <Menu>
+                                        <MenuButton><IoIosArrowDown/></MenuButton>
+                                        <MenuList>
+                                            <MenuItem onMouseEnter={() => getUserId(e._id)} onClick={deleteBlockUser}>Unblock</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </div>
+                                </div>
                             </div>)
                     })
                     : currentUser?.bloqUsers?.map((e) => {
                         return(
                             <div key={e._id} className={s.profileUsers}>
-                                <button value={e._id} className={s.profileUsers} onMouseEnter={() => getUserId(e._id)} onClick={deleteBlockUser}>
+                                <div className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
                                 <br />
-                                </button>
+                                <div className={s.arrowDown}>
+                                    <Menu>
+                                        <MenuButton><IoIosArrowDown/></MenuButton>
+                                        <MenuList>
+                                            <MenuItem onMouseEnter={() => getUserId(e._id)} onClick={deleteBlockUser}>Unblock</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </div>
+                                </div>
                             </div>)
                     })
                 }

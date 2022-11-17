@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Chats, User } from "../../../types";
-import AddUsers from "../Chats/AddUsers";
+import AddUsers from "../Dialogs/AddUsers";
 import s from "./ChatProfile.module.css";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { IoIosArrowDown } from "react-icons/io";
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai'
-import { Button, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Button, filter, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import RemoveUser from "./RemoveUser";
 import Admins from "../Dialogs/Admins";
 import RemoveAdmins from "../Dialogs/RemoveAdmin";
 import { useAppDispatch } from "../../../Redux/hooks";
 import { DELETE_CHAT, UPDATE_GROUP } from "../../../Redux/actions/actions";
 import ChangeImg from "../Dialogs/ChangeImg";
+import ViewPhoto from "../Dialogs/ViewPhoto";
 
 interface Props {
   filterGroupChat: Chats;
@@ -126,14 +127,30 @@ export default function ProfileGroup({
 
   //PARA LA IMAGEN
   const [activeDialogImg, setActiveDialogImg] = useState(false)
-  
+  const [changePhoto, setChangePhoto] = useState(false)
+  const [viewPhoto, setViewPhoto] = useState(false)
   const handleActiveDialogImg = () => {
     setActiveDialogImg(!activeDialogImg)
   }
 
+  const handleChangeImg = () => {
+    setChangePhoto(!changePhoto)
+  }
+
+  const handleViewPhoto = () => {
+    setViewPhoto(!viewPhoto)
+  }
+
   return (
     <div className={s.contenedor}>
-      <img src={filterGroupChat?.img} alt="asd" width='200px' className={s.imagen} onClick={handleActiveDialogImg}/>
+      {/* <img src={filterGroupChat?.img} alt="asd" width='200px' className={s.imagen} onClick={handleActiveDialogImg}/> */}
+      <Menu>
+            <MenuButton><img src={filterGroupChat?.img} alt="asd" width='200px' className={s.imagen} onClick={handleActiveDialogImg}/></MenuButton>
+            <MenuList>
+                <MenuItem onClick={handleViewPhoto}>View Photo</MenuItem>
+                <MenuItem onClick={handleChangeImg}>Change Photo</MenuItem>
+            </MenuList>
+          </Menu>
       {
         activeInput 
         ? <div>
@@ -185,37 +202,39 @@ export default function ProfileGroup({
               <div className={s.divAdmin}>
                 <p>{adminsId?.includes(e._id) ? "Admin" : ""}</p>
               </div>
-              {/* MODIFICAR EL CODIGO PARA QUE SEA MAS FACIL!!!! */}
               <div>
-                {
-                  activeMenu 
-                  ? <div>
-                    { (filterGroupChat?.creator._id !== e._id && e?._id !== currentUser?._id) || adminsId?.includes(currentUser._id) ? 
-                <Menu>
-                  <MenuButton
-                    as={Button}
-                    rightIcon={<IoIosArrowDown />}
-                    className={s.arrowDown}
-                  />
-                  <MenuList>
-                    {filterGroupChat.creator._id === currentUser?._id 
+                  {
+                    activeMenu 
                     ? <div>
-                    {
-                      adminsId?.includes(e._id) 
-                      ? <MenuItem onClick={() => handleRemoveAdmins(e._id)}>Remove Admin</MenuItem> 
-                      : <MenuItem onClick={() => handleAdmins(e._id)}>Make Admin</MenuItem>
+                      {
+                      filterGroupChat?.creator._id !== e._id 
+                      ? <div>
+                        {
+                      filterGroupChat?.creator._id === currentUser._id && adminsId?.includes(currentUser._id)
+                      ? <Menu>
+                        <MenuButton as={Button} rightIcon={<IoIosArrowDown />} className={s.arrowDown}/>
+                        <MenuList>
+                            {
+                              adminsId?.includes(e._id)
+                              ? <div>
+                                <MenuItem onClick={() => handleRemoveAdmins(e._id)}>Remove Admin</MenuItem>
+                                <MenuItem onClick={() => handleRemoveUser(e._id)}>Remove from Group</MenuItem>
+                              </div>
+                              : <div>
+                                <MenuItem onClick={() => handleAdmins(e._id)}>Make Admin</MenuItem>
+                                <MenuItem onClick={() => handleRemoveUser(e._id)}>Remove from Group</MenuItem>
+                              </div>
+                            }
+                        </MenuList>
+                      </Menu>
+                      : ''
                     }
-                    </div> 
-                    : ''}
-                    <MenuItem onClick={() => handleRemoveUser(e._id)}>Remove from Group</MenuItem>
-                  </MenuList>
-                </Menu>
-               : (
-                ""
-              )}
-                  </div>
-                  : '' 
-                }
+                      </div>
+                      : ''
+                    }
+                        </div>
+                    : ''    
+                  }
               </div>
               {
                 deleteDialog ? <RemoveUser setDeleteDialog={setDeleteDialog} currentChat={currentChat} filterGroupChat={filterGroupChat} userRemove={ids}/> : ''
@@ -227,7 +246,10 @@ export default function ProfileGroup({
                 removeAdmin ? <RemoveAdmins setRemoveAdmin={setRemoveAdmin} currentChat={currentChat} userRemove={ids}/> : ''
               }
               {
-                activeDialogImg ? <ChangeImg setActiveDialogImg={setActiveDialogImg} currentChat={currentChat} filterGroupChat={filterGroupChat}/> : ''
+                changePhoto ? <ChangeImg setChangePhoto={setChangePhoto} currentChat={currentChat} filterGroupChat={filterGroupChat}/> : ''
+              }
+              {
+                viewPhoto ? <ViewPhoto setViewPhoto={setViewPhoto} currentChat={currentChat} filterGroupChat={filterGroupChat}/> : ''
               }
             </div>
           );

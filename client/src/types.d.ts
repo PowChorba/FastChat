@@ -17,6 +17,11 @@ export type CreateUser = {
     image: string
 }
 
+export type ErrorsUser = {
+    nickName: boolean
+    password: boolean
+}
+
 //TYPES PARA LOS CHATS
 
 export type Chats = {
@@ -43,12 +48,14 @@ export type Messages = {
     chatId: string
     createdAt: string
     isDeleted?: boolean
+    isImage?: boolean
 }
 
 export type CreateMessages = {
     textMessage: string
     messageAuthor: string
     chatId: string
+    isImage?: boolean
 }
 
 //DELETE USER
@@ -67,6 +74,7 @@ export interface GetMessageData {
     text: string,
     senderChat: string,
     messageId: string
+    isImage: boolean
 }
 
 //GROUPS CHATS
