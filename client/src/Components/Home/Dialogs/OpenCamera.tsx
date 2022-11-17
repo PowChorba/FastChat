@@ -7,12 +7,9 @@ import {
   Button,
   AlertDialogHeader,
 } from "@chakra-ui/react";
-import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { NEW_MESSAGE } from "../../../Redux/actions/actions";
-import { useAppDispatch } from "../../../Redux/hooks";
 import { CreateMessages, User } from "../../../types";
 import s from "./ChangeImg.module.css";
 
@@ -27,8 +24,6 @@ interface Props {
 export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMessages, messages }: Props) {
   const [open, setOpen] = useState(true);
   const cancelRef: any = useRef();
-  const dispatch = useAppDispatch();
-  const id = uuidv4 
   const [image, setImage] = useState("");
 
   const videoConstraints = {
@@ -46,7 +41,6 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
 
   //PARA PODER MODIFICAR LA IMAGEN
   const handleImage = async (e: any) => {
-    console.log("entre")
     try {
       const file = e;
       const data = new FormData();
@@ -67,14 +61,8 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
     }
   };
 
-//   const handleSendMessage = () => {
-//     dispatch(NEW_MESSAGE(message))
-//   }
-
   const capturePhoto = () => {
     capture();
-    let imagen = webcamRef.current.getScreenshot();
-     handleImage(imagen)
   }
 
 
@@ -86,7 +74,7 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
     setOpen(false);
     setOpenCam(false);
   };
-console.log(messages)
+
   return (
     <>
       <AlertDialog
@@ -126,15 +114,12 @@ console.log(messages)
             <AlertDialogFooter className={s.footer}>
               {
                 image === '' 
-                ? <Button colorScheme="teal" ml={3} variant="outline" onClick={(e)=>capturePhoto()}>Capture Photo</Button>
+                ? <Button colorScheme="teal" ml={3} variant="outline" onClick={()=>capturePhoto()}>Capture Photo</Button>
                 : <div>
                     <Button colorScheme="teal" ml={3} variant="outline" onClick={retakePhoto}>Retake Photo</Button>
-                  <form >
-                    <Button type="submit" colorScheme="teal" ml={3} variant="outline">Send Photo</Button>
-                  </form>
+                    <Button onClick={(e)=>handleImage(e)} type="submit" colorScheme="teal" ml={3} variant="outline">Send Photo</Button>
                     </div>
               }
-              {/* <Button colorScheme="teal" ml={3} variant="outline" onClick={() => handleImage(image)}>Send Photo</Button> */}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>

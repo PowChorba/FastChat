@@ -235,7 +235,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         })
     }, [currentUser, socket])
 
-    //ARRAY PARA
 
     const fechaActual = (e: string) => {
         const date = new Date(e)
@@ -334,11 +333,9 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                             </div>
                                <div className={s.divGridForm}>
                                     <div className={s.divImagenIconos}>
-                                        <BiHappyAlt size="2em" onClick={()=>setEmoji(!emoji)}/>
-                                        <IconsMenu submit={handleSubmit} setCameraStatus={setCameraStatus} currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
+                                        <BiHappyAlt size="1.5em" onClick={()=>setEmoji(!emoji)}/>
+                                        <IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
                                         <BsMicFill onClick={()=> setAudioStatus(!audioStatus)}/>
-                                            {/* <div onClick={()=>setAudioStatus(true)}><AudioRecorderTest setAudioStatus={setAudioStatus}/></div> */}
-                                        
                                     </div>
                                     <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                             <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
