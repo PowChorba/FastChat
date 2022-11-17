@@ -35,7 +35,7 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
         return (hours + ':' + minutes)
     }
 
-    console.log(mensajes, 'images')
+    // console.log(mensajes, 'images')
 
     return(
         <div className={s.contenedorMensajes}>

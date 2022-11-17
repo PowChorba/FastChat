@@ -46,6 +46,7 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
 
   //PARA PODER MODIFICAR LA IMAGEN
   const handleImage = async (e: any) => {
+    console.log("entre")
     try {
       const file = e;
       const data = new FormData();
@@ -72,7 +73,10 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
 
   const capturePhoto = () => {
     capture();
+    let imagen = webcamRef.current.getScreenshot();
+     handleImage(imagen)
   }
+
 
   const retakePhoto = () => {
     setImage('')
@@ -82,7 +86,7 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
     setOpen(false);
     setOpenCam(false);
   };
-
+console.log(messages)
   return (
     <>
       <AlertDialog
@@ -122,10 +126,12 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
             <AlertDialogFooter className={s.footer}>
               {
                 image === '' 
-                ? <Button colorScheme="teal" ml={3} variant="outline" onClick={capturePhoto}>Capture Photo</Button>
+                ? <Button colorScheme="teal" ml={3} variant="outline" onClick={(e)=>capturePhoto()}>Capture Photo</Button>
                 : <div>
                     <Button colorScheme="teal" ml={3} variant="outline" onClick={retakePhoto}>Retake Photo</Button>
-                    <Button colorScheme="teal" ml={3} variant="outline" onClick={() => handleImage(image)}>Send Photo</Button>
+                  <form >
+                    <Button type="submit" colorScheme="teal" ml={3} variant="outline">Send Photo</Button>
+                  </form>
                     </div>
               }
               {/* <Button colorScheme="teal" ml={3} variant="outline" onClick={() => handleImage(image)}>Send Photo</Button> */}

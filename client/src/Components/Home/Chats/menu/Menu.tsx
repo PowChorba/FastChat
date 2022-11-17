@@ -15,8 +15,9 @@ interface Props {
   messages: CreateMessages
   currentChat: string
   currentUser: User
+  submit: (e: React.FormEvent<HTMLFormElement>) => void
 }
-export default function IconsMenu({ currentChat, currentUser, setMessages, messages}: Props){
+export default function IconsMenu({ currentChat, currentUser, setMessages, messages, submit}: Props){
     const [openCam, setOpenCam] = useState(false)
 
     const handleCamera = () => {

@@ -12,7 +12,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
+import { BsMicFill } from 'react-icons/bs'
 import IconsMenu from "./menu/Menu"
+// import Audio from "./AudioRecorder/AudioRecorder"
+import AudioRecorder from "./Audio/Audio"
+import AudioRecorderTest from "./Audio/Audio"
 
 interface Props {
     currentUser: User
@@ -326,11 +330,15 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         })
                                 }
                                 {emoji && <Emojis id={currentUser?._id} chat={currentChat}  setMessages={setMessages}/>}
+                                {audioStatus && <AudioRecorderTest setAudioStatus={setAudioStatus}/>}
                             </div>
                                <div className={s.divGridForm}>
                                     <div className={s.divImagenIconos}>
                                         <BiHappyAlt size="2em" onClick={()=>setEmoji(!emoji)}/>
-                                        <IconsMenu setCameraStatus={setCameraStatus} currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
+                                        <IconsMenu submit={handleSubmit} setCameraStatus={setCameraStatus} currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
+                                        <BsMicFill onClick={()=> setAudioStatus(!audioStatus)}/>
+                                            {/* <div onClick={()=>setAudioStatus(true)}><AudioRecorderTest setAudioStatus={setAudioStatus}/></div> */}
+                                        
                                     </div>
                                     <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                             <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
