@@ -62,9 +62,6 @@ export default function Users({currentUser}: Props){
 
     const bloqUser = () => {
         dispatch(BLOCK_USER(block))
-        // setTimeout(() => {
-        //     window.location.reload()
-        // }, 2000)
     }
 
     return(
@@ -78,9 +75,6 @@ export default function Users({currentUser}: Props){
                         return(<div key={e._id} className={s.profileUsers}>
                             <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                             <span>{e.nickName}</span>
-                            {/* <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>
-                                <AiOutlineUserAdd className={s.icono}/>
-                            </button> */}
                             <div className={s.arrowDown}>
                                     <Menu>
                                         <MenuButton><IoIosArrowDown/></MenuButton>
@@ -96,9 +90,6 @@ export default function Users({currentUser}: Props){
                         return(<div key={e._id} className={s.profileUsers}>
                             <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                             <span>{e.nickName}</span>
-                            {/* <button className={s.sendMensaje} onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>
-                                <AiOutlineUserAdd className={s.icono}/>
-                            </button> */}
                             <div className={s.arrowDown}>
                                     <Menu>
                                         <MenuButton><IoIosArrowDown/></MenuButton>

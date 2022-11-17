@@ -15,7 +15,6 @@ import { BiHappyAlt } from 'react-icons/bi'
 import { BsMicFill } from 'react-icons/bs'
 import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
-
 interface Props {
     currentUser: User
     currentChat: string
@@ -35,7 +34,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const [writting, setWritting] = useState(false)
     const [deleteMessage, setDeleteMessage] = useState<Messages>()
     const scroll = useRef<HTMLDivElement>(null)
-    // const [visible, setVisible] = useState(false)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     let filterMessages = allMessages?.filter(e => e.chatId === currentChat)
@@ -59,7 +57,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         chatId: '',
     })
 
-
     const handleMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
         socket.current.emit('sendEscribiendo', {
             senderId: currentUser?._id,
@@ -70,7 +67,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         setMessages({
             messageAuthor: e.target.id,
             textMessage: e.target.value,
-            chatId: currentChat
+            chatId: currentChat,
         })
     }
 
@@ -231,6 +228,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             }
         })
     }, [messageReceived, currentChat, socket])
+    
     const [online, setOnline] = useState<string[]>([])
 
     useEffect(() => {
@@ -238,7 +236,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             setOnline(users?.map((e) => e.userId))
         })
     }, [currentUser, socket])
-
 
     const fechaActual = (e: string) => {
         const date = new Date(e)
@@ -304,29 +301,23 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         {
                                             filterGroupChat.groupName
                                             ? filterGroupChat.chatsUsers.map(e => {
-                                                return(<span>{e.nickName}{' '}</span>)
+                                                return(<span key={e._id}>{e.nickName}{' '}</span>)
                                             })
                                             : writting ? "Writting..." : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
                                         }
-                                        {/* {filterGroupChat.groupName
-                                            ? filterGroupChat.chatsUsers.map(e => {
-                                                return(<span>{e.nickName}{' '}</span>)
-                                            })
-                                            : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')} */}
                                     </p>
                                 </div>
                             </div>
                             <div className={s.contenedorMensajes}>
                                 <div className={s.buttonsAddBloq}>
                                     {
-                                        filterGroupChat.groupName ? <span></span>
-                                            : prueba?.length !== 0 || !pows ? <span></span>
+                                        !filterGroupChat.groupName && (prueba?.length !== 0 || !pows ? <span></span>
                                                 : <div className={s.divAgregarBloquear}>
                                                     <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
                                                     <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
                                                     <Button variant='outline' colorScheme='red' onMouseEnter={() => handleBlockId(friendId?._id)} onClick={bloqUser}>Block User</Button>
                                                 </div>
-                                    }
+                                    )}
                                 </div>
                                 {
                                     filterMessages?.length === 0 ? <p>Today</p>
@@ -338,7 +329,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         })
                                 }
                                 {emoji && <Emojis id={currentUser?._id} chat={currentChat}  setMessages={setMessages}/>}
-                                {audioStatus && <AudioRecorderTest group={filterGroupChat.groupName} friend={friendId._id} chat={currentChat} userId={currentUser?._id} socket={socket} setAudioStatus={setAudioStatus}/>}
+                                {/* {audioStatus && <AudioRecorderTest group={filterGroupChat.groupName} friend={friendId._id} chat={currentChat} userId={currentUser?._id} socket={socket} setAudioStatus={setAudioStatus}/>} */}
                             </div>
                                <div className={s.divGridForm}>
                                     <div className={s.divImagenIconos}>
@@ -346,10 +337,14 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         <IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
                                         <BsMicFill onClick={()=> setAudioStatus(!audioStatus)}/>
                                     </div>
-                                    <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
+                                    {
+                                        audioStatus 
+                                        ? <div className={s.formMandarMensaje}><AudioRecorderTest group={filterGroupChat.groupName} friend={friendId._id} chat={currentChat} userId={currentUser?._id} socket={socket} setAudioStatus={setAudioStatus}/></div>
+                                        : <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                             <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
                                             <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}><AiOutlineSend className={s.iconos}/></button>
-                                    </form>
+                                        </form> 
+                                    }
                                </div>
                         </div>
                         <div className={profileChat ? s.divMensajes : s.displayNone}>

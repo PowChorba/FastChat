@@ -51,13 +51,12 @@ export default function Profile({currentUser}: Props){
     };
 
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if(user.userId === '') user.userId = currentUser?._id
         if(user.image === '') user.image = currentUser?.image
         if(user.nickName === '') user.nickName = currentUser?.nickName
         if(user.password === '') user.password = currentUser?.password
-
         dispatch(USER_CONTACTS(user))
         setUser({
             userId: '',
@@ -87,14 +86,14 @@ export default function Profile({currentUser}: Props){
                         </InputRightElement>
                     </InputGroup>
                 </div>
-                <div className={s.inputs}>
+                {/* <div className={s.inputs}>
                 <InputGroup>
                     <Input type={show ? 'text' : 'password'} placeholder='New password' name="password" value={user.password} onChange={handleChange}/>
                     <InputRightElement>
                         <Button onClick={handleShow} colorScheme='teal' variant='outline' size='xs' className={s.inputPassword}>{show ? 'Hide' : 'Show'}</Button>
                     </InputRightElement>
                 </InputGroup>
-                </div>
+                </div> */}
                 <Button type="submit" colorScheme='teal' variant='outline'>Update</Button>
             </form>
         </div>)

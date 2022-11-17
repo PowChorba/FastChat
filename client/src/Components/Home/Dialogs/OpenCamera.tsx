@@ -117,7 +117,7 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
                   ? <Button colorScheme="teal" ml={3} variant="outline" onClick={() => capturePhoto()}>Capture Photo</Button>
                   : <div>
                     <Button colorScheme="teal" ml={3} variant="outline" onClick={retakePhoto}>Retake Photo</Button>
-                    <Button onClick={() => handleImage(image)} colorScheme="teal" ml={3} variant="outline">Send Photo</Button>
+                    <Button type="submit" onClick={() => handleImage(image)} colorScheme="teal" ml={3} variant="outline">Send Photo</Button>
                   </div>
               }
             </AlertDialogFooter>
@@ -127,25 +127,3 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
     </>
   );
 }
-
-
-
-// PARA PODER MODIFICAR LA IMAGEN
-
-//   const handleImage = async (e: any) => {
-//     try {
-//       const file = e.target.files[0];
-//       const data = new FormData();
-//       data.append("file", file);
-//       data.append("upload_preset", "FastChat");
-
-//       const cloudinary = await axios.post('https://api.cloudinary.com/v1_1/powchorba/image/upload', data);
-
-//       setInputImg({
-//         groupId: currentChat,
-//         img: cloudinary.data?.secure_url,
-//       });
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };

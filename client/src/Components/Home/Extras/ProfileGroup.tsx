@@ -5,7 +5,7 @@ import s from "./ChatProfile.module.css";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { IoIosArrowDown } from "react-icons/io";
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai'
-import { Button, filter, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Button, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import RemoveUser from "./RemoveUser";
 import Admins from "../Dialogs/Admins";
 import RemoveAdmins from "../Dialogs/RemoveAdmin";
@@ -20,11 +20,7 @@ interface Props {
   currentChat: string;
 }
 
-export default function ProfileGroup({
-  filterGroupChat,
-  currentUser,
-  currentChat,
-}: Props) {
+export default function ProfileGroup({filterGroupChat, currentUser,currentChat}: Props) {
   const adminsId = filterGroupChat?.admin?.map((e) => e._id);
   const dispatch = useAppDispatch()
   //PARA MANDAR IDS A LOS DIALOGS
@@ -114,7 +110,7 @@ export default function ProfileGroup({
     },1000)
   }
 
-  //PARA UN POCO DE ESTETICA VISUAL
+  //PARA MEJORAR UN POCO DE ESTETICA VISUAL
   const [activeMenu, setActiveMenu] = useState(false)
 
   const handleActiveMenu = () => {
@@ -143,7 +139,6 @@ export default function ProfileGroup({
 
   return (
     <div className={s.contenedor}>
-      {/* <img src={filterGroupChat?.img} alt="asd" width='200px' className={s.imagen} onClick={handleActiveDialogImg}/> */}
       <Menu>
             <MenuButton><img src={filterGroupChat?.img} alt="asd" width='200px' className={s.imagen} onClick={handleActiveDialogImg}/></MenuButton>
             <MenuList>

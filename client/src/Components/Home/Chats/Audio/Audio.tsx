@@ -1,14 +1,12 @@
 
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import { useAudioRecorder } from 'react-audio-voice-recorder';
-import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
 import { NEW_MESSAGE } from "../../../../Redux/actions/actions";
 import { useAppDispatch } from "../../../../Redux/hooks";
 import { CreateMessages } from "../../../../types";
-
 interface Props {
   setAudioStatus: React.Dispatch<React.SetStateAction<boolean>>
   socket: any
@@ -17,9 +15,9 @@ interface Props {
   chat: string
   userId: string
 }
+
 export default function AudioRecorderTest({ setAudioStatus, socket, group, friend, chat, userId }: Props) {
   const recorderControls = useAudioRecorder()
-  const [audio, setAudio] = useState()
   const dispatch = useAppDispatch()
 
   const addAudioElement = async (blob: any) => {
@@ -36,7 +34,7 @@ export default function AudioRecorderTest({ setAudioStatus, socket, group, frien
 
       const cloudinary = await axios.post('https://api.cloudinary.com/v1_1/powchorba/video/upload', info);
 
-      let cloudinaryUrl:string = cloudinary.data.secure_url
+      let cloudinaryUrl:string = cloudinary?.data.secure_url
       let id = uuidv4()
 
       socket.current.emit('sendMessage', {
@@ -81,12 +79,11 @@ export default function AudioRecorderTest({ setAudioStatus, socket, group, frien
         senderChat: chat
       })
     }
-  }, [])
+  }, [socket, chat, friend, recorderControls, userId])
 
   return (
     <>
       <AudioRecorder recorderControls={recorderControls} onRecordingComplete={addAudioElement} />
-      {/* <audio src={"https://res.cloudinary.com/powchorba/video/upload/v1668651925/FastChat/bb3qnusycthqz0xmynhs.webm"} autoPlay /> */}
     </>
   );
 }

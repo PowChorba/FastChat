@@ -30,7 +30,7 @@ export default function Home(){
         signOut(auth)
         navigate('/')
     }
-    console.log(auth.currentUser)
+    
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
     const userChats = useAppSelector(state => state.clientReducer.userChats)
@@ -78,6 +78,7 @@ export default function Home(){
     let allChats = useAppSelector(state => state.clientReducer.chats)
     allChats = allChats?.filter(e => e._id === currentChat)
     const friendId = allChats[0]?.chatsUsers?.filter(e => e._id !== currentUser?._id)[0]
+    
     //PARA MOSTRASR LA INTERFAZ DE CONTACTOS O LA DE USUARIOS
     const [contacts, setContacts ] = useState(true)
     const [usuarios, setUsuarios] = useState(true)

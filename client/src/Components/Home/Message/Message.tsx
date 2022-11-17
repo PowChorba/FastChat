@@ -16,7 +16,6 @@ interface Props {
 }
 
 export default function Message({mensajes, currentUser, actualDayMessages, socket, currentChat, friendId, filterGroupChat}: Props){
-    
     //PARA PODER AGREGAR EL NOMBRE ARRIBA DEL MENSAJE CUANDO NO ES DEL USUARIO LOGEADO
     const idOfUsers = filterGroupChat.chatsUsers.map(e => e._id)
     const nameOfUsers = filterGroupChat.chatsUsers.map(e => e.nickName)
@@ -26,7 +25,6 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
         setDialog(!dialog)
     }
 
-
     const newDate = (e: string) => {
         const date = new Date(e)
         const hours = date.getHours()
@@ -35,7 +33,6 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
         return (hours + ':' + minutes)
     }
 
-    console.log(mensajes, 'UDIO')
 
     return(
         <div className={s.contenedorMensajes}>

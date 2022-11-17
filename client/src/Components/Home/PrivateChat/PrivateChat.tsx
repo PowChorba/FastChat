@@ -134,7 +134,7 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
                         </div>
                     }
                 </div>
-                <span>{allMessages.length !== 0 ? newDate(allMessages[allMessages.length -1]?.createdAt) : <p></p>}</span>
+                <span>{allMessages.length !== 0 && newDate(allMessages[allMessages.length -1]?.createdAt)}</span>
         </div>)
 }
 
