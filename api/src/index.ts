@@ -75,23 +75,31 @@ io.on('connection', (socket: any) => {
         io.emit('getUsers', users)
     })
 
-    socket.on('sendMessage', ({ senderId, receiverId, text, senderChat, messageId, isGroup, isImage }: Socket) => {
+    socket.on('sendMessage', ({ senderId, receiverId, text, senderChat, messageId, isGroup, isImage, isAudio }: Socket) => {
         if (!isGroup) {
             const user = getUser(receiverId)
             io.to(user?.socketId).emit('getMessage', {
-                senderId, text, senderChat, messageId, isImage
+                senderId, text, senderChat, messageId, isImage, isAudio
             })
         } else {
             io.to(senderChat).emit("getMessage", {
-                senderId, text, senderChat, messageId, isImage
+                senderId, text, senderChat, messageId, isImage, isAudio
             })
         }
     })
 
     socket.on("sendEscribiendo", ({ senderId, receiverId, text, senderChat }: Socket) => {
+        let type = "text"
         const user = getUser(receiverId)
         io.to(user?.socketId).emit("getUserWritting", {
-            senderId, text, senderChat
+            senderId, text, senderChat, type
+        })
+    })
+    socket.on("sendAudioRecording", ({ senderId, receiverId, text, senderChat }: Socket) => {
+        let type = "audio"
+        const user = getUser(receiverId)
+        io.to(user?.socketId).emit("getUserWritting", {
+            senderId, text, senderChat, type
         })
     })
     socket.on("deleteMessage", ({ senderId, receiverId, text, senderChat, messageId, createdAt }: Socket) => {

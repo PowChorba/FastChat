@@ -49,6 +49,7 @@ export type Messages = {
     createdAt: string
     isDeleted?: boolean
     isImage?: boolean
+    isAudio?: boolean
 }
 
 export type CreateMessages = {
@@ -56,6 +57,8 @@ export type CreateMessages = {
     messageAuthor: string
     chatId: string
     isImage?: boolean
+    isAudio?: boolean
+    _id?: string
 }
 
 //DELETE USER
@@ -75,6 +78,8 @@ export interface GetMessageData {
     senderChat: string,
     messageId: string
     isImage: boolean
+    type?: string
+    isAudio: boolean
 }
 
 //GROUPS CHATS

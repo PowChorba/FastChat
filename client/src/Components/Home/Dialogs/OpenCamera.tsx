@@ -113,12 +113,12 @@ export default function OpenCamera({ setOpenCam, currentChat, currentUser, setMe
             </AlertDialogBody>
             <AlertDialogFooter className={s.footer}>
               {
-                image === '' 
-                ? <Button colorScheme="teal" ml={3} variant="outline" onClick={()=>capturePhoto()}>Capture Photo</Button>
-                : <div>
+                image === ''
+                  ? <Button colorScheme="teal" ml={3} variant="outline" onClick={() => capturePhoto()}>Capture Photo</Button>
+                  : <div>
                     <Button colorScheme="teal" ml={3} variant="outline" onClick={retakePhoto}>Retake Photo</Button>
-                    <Button onClick={(e)=>handleImage(e)} type="submit" colorScheme="teal" ml={3} variant="outline">Send Photo</Button>
-                    </div>
+                    <Button onClick={() => handleImage(image)} colorScheme="teal" ml={3} variant="outline">Send Photo</Button>
+                  </div>
               }
             </AlertDialogFooter>
           </AlertDialogContent>

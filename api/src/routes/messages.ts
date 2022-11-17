@@ -2,14 +2,15 @@ import { Request, Response } from "express";
 import { Messages } from "../models/mensaje";
 
 export const newMessage = async (req: Request, res: Response) => {
-  const { textMessage, messageAuthor, chatId, _id, isImage } = req.body;
+  const { textMessage, messageAuthor, chatId, _id, isImage, isAudio } = req.body;
   try {
     const newMessage = await Messages.create({
       textMessage,
       messageAuthor,
       chatId,
       _id,
-      isImage
+      isImage,
+      isAudio
     });
     res.status(201).send(newMessage);
   } catch (error) {

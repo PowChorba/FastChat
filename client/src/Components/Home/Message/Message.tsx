@@ -35,7 +35,7 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
         return (hours + ':' + minutes)
     }
 
-    // console.log(mensajes, 'images')
+    console.log(mensajes, 'UDIO')
 
     return(
         <div className={s.contenedorMensajes}>
@@ -64,7 +64,8 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
                                     </div> 
                                 : <div>
                                     {
-                                            e.isImage ? <img src={e.textMessage} alt="Not Found" /> : <p className={s.textoMensajes}>{e.textMessage}</p> 
+                                            e.isImage ? <img src={e.textMessage} alt="Not Found" /> : e.isAudio ? 
+                                            <audio src={e.textMessage} controls /> :<p className={s.textoMensajes}>{e.textMessage}</p> 
                                     }
                                 </div>
                             }
