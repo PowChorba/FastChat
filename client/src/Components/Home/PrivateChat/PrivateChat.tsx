@@ -5,6 +5,8 @@ import { ALL_MESSAGES, USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
+import { BsMicFill } from 'react-icons/bs'
+
 
 interface Props {
     chatUser: User[]
@@ -23,6 +25,7 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
 
     const [inaki, setInaki] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
+    const [sendingAudio, setSendingAudio] = useState(false)
     //PARA AGARRAR MENSAJES DE CADA CHAT
     const secondUserId = chatUser.find((e) => e._id !== currentUser?._id)
     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
@@ -63,6 +66,7 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
                         chatId: data.senderChat,
                         isImage: data?.isImage,
                         createdAt: new Date().toISOString(),
+                        isAudio: data.isAudio
                     })
                     return getSocketMessage
                 })
@@ -75,14 +79,20 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
                     chatId: allChats[0]?._id,
                     isImage: data?.isImage,
                     createdAt: new Date().toISOString(),
+                    isAudio: data?.isAudio
                 }])
             }
         })
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
             if (data.senderChat === allChats[0]?._id) {
-                if (data.text) setWritting(true)
-                else setWritting(false)
+                if (data.type === "text"){
+                    if (data.text) setWritting(true)
+                    else setWritting(false)
+                } else if (data.type === "audio"){
+                    if (data.text) setSendingAudio(true)
+                    else setSendingAudio(false)
+                }
             }
         })
         if (allChatData.groupName) {
@@ -112,10 +122,13 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
                     <span>{allChatData.groupName ? allChatData?.groupName : secondUserId?.nickName}</span>
                     {
                         writting && !allChatData.groupName ? <p className={s.writtingMessage}>Writting...</p>
-                        : <div>
+                        : sendingAudio && !allChatData.groupName ? <p className={s.writtingMessage}>Sending audio...</p> :
+                        <div>
                             {
                                 allMessages[allMessages?.length - 1]?.isImage 
-                                ? <div className={s.lastImage}><BiImageAlt/>Image...</div> 
+                                ? <div className={s.lastImage}><BiImageAlt/>Image</div> 
+                                : allMessages[allMessages?.length - 1]?.isAudio 
+                                ? <div className={s.lastImage}><BsMicFill/>Audio</div>
                                 : <p className={s.lastMessage}>{allMessages[allMessages.length -1]?.textMessage }</p>
                             }
                         </div>

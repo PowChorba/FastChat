@@ -12,7 +12,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
+import { BsMicFill } from 'react-icons/bs'
 import IconsMenu from "./menu/Menu"
+import AudioRecorderTest from "./Audio/Audio"
 
 interface Props {
     currentUser: User
@@ -25,6 +27,8 @@ interface Props {
 }
 
 export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
+    const [audioStatus, setAudioStatus] = useState(false)
+    const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
     const [emoji, setEmoji] = useState(false)
     const [test, setTest] = useState<Messages[]>([])
@@ -170,6 +174,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                         chatId: data.senderChat,
                         isImage: data.isImage,
                         createdAt: new Date().toISOString(),
+                        isAudio: data.isAudio
                     })
                     return getSocketMessage
                 })
@@ -216,8 +221,13 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     useEffect(() => {
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
-                if (data.text) setWritting(true)
-                else setWritting(false)
+                if (data.type === "text"){
+                    if (data.text) setWritting(true)
+                    else setWritting(false)
+                } else if (data.type === "audio"){
+                    if (data.text) setSendingAudio(true)
+                    else setSendingAudio(false)
+                }
             }
         })
     }, [messageReceived, currentChat, socket])
@@ -296,8 +306,13 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                             ? filterGroupChat.chatsUsers.map(e => {
                                                 return(<span>{e.nickName}{' '}</span>)
                                             })
-                                            : writting ? "Writting..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
+                                            : writting ? "Writting..." : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
                                         }
+                                        {/* {filterGroupChat.groupName
+                                            ? filterGroupChat.chatsUsers.map(e => {
+                                                return(<span>{e.nickName}{' '}</span>)
+                                            })
+                                            : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')} */}
                                     </p>
                                 </div>
                             </div>
@@ -323,11 +338,13 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         })
                                 }
                                 {emoji && <Emojis id={currentUser?._id} chat={currentChat}  setMessages={setMessages}/>}
+                                {audioStatus && <AudioRecorderTest group={filterGroupChat.groupName} friend={friendId._id} chat={currentChat} userId={currentUser?._id} socket={socket} setAudioStatus={setAudioStatus}/>}
                             </div>
                                <div className={s.divGridForm}>
                                     <div className={s.divImagenIconos}>
                                         <BiHappyAlt size="1.5em" onClick={()=>setEmoji(!emoji)}/>
                                         <IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
+                                        <BsMicFill onClick={()=> setAudioStatus(!audioStatus)}/>
                                     </div>
                                     <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                             <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />

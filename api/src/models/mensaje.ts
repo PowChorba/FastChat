@@ -23,6 +23,10 @@ isDeleted: {
 isImage: {
     type: Boolean,
     default: false
+},
+isAudio: {
+    type: Boolean,
+    default: false
 }
 }, {
     timestamps: true,

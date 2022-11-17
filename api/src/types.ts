@@ -28,6 +28,7 @@ export interface Socket {
     messageId?: string
     createdAt?: string
     isImage: boolean
+    isAudio?: boolean
 }
 export interface SocketRoom {
     room: string,
