@@ -68,9 +68,9 @@ export const updateUsers = async (req: Request, res: Response) => {
       );
       if (filterContact?.length === 1) {
         await findUser.updateOne({ $pull: { contacts: contactId } });
-        return res.send("Contact deleted successfully");
+        return res.json({ok:true,contactId,userId, msg:"Contact deleted successfully"});
       } else {
-        return res.send("Esta rompiendo");
+        return res.json({ok:false, msg:"Esta rompiendo"});
       }
     } else if (findUser && bloqUserId) {
       const filterBlocks = findUser.bloqUsers?.filter(
