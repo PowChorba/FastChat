@@ -1,0 +1,10 @@
+.contenedorInput{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #000;
+}
+
+.searchIcon {
+    font-size: 20px;
+}

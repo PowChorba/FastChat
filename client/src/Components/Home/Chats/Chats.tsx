@@ -9,12 +9,13 @@ import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
-import { AiOutlineSend } from "react-icons/ai"
+import { AiOutlineSearch, AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
 import { BsMicFill } from 'react-icons/bs'
 import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
+import SearchMessages from "../Extras/SearchMessages"
 interface Props {
     currentUser: User
     currentChat: string
@@ -107,13 +108,24 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     }
 
     const [profileChat, setProfileChat] = useState(false)
+    const [searchMessages, setSearchMessages] = useState(false)
 
     const handleProfileChat = () => {
         setProfileChat(true)
+        setSearchMessages(false)
     }
 
     const handleCloseProfileChat = () => {
         setProfileChat(false)
+    }
+
+    const handleSearchMessages = () => {
+        setSearchMessages(true)
+        setProfileChat(false)
+    }
+
+    const handleCloseSearchMessages = () => {
+        setSearchMessages(false)
     }
 
     //PROBANDO SI EL USUARIO TIENE A LA PERSONA QUE LE ENVIO EL MENSAJE
@@ -292,10 +304,10 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                         <h4>Open a conversation or start a new one!</h4>
                     </div>
                     :
-                    <div className={profileChat ? s.contenedor : s.asd}>
+                    <div className={profileChat || searchMessages ? s.contenedor : s.asd}>
                         <div className={s.divMensajes}>
-                            <div className={s.divDatosUserChat} onClick={handleProfileChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
-                                <div className={s.contenedorPerfil}>
+                            <div className={s.divDatosUserChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
+                                <div className={s.contenedorPerfil} onClick={handleProfileChat}>
                                     <p>{filterGroupChat.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
                                     <p className={s.conection}>
                                         {
@@ -307,6 +319,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         }
                                     </p>
                                 </div>
+                                <div><AiOutlineSearch onClick={handleSearchMessages}/></div>
                             </div>
                             <div className={s.contenedorMensajes}>
                                 <div className={s.buttonsAddBloq}>
@@ -356,6 +369,13 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                 filterGroupChat.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
                                     : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser}/>
                             }
+                        </div>
+                        <div className={searchMessages ? s.divMensajes : s.displayNone}>
+                            <div className={s.divCerrarInfo}>
+                                <button onClick={handleCloseSearchMessages} className={s.botonCerrarInfo}><GrClose /></button>
+                                <span>{' '}Search Messages</span>
+                            </div>
+                            <SearchMessages/>
                         </div>
                     </div>
             }
