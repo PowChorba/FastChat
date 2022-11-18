@@ -108,8 +108,8 @@ export default function Home(){
 
 
     return(
-    <Grid templateColumns='1fr 3fr' className={s.contenedor}>
-        <GridItem className={s.divAside}>
+    <div className={s.contenedor}>
+        <div className={s.divAside}>
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile || !block || !createGroup ? s.none : s.asdasd}>
                 <div className={s.perfilAside}>
@@ -186,9 +186,9 @@ export default function Home(){
                 </div>
                 <ChatGroups currentUser={currentUser}/>
             </div>
-        </GridItem>
+        </div>
         <div>
             <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
         </div>
-    </Grid>)
+    </div>)
 }

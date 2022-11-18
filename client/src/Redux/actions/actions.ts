@@ -139,6 +139,7 @@ export const BLOCK_USER = createAsyncThunk(
     'BLOCK_USER',async (data: any) => {
         try {
             const response = await axios.put('http://localhost:3001/users', data)
+            console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)

@@ -1,18 +1,30 @@
-.contenedor{
-    width: 100%;
-}
+
 
 .profileUsers {
     display: flex;
     align-items: center;
-    margin: 5px;
-    width: 98%;
     padding: 10px;
+    position: relative;
 }
 
 .profileUsers:hover {
     background-color: #EDF2F7;
-    cursor: pointer;
+}
+
+.arrowDown{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 5px;
+}
+
+.arrowDown span{
+    visibility: hidden;
+    font-size: 20px;
+}
+
+.profileUsers:hover span{
+    visibility: visible;
 }
 
 .none {
@@ -43,13 +55,21 @@
     font-size: 20px;
 }
 
-.arrowDown span{
-    visibility: hidden;
-    display: flex;
-    align-items: flex-start;
+.divContactsMap{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 65vh;
+    max-height: 65vh;
 }
 
-.arrowDown:hover span{
-    visibility: visible;
-    font-size: 20px;
+.divContactsMap::-webkit-scrollbar{
+    width: 6px;
+}
+
+.divContactsMap::-webkit-scrollbar-track{
+    background: rgba(255, 0, 0, 0);
+}
+
+.divContactsMap::-webkit-scrollbar-thumb{
+    background-color: #EDF2F7;
 }

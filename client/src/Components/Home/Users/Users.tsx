@@ -69,7 +69,8 @@ export default function Users({currentUser}: Props){
             <div className={s.formBusqueda}>
                 <Input variant='filled' type="text" name="busqueda" value={busqueda} onChange={handleBusqueda} placeholder='Search user...'/>
             </div>
-                {
+            <div className={s.divContactsMap}>
+            {
                      searchUsers.length !== 0 
                     ? searchUsers.map(e => {
                         return(<div key={e._id} className={s.profileUsers}>
@@ -102,5 +103,6 @@ export default function Users({currentUser}: Props){
                             </div>)
                     })
                 }
+            </div>    
         </div>)
 }

@@ -45,6 +45,7 @@ export default function BlockUsers({currentUser}: Props){
             <div className={s.formInput}>
                     <Input variant='filled' type="text" placeholder="Search Block Users" value={busqueda} onChange={handleBusqueda}/>
             </div>
+            <div className={s.divContactsMap}>
             {
                     currentUser && currentUser.bloqUsers?.length === 0 ? <p className={s.textNotBlock}>Not block Users.</p>
                     : busquedaBlock?.length !== 0 
@@ -69,10 +70,8 @@ export default function BlockUsers({currentUser}: Props){
                     : currentUser?.bloqUsers?.map((e) => {
                         return(
                             <div key={e._id} className={s.profileUsers}>
-                                <div className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
-                                <br />
                                 <div className={s.arrowDown}>
                                     <Menu>
                                         <MenuButton><IoIosArrowDown/></MenuButton>
@@ -81,9 +80,9 @@ export default function BlockUsers({currentUser}: Props){
                                         </MenuList>
                                     </Menu>
                                 </div>
-                                </div>
                             </div>)
                     })
                 }
+            </div>
         </div>)
 }

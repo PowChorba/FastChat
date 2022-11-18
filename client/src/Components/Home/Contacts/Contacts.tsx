@@ -84,7 +84,7 @@ export default function Contacts({currentUser}: Props) {
         }
 
     return(
-        <div>
+        <div className={s.contenedor}>
                 <div className={s.formInput}>
                     <Input variant='filled' type="text" placeholder="Seach contacts" value={busqueda} onChange={handleBusqueda}/>
                 </div>
