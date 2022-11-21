@@ -37,7 +37,45 @@ export const clientReducer = createReducer(initialState, (callback) => {
         state.chats = action.payload
     })
     callback.addCase(NEW_CHAT.fulfilled, (state, action) => {
-        state.newChat = state.newChat?.concat(action.payload)
+        let payloadChats;
+        console.log(action.payload.chat)
+        if (action.payload.ok){
+            payloadChats = {
+                        _id: action.payload.chat._id,
+                        chatsUsers: action.payload.chat.chatsUsers,
+                        creator: action.payload.chat.chatsUsers[0]._id,
+                        groupName: action.payload.chat.groupName || ""
+                    }
+
+            // if (action.payload.chat.groupName) {
+            //     payloadChats = {
+            //         _id: action.payload.chat._id,
+            //         chatsUsers: action.payload.chat.chatsUsers,
+            //         creator: action.payload.chat.chatsUsers[0]._id,
+            //         groupName: action.payload.chat.groupName
+            //     }
+            // } else{
+            //     payloadChats = {
+            //         _id: action.payload.chat._id,
+            //         chatsUsers: action.payload.chat.chatsUsers,
+            //         creator: action.payload.chat.chatsUsers[0]._id,
+            //     }
+            // }
+            // _id: string;
+            // chatsUsers: User[];
+            // creator: User;
+            // img?: string | undefined;
+            // groupName?: string | undefined;
+            // admin?: User[] | undefined;
+            let newChat = {
+                _id: action.payload.chat._id,
+                chatsUsers: action.payload.chat.chatsUsers,
+                creator: action.payload.chat.chatsUsers[0]._id,
+            }
+            state.chats = [...state.chats, newChat]
+            state.userChats = [...state.chats,payloadChats]
+        }
+
     })
     callback.addCase(USER_BY_ID.fulfilled, (state, action) => {
         state.users = action.payload
@@ -69,7 +107,7 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 })
                 searchContactBlocked ? stateUserCopy[indexActualUser].bloqUsers.push(searchContactBlocked) : skip = ""
                 state.users = stateUserCopy
-            } 
+            }
         }
     })
     callback.addCase(UNBLOCK_USER.fulfilled, (state, action) => {
