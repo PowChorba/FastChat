@@ -22,9 +22,9 @@ export default function BlockUsers({currentUser}: Props){
         setBusqueda(e.target.value)
     }
 
-    const busquedaBlock = currentUser?.bloqUsers?.filter(e => e.nickName === busqueda 
-        || e.nickName.toLowerCase() === busqueda
-        || e.nickName.toUpperCase() === busqueda)
+    const busquedaBlock = currentUser?.bloqUsers?.filter(e => e.nickName.includes(busqueda) 
+        || e.nickName.toLowerCase().includes(busqueda)
+        || e.nickName.toUpperCase().includes(busqueda))
     
     
     const getUserId = (e: string) => {
@@ -43,7 +43,7 @@ export default function BlockUsers({currentUser}: Props){
     return(
         <div>
             <div className={s.formInput}>
-                    <Input variant='filled' type="text" placeholder="Search Block Users" value={busqueda} onChange={handleBusqueda}/>
+                <Input variant='filled' type="text" placeholder="Search Block Users" value={busqueda} onChange={handleBusqueda}/>
             </div>
             <div className={s.divContactsMap}>
             {

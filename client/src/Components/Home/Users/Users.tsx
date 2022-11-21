@@ -18,9 +18,9 @@ export default function Users({currentUser}: Props){
 
     //BUSQUEDA DE CONTACTOS
     const [busqueda, setBusqueda] = useState('')
-    const searchUsers = filterUsers.filter(e => e.nickName === busqueda 
-        || e.nickName.toLowerCase() === busqueda 
-        || e.nickName.toUpperCase() === busqueda)
+    const searchUsers = filterUsers.filter(e => e.nickName.includes(busqueda) 
+        || e.nickName.toLowerCase().includes(busqueda) 
+        || e.nickName.toUpperCase().includes(busqueda))
 
     const handleBusqueda = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBusqueda(e.target.value)
