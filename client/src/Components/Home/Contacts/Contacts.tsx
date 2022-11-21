@@ -25,9 +25,9 @@ export default function Contacts({currentUser}: Props) {
         setBusqueda(e.target.value)
     }
 
-    const busquedaContacts = currentUser?.contacts?.filter(e => e.nickName === busqueda 
-        || e.nickName.toLowerCase() === busqueda
-        || e.nickName.toUpperCase() === busqueda)
+    const busquedaContacts = currentUser?.contacts?.filter(e => e.nickName.includes(busqueda)
+        || e.nickName.toLowerCase().includes(busqueda)
+        || e.nickName.toUpperCase().includes(busqueda))
 
     const handleDatosChat = (e: string | undefined) => {
         if(currentUser?._id !== undefined && e) {

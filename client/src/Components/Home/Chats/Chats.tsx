@@ -16,6 +16,7 @@ import { BsMicFill } from 'react-icons/bs'
 import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
 import SearchMessages from "../Extras/SearchMessages"
+import { date, fechaActual } from "../Tools/Tools"
 interface Props {
     currentUser: User
     currentChat: string
@@ -249,13 +250,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         })
     }, [currentUser, socket])
 
-    const fechaActual = (e: string) => {
-        const date = new Date(e)
-        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
-    }
-
-    const date = new Date()
-
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
 
     // BORRA O AGREGA MENSAJE 
@@ -291,9 +285,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
     const bloqUser = () => {
         dispatch(BLOCK_USER(block))
         dispatch(DELETE_CHAT(currentChat))
-        setTimeout(() => {
-            window.location.reload()
-        }, 2000)
     }
 
     return (
@@ -342,7 +333,6 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                         })
                                 }
                                 {emoji && <Emojis id={currentUser?._id} chat={currentChat}  setMessages={setMessages}/>}
-                                {/* {audioStatus && <AudioRecorderTest group={filterGroupChat.groupName} friend={friendId._id} chat={currentChat} userId={currentUser?._id} socket={socket} setAudioStatus={setAudioStatus}/>} */}
                             </div>
                                <div className={s.divGridForm}>
                                     <div className={s.divImagenIconos}>
@@ -375,8 +365,8 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                                 <button onClick={handleCloseSearchMessages} className={s.botonCerrarInfo}><GrClose /></button>
                                 <span>{' '}Search Messages</span>
                             </div>
-                            <SearchMessages/>
-                        </div>
+                            <SearchMessages filterMessages={filterMessages}/>
+                        </div> 
                     </div>
             }
         </div>)

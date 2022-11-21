@@ -62,7 +62,6 @@ export default function ChatProfile({user, currentChat, currentUser}: Props){
         <div className={s.contenedor}>
             <img src={user?.image} alt="asd" width='250px' className={s.imagen} onClick={handleOpenImg}/>
             <h4>{user?.nickName}</h4>
-            <audio src="blob:http://localhost:3000/12dc14dc-009d-47c2-8b5a-d4e031c64a1a" autoPlay={true}/>
             <p>{user?.userEmail}</p>
             <div>
 
