@@ -73,6 +73,7 @@ export const NEW_CHAT = createAsyncThunk(
     'NEW_CHAT',async (newChat: NewChat) => {
         try {
             const response = await axios.post('http://localhost:3001/chats', newChat)
+            console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)
@@ -139,6 +140,7 @@ export const BLOCK_USER = createAsyncThunk(
     'BLOCK_USER',async (data: any) => {
         try {
             const response = await axios.put('http://localhost:3001/users', data)
+            // console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)
@@ -162,6 +164,7 @@ export const DELETE_MESSAGE = createAsyncThunk(
         let data = {messageId}
         try {
             const response = await axios.put('http://localhost:3001/messages', data)
+            console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)

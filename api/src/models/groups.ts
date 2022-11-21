@@ -3,7 +3,6 @@ import { Schema, model, SchemaType } from "mongoose";
 const GroupsSchema = new Schema({
     groupName: {
         type: String,
-        require: true
     },
     members: [{
         type: Schema.Types.ObjectId,

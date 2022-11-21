@@ -44,6 +44,8 @@ export const updateUsers = async (req: Request, res: Response) => {
   try {
     const findUser = await Users.findById(userId).populate("contacts");
     const findUserDos = await Users.findById(contact);
+    const blockedUser = await Users.findById(bloqUserId).populate("contacts");
+
     const alreadyAdded = findUser?.contacts?.filter(
       (e) => e._id?.toString() === contact
     );
@@ -52,25 +54,26 @@ export const updateUsers = async (req: Request, res: Response) => {
     );
     if (findUser && findUserDos) {
       if (alreadyAdded?.length !== 0) {
-        return res.send("Contact already on list");
+        return res.json({ok:true,msg:"Contact already exist"});
       } else if (alreadyBloq?.length !== 0) {
-        return res.send("Contact already blocked");
+        return res.send({ok:true,msg:"Contact already blocked"});
       } else {
         await findUser.updateOne({ $push: { contacts: contact } });
-        return res.send(findUser);
+
+        return res.json({ok:true,userId , findUserDos ,msg:"contact created"});
       }
     } else if (!contact && findUser && !contactId && !bloqUserId) {
       await findUser.updateOne({ image, password, nickName });
-      return res.send("User updated");
+      return res.json({ok:true, msg:"User updated"});
     } else if (findUser && contactId) {
       const filterContact = findUser.contacts?.filter(
         (e) => e._id?.toString() === contactId
       );
       if (filterContact?.length === 1) {
         await findUser.updateOne({ $pull: { contacts: contactId } });
-        return res.send("Contact deleted successfully");
+        return res.json({ok:true,contactId,userId, msg:"Contact deleted successfully"});
       } else {
-        return res.send("Esta rompiendo");
+        return res.json({ok:false, msg:"Esta rompiendo"});
       }
     } else if (findUser && bloqUserId) {
       const filterBlocks = findUser.bloqUsers?.filter(
@@ -78,10 +81,14 @@ export const updateUsers = async (req: Request, res: Response) => {
       );
       if (filterBlocks?.length === 0) {
         await findUser.updateOne({ $push: { bloqUsers: bloqUserId } });
-        return res.send("Contact blocked successfully");
+        return res.json({ok:true,userId , blockUserId: bloqUserId ,msg:"Contact blocked successfully"});
+
       } else if (filterBlocks?.length === 1) {
-        await findUser.updateOne({ $pull: { bloqUsers: bloqUserId } });
-        return res.send("Contact unblocked successfully");
+        await findUser.updateOne({ $pull: { bloqUsers: bloqUserId }});
+        // await findUser.updateOne({ $push:{contacts: blockedUser}})
+        
+        return res.json({ok:true,userId ,findUser, blockedUser, blockUserId: bloqUserId ,msg:"Contact unblocked successfully"});
+        
       } else {
         return res.send("Contact blocked successfully ");
       }
@@ -89,7 +96,7 @@ export const updateUsers = async (req: Request, res: Response) => {
       return res.send("We could not find that user");
     }
   } catch (error) {
-    return console.log(error);
+    return res.status(404).json({ok:false,msg:error});
   }
 };
 

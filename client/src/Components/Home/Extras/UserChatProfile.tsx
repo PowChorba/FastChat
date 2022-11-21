@@ -10,16 +10,17 @@ interface Props {
     user: User
     currentChat: string
     currentUser: User
+    setProfileChat : React.Dispatch<React.SetStateAction<boolean>>
+    setCurrentChat: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function ChatProfile({user, currentChat, currentUser}: Props){
+export default function ChatProfile({setCurrentChat,user, currentChat, currentUser, setProfileChat}: Props){
     const dispatch = useAppDispatch()
 
     const deleteChat = async () => {
         dispatch(DELETE_CHAT(currentChat))
-        setTimeout(() => {
-            window.location.reload()
-        },2000)
+        setProfileChat(false)
+        setCurrentChat("")
     }
     
     const [openImg, setOpenImg] = useState(false)
@@ -55,7 +56,10 @@ export default function ChatProfile({user, currentChat, currentUser}: Props){
         
     const bloqUser = () => {
         dispatch(BLOCK_USER(block))
+        setProfileChat(false)
         dispatch(DELETE_CONTACT(deleteData))
+        dispatch(DELETE_CHAT(currentChat))
+        setCurrentChat("")
     }
 
     return(

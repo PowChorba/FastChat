@@ -25,9 +25,10 @@ interface Props {
     allChats: Chats[]
     setPendingMessages: Dispatch<SetStateAction<Messages[]>>
     pendingMessages: Messages[]
+    setCurrentChat: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
+export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
     const [audioStatus, setAudioStatus] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
@@ -286,7 +287,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
         dispatch(BLOCK_USER(block))
         dispatch(DELETE_CHAT(currentChat))
     }
-
+console.log(currentChat)
     return (
         <div>
             {
@@ -299,10 +300,10 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                         <div className={s.divMensajes}>
                             <div className={s.divDatosUserChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
                                 <div className={s.contenedorPerfil} onClick={handleProfileChat}>
-                                    <p>{filterGroupChat.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
+                                    <p>{filterGroupChat?.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
                                     <p className={s.conection}>
                                         {
-                                            filterGroupChat.groupName
+                                            filterGroupChat?.groupName
                                             ? filterGroupChat.chatsUsers.map(e => {
                                                 return(<span key={e._id}>{e.nickName}{' '}</span>)
                                             })
@@ -315,7 +316,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                             <div className={s.contenedorMensajes}>
                                 <div className={s.buttonsAddBloq}>
                                     {
-                                        !filterGroupChat.groupName && (prueba?.length !== 0 || !pows ? <span></span>
+                                        !filterGroupChat?.groupName && (prueba?.length !== 0 || !pows ? <span></span>
                                                 : <div className={s.divAgregarBloquear}>
                                                     <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
                                                     <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
@@ -353,11 +354,11 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
                         <div className={profileChat ? s.divMensajes : s.displayNone}>
                             <div className={s.divCerrarInfo}>
                                 <button onClick={handleCloseProfileChat} className={s.botonCerrarInfo}><GrClose /></button>
-                                <span>{' '}{filterGroupChat.groupName ? 'Group info' : 'Contact info'}</span>
+                                <span>{' '}{filterGroupChat?.groupName ? 'Group info' : 'Contact info'}</span>
                             </div>
                             {
-                                filterGroupChat.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
-                                    : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser}/>
+                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
+                                    : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat = {setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser}/>
                             }
                         </div>
                         <div className={searchMessages ? s.divMensajes : s.displayNone}>
