@@ -140,7 +140,7 @@ export const BLOCK_USER = createAsyncThunk(
     'BLOCK_USER',async (data: any) => {
         try {
             const response = await axios.put('http://localhost:3001/users', data)
-            console.log(response.data)
+            // console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)
@@ -164,6 +164,7 @@ export const DELETE_MESSAGE = createAsyncThunk(
         let data = {messageId}
         try {
             const response = await axios.put('http://localhost:3001/messages', data)
+            console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)

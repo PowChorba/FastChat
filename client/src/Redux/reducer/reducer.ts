@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import Users from '../../Components/Home/Users/Users';
 import { Chats, Messages, NewChat, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER } from '../actions/actions'
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT } from '../actions/actions'
 
 interface Reducer {
     users: User[],
@@ -39,41 +39,39 @@ export const clientReducer = createReducer(initialState, (callback) => {
     callback.addCase(NEW_CHAT.fulfilled, (state, action) => {
         let payloadChats;
         console.log(action.payload.chat)
-        if (action.payload.ok){
+        if (action.payload.ok) {
             payloadChats = {
-                        _id: action.payload.chat._id,
-                        chatsUsers: action.payload.chat.chatsUsers,
-                        creator: action.payload.chat.chatsUsers[0]._id,
-                        groupName: action.payload.chat.groupName || ""
-                    }
+                _id: action.payload.chat._id,
+                chatsUsers: action.payload.chat.chatsUsers,
+                creator: action.payload.chat.chatsUsers[0]._id,
+                groupName: action.payload.chat.groupName || ""
+            }
 
-            // if (action.payload.chat.groupName) {
-            //     payloadChats = {
-            //         _id: action.payload.chat._id,
-            //         chatsUsers: action.payload.chat.chatsUsers,
-            //         creator: action.payload.chat.chatsUsers[0]._id,
-            //         groupName: action.payload.chat.groupName
-            //     }
-            // } else{
-            //     payloadChats = {
-            //         _id: action.payload.chat._id,
-            //         chatsUsers: action.payload.chat.chatsUsers,
-            //         creator: action.payload.chat.chatsUsers[0]._id,
-            //     }
-            // }
-            // _id: string;
-            // chatsUsers: User[];
-            // creator: User;
-            // img?: string | undefined;
-            // groupName?: string | undefined;
-            // admin?: User[] | undefined;
             let newChat = {
                 _id: action.payload.chat._id,
                 chatsUsers: action.payload.chat.chatsUsers,
                 creator: action.payload.chat.chatsUsers[0]._id,
             }
             state.chats = [...state.chats, newChat]
-            state.userChats = [...state.chats,payloadChats]
+            state.userChats = [...state.chats, payloadChats]
+        }
+
+    })
+    callback.addCase(CREATE_GROUP_CHAT.fulfilled, (state, action) => {
+        let payloadChats;
+        console.log(action.payload.chat)
+        if (action.payload.ok) {
+            payloadChats = {
+                _id: action.payload.chat._id,
+                chatsUsers: action.payload.chat.chatsUsers,
+                creator: action.payload.chat.creator,
+                groupName: action.payload.chat.groupName,
+                admin: action.payload.chat.admin,
+                img: action.payload.chat.img
+            }
+            
+            state.chats = [...state.chats, payloadChats]
+            state.userChats = [...state.userChats, payloadChats]
         }
 
     })
@@ -90,6 +88,7 @@ export const clientReducer = createReducer(initialState, (callback) => {
         state.searchUser = action.payload
     })
     callback.addCase(BLOCK_USER.fulfilled, (state, action) => {
+        console.log(action.payload)
         if (action.payload.ok) {
             if (action.payload.msg === "Contact blocked successfully") {
                 let stateUserCopy = state.users
@@ -107,10 +106,19 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 })
                 searchContactBlocked ? stateUserCopy[indexActualUser].bloqUsers.push(searchContactBlocked) : skip = ""
                 state.users = stateUserCopy
+                let userChatsCopy = state.userChats
+                let userDeleted = userChatsCopy.filter(user => user.chatsUsers[1]._id !== action.payload.blockUserId)
+                console.log(userDeleted)
+                console.log(action.payload.blockUserId)
+                state.userChats = userDeleted
             }
+            // } else if (action.payload.msg === "Contact unblocked successfully"){
+            //     state.userChats
+            // }
         }
     })
     callback.addCase(UNBLOCK_USER.fulfilled, (state, action) => {
+        console.log(action.payload)
         if (action.payload.ok) {
             let stateUserCopy = state.users
             let indexActualUser = state.users.findIndex((user) => {
@@ -121,8 +129,25 @@ export const clientReducer = createReducer(initialState, (callback) => {
                     return blockUsers._id !== action.payload.blockUserId
                 })
                 stateUserCopy[indexActualUser].bloqUsers = unblockUser
+                stateUserCopy[indexActualUser].contacts = unblockUser
                 state.users = stateUserCopy
             }
+        }
+    })
+    callback.addCase(DELETE_CHAT.fulfilled, (state, action) => {
+        console.log(action.payload)
+        if (action.payload.ok) {
+            let stateChatsCopy = state.chats
+            let userChatsCopy = state.userChats
+            let chatDeleted = stateChatsCopy.filter((chat) => {
+                return chat._id !== action.payload.chatId
+            })
+            // console.log(chatDeleted)
+            let userChatDeleted = userChatsCopy.filter((chat) => {
+                return chat._id !== action.payload.chatId
+            })
+            state.chats = chatDeleted
+            state.userChats = userChatDeleted
         }
     })
     callback.addCase(DELETE_CONTACT.fulfilled, (state, action) => {
@@ -136,6 +161,9 @@ export const clientReducer = createReducer(initialState, (callback) => {
             })
             stateUserCopy[indexActualUser].contacts = deletedContact
             state.users = stateUserCopy
+            let userChatsCopy = state.userChats
+            let userDeleted = userChatsCopy.filter(chat => chat._id !== action.payload.contactId)
+            state.userChats = userDeleted
         }
     })
     callback.addCase(USER_CONTACTS.fulfilled, (state, action) => {

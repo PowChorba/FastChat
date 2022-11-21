@@ -9,9 +9,10 @@ import s from './ChatGroups.module.css'
 
 interface Props {
     currentUser: User
+    setCreateGroup: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function ChatGroups({currentUser}: Props){
+export default function ChatGroups({currentUser, setCreateGroup}: Props){
     const dispatch = useAppDispatch()
     const [group, setGroup] = useState({
         img: '',
@@ -55,9 +56,7 @@ export default function ChatGroups({currentUser}: Props){
         e.preventDefault()
         if(!group.img) group.img = defaultImage
         dispatch(CREATE_GROUP_CHAT(group))
-        setTimeout(() => {
-            window.location.reload()
-        }, 1500)
+        setCreateGroup(true)
     } 
 
     return(

@@ -24,10 +24,10 @@ interface Props {
     allChats: Chats[]
     setPendingMessages: Dispatch<SetStateAction<Messages[]>>
     pendingMessages: Messages[]
+    setCurrentChat: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function Chatss({ currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
-    console.log(friendId)
+export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
     const [audioStatus, setAudioStatus] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
@@ -296,7 +296,7 @@ export default function Chatss({ currentUser, currentChat, friendId, socket, all
             window.location.reload()
         }, 2000)
     }
-console.log(filterGroupChat)
+console.log(currentChat)
     return (
         <div>
             {
@@ -367,7 +367,7 @@ console.log(filterGroupChat)
                             </div>
                             {
                                 filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
-                                    : <ChatProfile user={friendId} currentChat={currentChat} currentUser={currentUser}/>
+                                    : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat = {setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser}/>
                             }
                         </div>
                         <div className={searchMessages ? s.divMensajes : s.displayNone}>

@@ -44,6 +44,8 @@ export const updateUsers = async (req: Request, res: Response) => {
   try {
     const findUser = await Users.findById(userId).populate("contacts");
     const findUserDos = await Users.findById(contact);
+    const blockedUser = await Users.findById(bloqUserId).populate("contacts");
+
     const alreadyAdded = findUser?.contacts?.filter(
       (e) => e._id?.toString() === contact
     );
@@ -82,8 +84,10 @@ export const updateUsers = async (req: Request, res: Response) => {
         return res.json({ok:true,userId , blockUserId: bloqUserId ,msg:"Contact blocked successfully"});
 
       } else if (filterBlocks?.length === 1) {
-        await findUser.updateOne({ $pull: { bloqUsers: bloqUserId } });
-        return res.json({ok:true,userId , blockUserId: bloqUserId ,msg:"Contact unblocked successfully"});
+        await findUser.updateOne({ $pull: { bloqUsers: bloqUserId }});
+        // await findUser.updateOne({ $push:{contacts: blockedUser}})
+        
+        return res.json({ok:true,userId ,findUser, blockedUser, blockUserId: bloqUserId ,msg:"Contact unblocked successfully"});
         
       } else {
         return res.send("Contact blocked successfully ");

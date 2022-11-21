@@ -1,5 +1,6 @@
 import e, {Request, Response} from 'express'
 import { Chats } from '../models/chats'
+import { Users } from '../models/users'
 
 export const newChat = async (req: Request,res: Response) => {
     const { firstUser, secondUser, groupName, chatsUsersId , admin, creator , img } = req.body
@@ -25,7 +26,7 @@ export const newChat = async (req: Request,res: Response) => {
                 admin,
                 img
             }
-            res.json({ ok: true, message:"succesfully created" ,chat })
+            res.json({ ok: true, message:"succesfully created" ,chat: groupsCreated })
         }
         else if(alreadyChatOne || alreadyChatTwo){
             return res.send('You have already created a chat with that user')
@@ -67,10 +68,10 @@ export const deleteChat =async (req:Request, res: Response) => {
         const findChat = await Chats.findById(chatId)
         if(findChat){
             findChat.deleteOne({_id : chatId})
-            return res.send('Chat deleted successfully')
+            return res.json({ok:true ,chatId , msg:'Chat deleted successfully'})
         }
     } catch (error) {
-        console.log(error)
+        res.json({ok:false, msg: "error"})
     }
 }
 

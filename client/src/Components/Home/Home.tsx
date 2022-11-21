@@ -184,11 +184,11 @@ export default function Home(){
                     <button onClick={handleGroups} className={s.botonAtras}>{'<'}</button>
                     <Text fontSize='20px'>Create Group</Text>
                 </div>
-                <ChatGroups currentUser={currentUser}/>
+                <ChatGroups setCreateGroup={setCreateGroup} currentUser={currentUser}/>
             </div>
         </div>
         <div>
-            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
+            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
         </div>
     </div>)
 }
