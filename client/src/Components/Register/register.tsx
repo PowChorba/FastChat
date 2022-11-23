@@ -14,17 +14,6 @@ interface FormState{
     inputValue: CreateUser
 }
 
-// function handleErrors(user: CreateUser){
-//     let error: ErrorsUser = {
-//         nickName: false,
-//         password: false
-//     }
-//     if(user.nickName === '') error.nickName = true
-//     else if(user.password === '') error.password = true 
-//     else if (user.password.length < 6 ) error.password = true
-//     return error
-// }
-
 
 export default function Register() {
     const [user, setUser] = useState<FormState['inputValue']>({
@@ -34,7 +23,6 @@ export default function Register() {
         image: ''
     })
 
-    console.log(user.userEmail)
     const auth = getAuth()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()

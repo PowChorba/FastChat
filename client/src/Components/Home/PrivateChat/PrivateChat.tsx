@@ -1,11 +1,12 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { BiImageAlt } from "react-icons/bi"
-import { ALL_MESSAGES, USER_CHATS } from "../../../Redux/actions/actions"
+import {  USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
 import { BsMicFill } from 'react-icons/bs'
+import { newDate } from "../Tools/Tools"
 
 
 interface Props {
@@ -13,10 +14,11 @@ interface Props {
     currentUser: User
     socket: any
     allChatData: Chats
+    allMessages: Messages[]
     setPendingMessages: Dispatch<SetStateAction<Messages[]>>
 }
 
-export default function PrivateChat({ chatUser, currentUser, socket, allChatData, setPendingMessages }: Props) {
+export default function PrivateChat({ chatUser, currentUser, socket, allChatData, setPendingMessages, allMessages }: Props) {
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",
@@ -31,22 +33,12 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
     let allChats = useAppSelector(state => state.clientReducer.userChats)
     const dispatch = useAppDispatch()
-    let allMessages = useAppSelector(state => state.clientReducer.messages)
     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
     allChats = allChats.filter(e => e.chatsUsers[0]?._id === secondUserId?._id || e.chatsUsers[1]?._id === secondUserId?._id)
     allMessages = allMessages.filter(e => e.chatId === allChatData?._id)
 
-    const newDate = (e: string) => {
-        const date = new Date(e)
-        const hours = date.getHours()
-        let minutes = date.getMinutes()
-        if (minutes < 10) return (hours + ':0' + minutes)
-        return (hours + ':' + minutes)
-    }
-
     useEffect(() => {
         if (currentUser?._id) dispatch(USER_CHATS(currentUser._id))
-        dispatch(ALL_MESSAGES())
     }, [dispatch, currentUser?._id])
 
     useEffect(() => {

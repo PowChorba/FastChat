@@ -20,8 +20,8 @@ export default function Profile({currentUser}: Props){
         password: ''
     })
 
-    const [show, setShow] = useState(false)
-    const handleShow = () => setShow(!show)
+    // const [show, setShow] = useState(false)
+    // const handleShow = () => setShow(!show)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(currentUser._id){

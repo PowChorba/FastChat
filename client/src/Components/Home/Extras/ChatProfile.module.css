@@ -90,11 +90,6 @@
     background-color: #EDF2F7;
 }
 
-/* .groupNameForm{
-    display: flex;
-    position: relative;
-} */
-
 .botonesGroupNameCheck{
     position: absolute;
     top: 10px;
@@ -105,4 +100,11 @@
     position: absolute;
     top: 10px;
     right: 5px;
+}
+
+@media only screen and (max-width: 1280px){
+    .imagen{
+        width: 100px;
+        height: 100px;
+    }
 }

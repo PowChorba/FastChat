@@ -28,3 +28,7 @@
 .divLinkRegister{
     margin-top: 15px;
 }
+
+.mensajeError{
+    color: red;
+}

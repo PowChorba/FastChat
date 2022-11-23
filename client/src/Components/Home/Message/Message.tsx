@@ -4,6 +4,7 @@ import { BiBlock } from 'react-icons/bi'
 import { IoIosArrowDown } from 'react-icons/io'
 import { useState } from "react"
 import DeleteMessage from "./Dialog"
+import { newDate } from "../Tools/Tools"
 
 interface Props {
     mensajes: Messages[]
@@ -24,15 +25,6 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
     const handleDialog = () => {
         setDialog(!dialog)
     }
-
-    const newDate = (e: string) => {
-        const date = new Date(e)
-        const hours = date.getHours()
-        let minutes = date.getMinutes()
-        if(minutes < 10) return (hours + ':0' + minutes)
-        return (hours + ':' + minutes)
-    }
-
 
     return(
         <div className={s.contenedorMensajes}>

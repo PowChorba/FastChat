@@ -22,27 +22,35 @@ export default function Login(){
         })
     }
 
+    const [error,setError] = useState('')
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
             await login(user.userEmail,user.password)
             navigate('/verification')
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {
+                setError(error)
         }    
     }
+
 
     return(
         <div className={s.contenedor}>
             <h1 className={s.tituloLogin}>Login to FastChat!</h1>
             <form onSubmit={e => handleSubmit(e)} className={s.formLogin}>
+                    {
+                        error !== '' && error.toString().includes('been temporarily disabled')
+                        ? <p className={s.mensajeError}>Too many attemps, try again later.</p>
+                        : <p className={s.mensajeError}>Email and password do not match.</p>
+                    }
                 <div className={s.divsForm}>
                     <label>Email: </label>
-                    <Input type="email" name="userEmail" value={user.userEmail} onChange={handleChange} />
+                    <Input type="email" name="userEmail" value={user.userEmail} onChange={handleChange} isInvalid={error !== '' && error.toString().includes('(auth/user-not-found)') ? true : false} errorBorderColor='crimson'/>
                 </div>
                 <div className={s.divsForm}>
                     <label>Password: </label>
-                    <Input type="password" name="password" value={user.password} onChange={handleChange} />
+                    <Input type="password" name="password" value={user.password} onChange={handleChange} isInvalid={error !== '' && error.toString().includes('(auth/wrong-password)') ? true : false} errorBorderColor='crimson'/>
                 </div>
                 <Button type="submit">Login</Button>
             <div className={s.divLinkRegister}>
