@@ -208,6 +208,16 @@ export const UPDATE_GROUP = createAsyncThunk(
         }
     }
 )
-
-
- 
+export const DELETE_NOTIFICATIONS = createAsyncThunk(
+    'DELETE_NOTIFICATIONS',async (data: string) => {
+        try {
+            console.log(data)
+            let chatId = {chatId: data}
+            const response = await axios.put('http://localhost:3001/messages/notification', chatId)
+            console.log(response.data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)

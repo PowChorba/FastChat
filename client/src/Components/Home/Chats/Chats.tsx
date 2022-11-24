@@ -287,7 +287,6 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
         dispatch(BLOCK_USER(block))
         dispatch(DELETE_CHAT(currentChat))
     }
-console.log(currentChat)
     return (
         <div>
             {

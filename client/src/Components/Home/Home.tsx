@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
 import { useEffect, useRef, useState} from 'react'
-import { ALL_CHATS, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
+import { ALL_CHATS, ALL_USERS, DELETE_NOTIFICATIONS, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
@@ -56,6 +56,7 @@ export default function Home(){
     //USE STATE
     const [currentChat, setCurrentChat] = useState('')
     const [pendingMessages, setPendingMessages] = useState<Messages[]>([])
+
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
@@ -68,9 +69,9 @@ export default function Home(){
     }, [dispatch, currentUser?._id])
     
     //SETTEAR VALOR DEL CURRENT CHAT
-    const handleChat = (e: string ) => {
-        if(e) {
-            setCurrentChat(e)
+    const handleChat = (chatId: string ) => {
+        if(chatId) {
+            setCurrentChat(chatId)
         }
     }
     

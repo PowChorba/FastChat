@@ -1,12 +1,14 @@
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react"
 import { BiImageAlt } from "react-icons/bi"
-import { ALL_MESSAGES, USER_CHATS } from "../../../Redux/actions/actions"
+import { ALL_MESSAGES, DELETE_NOTIFICATIONS, USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
 import { BsMicFill } from 'react-icons/bs'
-
+import { IoMdNotificationsOff } from "react-icons/io"
+import useSound from "use-sound"
+import notificationSound from "../../../assets/notification"
 
 interface Props {
     chatUser: User[]
@@ -22,7 +24,6 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
         text: "",
         senderChat: ""
     })
-
     const [inaki, setInaki] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
@@ -35,13 +36,29 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
     allChats = allChats.filter(e => e.chatsUsers[0]?._id === secondUserId?._id || e.chatsUsers[1]?._id === secondUserId?._id)
     allMessages = allMessages.filter(e => e.chatId === allChatData?._id)
+    // PARA NOTIFICACIONES 
+    const [notificationCounter, setNotificationCounter] = useState(0)
+    let count = 0
+    allMessages.forEach((msg) => {
+        return msg.notification === true ? count++ : ""
+    })
 
+    let numberOfNotifications = count + notificationCounter
+    const notificationAudio = ()=>{
+        new Audio(notificationSound).play()
+    }
+    // ----------------------------------------------
     const newDate = (e: string) => {
         const date = new Date(e)
         const hours = date.getHours()
         let minutes = date.getMinutes()
         if (minutes < 10) return (hours + ':0' + minutes)
         return (hours + ':' + minutes)
+    }
+    const notificationsOff = () => {
+        setNotificationCounter(0)
+        console.log(allChatData._id)
+        dispatch(DELETE_NOTIFICATIONS(allChatData._id))
     }
 
     useEffect(() => {
@@ -50,12 +67,19 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
     }, [dispatch, currentUser?._id])
 
     useEffect(() => {
+        // SOCKET MESSAGE RECEIVED 
         socket.current?.on('getMessage', (data: GetMessageData) => {
+            // NOTIFICATION SOUND 
+            // ----------------
             if (data.senderChat === allChatData._id) {
                 setMessageReceived({
                     senderId: data.senderId,
                     text: data.text,
                     senderChat: data.senderChat
+                })
+                setNotificationCounter((prevNumber) => {
+                    console.log(prevNumber)
+                    return prevNumber + 1
                 })
                 setPendingMessages((prevState) => {
                     let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
@@ -85,11 +109,12 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
         })
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
-            if (data.senderChat === allChats[0]?._id) {
-                if (data.type === "text"){
+            if (data.senderChat === allChatData._id) {
+                console.log(data.type)
+                if (data.type === "text") {
                     if (data.text) setWritting(true)
                     else setWritting(false)
-                } else if (data.type === "audio"){
+                } else if (data.type === "audio") {
                     if (data.text) setSendingAudio(true)
                     else setSendingAudio(false)
                 }
@@ -101,7 +126,7 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
                 userId: currentUser?._id
             })
         }
-    }, [socket, allChats, setPendingMessages])
+    }, [socket, setPendingMessages])
 
     //PARA RENDERIZAR EL ULTIMO MENSAJE DE SOCKET
     if (messageReceived.text !== "" && allChatData._id === messageReceived.senderChat) {
@@ -116,25 +141,25 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
     }
 
     return (
-        <div className={s.chat}>
-            <img src={allChatData.img ? allChatData.img : secondUserId?.image} alt="asd" width='50px' className={s.imagen}/>
-                <div className={s.overFlow}>
-                    <span>{allChatData.groupName ? allChatData?.groupName : secondUserId?.nickName}</span>
-                    {
-                        writting && !allChatData.groupName ? <p className={s.writtingMessage}>Writting...</p>
+        <div onClick={() => notificationsOff()} className={s.chat}>
+            <img src={allChatData.img ? allChatData.img : secondUserId?.image} alt="asd" width='50px' className={s.imagen} />
+            <div className={s.overFlow}>
+                <span>{allChatData.groupName ? allChatData?.groupName : secondUserId?.nickName}</span>
+                {
+                    writting && !allChatData.groupName ? <p className={s.writtingMessage}>Writting...</p>
                         : sendingAudio && !allChatData.groupName ? <p className={s.writtingMessage}>Sending audio...</p> :
-                        <div>
-                            {
-                                allMessages[allMessages?.length - 1]?.isImage 
-                                ? <div className={s.lastImage}><BiImageAlt/>Image</div> 
-                                : allMessages[allMessages?.length - 1]?.isAudio 
-                                ? <div className={s.lastImage}><BsMicFill/>Audio</div>
-                                : <p className={s.lastMessage}>{allMessages[allMessages.length -1]?.textMessage }</p>
-                            }
-                        </div>
-                    }
-                </div>
-                <span>{allMessages.length !== 0 && newDate(allMessages[allMessages.length -1]?.createdAt)}</span>
+                            <div>
+                                {
+                                    allMessages[allMessages?.length - 1]?.isImage
+                                        ? <div className={s.lastImage}><BiImageAlt />Image</div>
+                                        : allMessages[allMessages?.length - 1]?.isAudio
+                                            ? <div className={s.lastImage}><BsMicFill />Audio</div>
+                                            : <div> <p className={s.lastMessage}>{allMessages[allMessages.length - 1]?.textMessage}</p>{numberOfNotifications > 0 ? <div>{numberOfNotifications}</div> : ""}</div>
+                                }
+                            </div>
+                }
+            </div>
+            <span>{allMessages.length !== 0 && newDate(allMessages[allMessages.length - 1]?.createdAt)}</span>
         </div>)
 }
 

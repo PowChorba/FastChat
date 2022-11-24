@@ -50,6 +50,7 @@ export type Messages = {
     isDeleted?: boolean
     isImage?: boolean
     isAudio?: boolean
+    notification?: boolean
 }
 
 export type CreateMessages = {
