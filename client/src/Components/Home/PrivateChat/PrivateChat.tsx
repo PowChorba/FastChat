@@ -6,10 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
 import { BsMicFill } from 'react-icons/bs'
-import { IoMdNotificationsOff } from "react-icons/io"
 import useSound from "use-sound"
-import notificationSound from "../../../assets/notification"
-
 interface Props {
     chatUser: User[]
     currentUser: User
@@ -40,12 +37,16 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
     const [notificationCounter, setNotificationCounter] = useState(0)
     let count = 0
     allMessages.forEach((msg) => {
-        return msg.notification === true ? count++ : ""
+        if (msg.messageAuthor !== currentUser._id){
+            return msg.notification === true ? count++ : ""
+        }
     })
 
     let numberOfNotifications = count + notificationCounter
+
     const notificationAudio = ()=>{
-        new Audio(notificationSound).play()
+        let audio = new Audio(require("../../../assets/notification.wav"))
+        audio.play()
     }
     // ----------------------------------------------
     const newDate = (e: string) => {
@@ -69,9 +70,12 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
     useEffect(() => {
         // SOCKET MESSAGE RECEIVED 
         socket.current?.on('getMessage', (data: GetMessageData) => {
-            // NOTIFICATION SOUND 
-            // ----------------
             if (data.senderChat === allChatData._id) {
+                // NOTIFICATION SOUND 
+                notificationAudio()
+                console.log(notificationAudio)
+                console.log(data.text)
+                // ----------------
                 setMessageReceived({
                     senderId: data.senderId,
                     text: data.text,

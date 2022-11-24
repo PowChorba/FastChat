@@ -64,3 +64,14 @@ export const deleteAllMessagesChat =async (req:Request, res:Response) => {
     
   }
 }
+export const deleteNotifications = async(req:Request, res:Response) =>{
+  const {chatId} = req.body
+  try{
+    await Messages.updateMany({chatId},{$set:{notification:false}})
+    return res.json({ok:true,msg:"notifications deleted",chatId})
+
+  }catch(e){
+    console.log(e)
+    return res.status(404).json({ok:false,msg:e})
+  }
+}
