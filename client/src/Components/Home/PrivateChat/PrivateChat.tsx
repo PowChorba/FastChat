@@ -6,16 +6,17 @@ import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
 import { BsMicFill } from 'react-icons/bs'
-import useSound from "use-sound"
+import { newDate } from "../Tools/Tools"
 interface Props {
     chatUser: User[]
     currentUser: User
     socket: any
     allChatData: Chats
+    allMessages: Messages[]
     setPendingMessages: Dispatch<SetStateAction<Messages[]>>
 }
 
-export default function PrivateChat({ chatUser, currentUser, socket, allChatData, setPendingMessages }: Props) {
+export default function PrivateChat({ chatUser, currentUser, socket, allChatData, setPendingMessages, allMessages }: Props) {
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",
@@ -29,7 +30,6 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
     let allChats = useAppSelector(state => state.clientReducer.userChats)
     const dispatch = useAppDispatch()
-    let allMessages = useAppSelector(state => state.clientReducer.messages)
     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
     allChats = allChats.filter(e => e.chatsUsers[0]?._id === secondUserId?._id || e.chatsUsers[1]?._id === secondUserId?._id)
     allMessages = allMessages.filter(e => e.chatId === allChatData?._id)
@@ -49,13 +49,6 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
         audio.play()
     }
     // ----------------------------------------------
-    const newDate = (e: string) => {
-        const date = new Date(e)
-        const hours = date.getHours()
-        let minutes = date.getMinutes()
-        if (minutes < 10) return (hours + ':0' + minutes)
-        return (hours + ':' + minutes)
-    }
     const notificationsOff = () => {
         setNotificationCounter(0)
         console.log(allChatData._id)
@@ -64,7 +57,6 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
 
     useEffect(() => {
         if (currentUser?._id) dispatch(USER_CHATS(currentUser._id))
-        dispatch(ALL_MESSAGES())
     }, [dispatch, currentUser?._id])
 
     useEffect(() => {

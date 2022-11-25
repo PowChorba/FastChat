@@ -16,7 +16,7 @@ import { BsMicFill } from 'react-icons/bs'
 import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
 import SearchMessages from "../Extras/SearchMessages"
-import { date, fechaActual } from "../Tools/Tools"
+import { date, fechaActual, sortMessagesChat } from "../Tools/Tools"
 interface Props {
     currentUser: User
     currentChat: string
@@ -262,11 +262,7 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
     }
 
     // ORDENA LOS MENSAJES POR FECHA
-    filterMessages = filterMessages.sort((a, b) => {
-        if (a.createdAt < b.createdAt) return -1
-        if (a.createdAt > b.createdAt) return 1
-        else return 0
-    })
+    filterMessages = sortMessagesChat(filterMessages)
 
     //BLOQUEAR CONTACTOS
     const [block, setBlock] = useState({

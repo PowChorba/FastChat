@@ -13,12 +13,10 @@ export default function Verification(){
             navigate('/')
         }
     }
-    console.log(auth.currentUser)
     useEffect(() => {
         if(auth.currentUser?.emailVerified === true){
             navigate('/home')
         }
-        console.log('asd')
     }, [auth,navigate]) 
 
     return(

@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
 import { useEffect, useRef, useState} from 'react'
-import { ALL_CHATS, ALL_USERS, DELETE_NOTIFICATIONS, USER_CHATS } from "../../Redux/actions/actions"
+import { ALL_CHATS, ALL_MESSAGES, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 import Users from "./Users/Users"
 import Contacts from "./Contacts/Contacts"
 import Profile from "./Profile/Profile"
-import { Grid, GridItem, Input, Text } from '@chakra-ui/react'
+import { Input, Text } from '@chakra-ui/react'
 import { FiUsers } from 'react-icons/fi'
 import { BsChatSquare } from 'react-icons/bs'
 import { HiLogout } from 'react-icons/hi'
@@ -19,6 +19,7 @@ import { io } from "socket.io-client"
 import ChatGroups from "./ChatGroups/ChatGroups"
 import Chatss from "./Chats/Chats"
 import { Messages } from "../../types"
+import { sortChats, sortMessagees } from "./Tools/Tools"
 
 export default function Home(){
     const dispatch = useAppDispatch()
@@ -34,39 +35,49 @@ export default function Home(){
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
     const userChats = useAppSelector(state => state.clientReducer.userChats)
+    const allMessages = useAppSelector(state => state.clientReducer.messages)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
-    //FILTER USER CHATS
-    const [searchChat, setSearchChat] = useState('')
-    
-    const handleSearchChat = (e: React.ChangeEvent<HTMLInputElement>) =>{ 
-        setSearchChat(e.target.value)
-    }
-
-    const filterUserChats = userChats.filter(e => e.chatsUsers[0]?.nickName === searchChat 
-        || e.chatsUsers[1]?.nickName === searchChat 
-        || e.chatsUsers[0]?.nickName.toLowerCase() === searchChat 
-        || e.chatsUsers[1]?.nickName.toLowerCase() === searchChat 
-        || e.chatsUsers[0]?.nickName.toUpperCase() === searchChat 
-        || e.chatsUsers[1]?.nickName.toUpperCase() === searchChat
-        || e.groupName === searchChat
-        || e.groupName?.toLowerCase() === searchChat
-        || e.groupName?.toUpperCase() === searchChat 
-        )    
-
-    //USE STATE
-    const [currentChat, setCurrentChat] = useState('')
-    const [pendingMessages, setPendingMessages] = useState<Messages[]>([])
-
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
         socket.current = io('ws://localhost:3002')
         if(currentUser?._id){
+            dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
             dispatch(ALL_CHATS())
             socket.current?.emit('addUser', currentUser?._id)
         }
     }, [dispatch, currentUser?._id])
+    //FILTER USER CHATS
+    const [searchChat, setSearchChat] = useState('')
+    const handleSearchChat = (e: React.ChangeEvent<HTMLInputElement>) =>{ 
+        setSearchChat(e.target.value)
+    }
+
+    //ORDENAR LOS CHATS SEGUN LA HORA DEL ULTIMO
+    const mapIdChats = userChats.map(e => e._id)
+    const filterMessagesIds = allMessages.filter(e => mapIdChats.includes(e.chatId))
+
+    const sortMessages = sortMessagees(filterMessagesIds)
+    const sortChatss = sortChats(filterMessagesIds, userChats)
+    const probando = userChats.filter(e => e._id !== sortMessages[0]?.chatId)
+    const lastChat = [...sortChatss, ...probando]
+
+    //PARA BUSCAR UN CHAT EN EL INPUT
+    const filterUserChats = lastChat?.filter(e => e.chatsUsers[0]?.nickName.includes(searchChat) 
+        || e.chatsUsers[1]?.nickName.includes(searchChat)  
+        || e.chatsUsers[0]?.nickName.toLowerCase().includes(searchChat) 
+        || e.chatsUsers[1]?.nickName.toLowerCase().includes(searchChat) 
+        || e.chatsUsers[0]?.nickName.toUpperCase().includes(searchChat) 
+        || e.chatsUsers[1]?.nickName.toUpperCase().includes(searchChat) 
+        || e.groupName?.includes(searchChat) 
+        || e.groupName?.toLowerCase().includes(searchChat) 
+        || e.groupName?.toUpperCase().includes(searchChat) 
+        )    
+
+    //USE STATE
+    const [currentChat, setCurrentChat] = useState('')
+    const [pendingMessages, setPendingMessages] = useState<Messages[]>([])
     
     //SETTEAR VALOR DEL CURRENT CHAT
     const handleChat = (chatId: string ) => {
@@ -74,7 +85,6 @@ export default function Home(){
             setCurrentChat(chatId)
         }
     }
-    
     //PERFIL DEL CONTACTO QUE TIENE EL CHAT ABIERTO
     let allChats = useAppSelector(state => state.clientReducer.chats)
     allChats = allChats?.filter(e => e._id === currentChat)
@@ -132,13 +142,13 @@ export default function Home(){
                     ? filterUserChats && filterUserChats?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
-                    : userChats && userChats?.map(e => {
+                    : lastChat && lastChat?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>
                             )
                     }) 

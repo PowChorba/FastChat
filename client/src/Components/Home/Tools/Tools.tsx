@@ -1,3 +1,5 @@
+import { Chats, Messages } from "../../../types"
+
 //PARA OBTENER LAS FECHAS EXACTAS
 export const fechasMensajes = (e: string) => {
     const date = new Date(e)
@@ -41,3 +43,44 @@ export const fechaActual = (e: string) => {
 }
 
 export const date = new Date()
+
+//FECHA PARA PRIVATE CHATS
+export const newDate = (e: string) => {
+    const date = new Date(e)
+    const hours = date.getHours()
+    let minutes = date.getMinutes()
+    if (minutes < 10) return (hours + ':0' + minutes)
+    return (hours + ':' + minutes)
+}
+
+
+// PARA EL SORT DE LOS CHATS
+export const sortChats = (mensajes: Messages[], chats: Chats[]) => {
+    let arrayUno = []
+    for(let i = 0; i < chats.length; i++){
+        if(mensajes[0]?.chatId === chats[i]?._id){
+            arrayUno.push(chats[i])
+        }
+    }
+    return arrayUno
+}
+
+export const sortMessagees = (messages: Messages[]) => {
+    const array = messages?.sort((a,b) => {
+        if(a.createdAt > b.createdAt) return -1
+        if(a.createdAt < b.createdAt) return 1
+        return 0
+    })
+    return array
+}
+
+//SORT PARA FILTRAR LOS MENSAJES EN CHATS
+
+export const sortMessagesChat = (messages: Messages[]) => {
+    const sort = messages.sort((a, b) => {
+        if (a.createdAt < b.createdAt) return -1
+        if (a.createdAt > b.createdAt) return 1
+        else return 0
+    })
+    return sort
+}

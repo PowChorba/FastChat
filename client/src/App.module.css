@@ -1,5 +1,4 @@
 .fondoChat { 
-  /* display: flex; */
   height: 100vh;
   padding: 25px;
 }
@@ -17,3 +16,8 @@
   transform-origin: top right;
 }
 
+@media only screen and (max-width: 1280px){
+  .fondoChat { 
+    padding: 5px;
+  }
+}

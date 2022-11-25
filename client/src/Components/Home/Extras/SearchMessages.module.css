@@ -40,3 +40,11 @@
 .divContactsMap::-webkit-scrollbar-thumb{
     background-color: #EDF2F7;
 }
+
+@media only screen and (max-width: 1280px){
+    .contenedor {
+        display: flex;
+        flex-direction: column;
+        max-width: 315px;
+    }
+  }
