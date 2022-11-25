@@ -105,13 +105,13 @@
     text-align: center;
 }
 
-@media only screen and (max-width: 1280px){
+@media only screen and (max-width: 1500px){
  .contenedor {
     width: 100%;
     margin: auto;
  }
  .textoCreadores{
-    padding: 5px;
-    font-size: 12px;
+    padding: 0px;
+    font-size: 8px;
  } 
 }

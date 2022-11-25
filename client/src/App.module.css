@@ -1,6 +1,6 @@
 .fondoChat { 
   height: 100vh;
-  padding: 25px;
+  padding:25px;
 }
 
 .contenedor {
@@ -16,8 +16,9 @@
   transform-origin: top right;
 }
 
-@media only screen and (max-width: 1280px){
+@media only screen and (max-width: 1500px){
   .fondoChat { 
-    padding: 5px;
+    padding: 0px;
+    height: 95vh;
   }
 }

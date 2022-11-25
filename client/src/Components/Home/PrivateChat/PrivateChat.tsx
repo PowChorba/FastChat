@@ -14,9 +14,10 @@ interface Props {
     allChatData: Chats
     allMessages: Messages[]
     setPendingMessages: Dispatch<SetStateAction<Messages[]>>
+    currentChat: string
 }
 
-export default function PrivateChat({ chatUser, currentUser, socket, allChatData, setPendingMessages, allMessages }: Props) {
+export default function PrivateChat({ currentChat, chatUser, currentUser, socket, allChatData, setPendingMessages, allMessages }: Props) {
     const [messageReceived, setMessageReceived] = useState({
         senderId: "",
         text: "",
@@ -35,128 +36,130 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
     allMessages = allMessages.filter(e => e.chatId === allChatData?._id)
     // PARA NOTIFICACIONES 
     const [notificationCounter, setNotificationCounter] = useState(0)
+    if (currentChat === allChatData._id && notificationCounter > 0){
+        setNotificationCounter(0)
+    }
     let count = 0
     allMessages.forEach((msg) => {
-        if (msg.messageAuthor !== currentUser._id){
+        if (msg.messageAuthor !== currentUser._id) {
             return msg.notification === true ? count++ : ""
         }
     })
 
     let numberOfNotifications = count + notificationCounter
 
-    const notificationAudio = ()=>{
+    const notificationAudio = () => {
         let audio = new Audio(require("../../../assets/notification.wav"))
         audio.play()
+    
     }
-    // ----------------------------------------------
     const notificationsOff = () => {
-        setNotificationCounter(0)
-        console.log(allChatData._id)
+        setNotificationCounter(prevNumber=>prevNumber = 0)
         dispatch(DELETE_NOTIFICATIONS(allChatData._id))
     }
+    // ----------------------------------------------
 
     useEffect(() => {
         if (currentUser?._id) dispatch(USER_CHATS(currentUser._id))
     }, [dispatch, currentUser?._id])
 
-    useEffect(() => {
-        // SOCKET MESSAGE RECEIVED 
-        socket.current?.on('getMessage', (data: GetMessageData) => {
-            if (data.senderChat === allChatData._id) {
-                // NOTIFICATION SOUND 
-                notificationAudio()
-                console.log(notificationAudio)
-                console.log(data.text)
-                // ----------------
-                setMessageReceived({
-                    senderId: data.senderId,
-                    text: data.text,
-                    senderChat: data.senderChat
-                })
+useEffect(() => {
+    // SOCKET MESSAGE RECEIVED 
+    socket.current?.on('getMessage', (data: GetMessageData) => {
+    console.log(currentChat)
+        if (data.senderChat === allChatData._id) {
+            // NOTIFICATION SOUND 
+            notificationAudio()
+            // ----------------
+            setMessageReceived({
+                senderId: data.senderId,
+                text: data.text,
+                senderChat: data.senderChat
+            })
+
                 setNotificationCounter((prevNumber) => {
-                    console.log(prevNumber)
                     return prevNumber + 1
                 })
-                setPendingMessages((prevState) => {
-                    let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                    getSocketMessage.push({
-                        _id: data.messageId,
-                        textMessage: data.text,
-                        messageAuthor: data.senderId,
-                        chatId: data.senderChat,
-                        isImage: data?.isImage,
-                        createdAt: new Date().toISOString(),
-                        isAudio: data.isAudio
-                    })
-                    return getSocketMessage
-                })
 
-                setInaki((prev: Messages[]) => [...prev, {
+            setPendingMessages((prevState) => {
+                let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
+                getSocketMessage.push({
                     _id: data.messageId,
                     textMessage: data.text,
-                    messageAuthor: data.senderChat,
-                    // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
-                    chatId: allChats[0]?._id,
+                    messageAuthor: data.senderId,
+                    chatId: data.senderChat,
                     isImage: data?.isImage,
                     createdAt: new Date().toISOString(),
-                    isAudio: data?.isAudio
-                }])
-            }
-        })
-        socket.current?.on("getUserWritting", (data: GetMessageData) => {
-            // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
-            if (data.senderChat === allChatData._id) {
-                console.log(data.type)
-                if (data.type === "text") {
-                    if (data.text) setWritting(true)
-                    else setWritting(false)
-                } else if (data.type === "audio") {
-                    if (data.text) setSendingAudio(true)
-                    else setSendingAudio(false)
-                }
-            }
-        })
-        if (allChatData.groupName) {
-            socket.current?.emit("join_room", {
-                room: allChatData?._id,
-                userId: currentUser?._id
+                    isAudio: data.isAudio
+                })
+                return getSocketMessage
             })
-        }
-    }, [socket, setPendingMessages])
 
-    //PARA RENDERIZAR EL ULTIMO MENSAJE DE SOCKET
-    if (messageReceived.text !== "" && allChatData._id === messageReceived.senderChat) {
-        if (!allMessages.includes(inaki[0])) {
-            allMessages = [...allMessages, ...inaki]
+            setInaki((prev: Messages[]) => [...prev, {
+                _id: data.messageId,
+                textMessage: data.text,
+                messageAuthor: data.senderChat,
+                // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
+                chatId: allChats[0]?._id,
+                isImage: data?.isImage,
+                createdAt: new Date().toISOString(),
+                isAudio: data?.isAudio
+            }])
         }
-        allMessages = allMessages.sort((a, b) => {
-            if (a.createdAt < b.createdAt) return -1
-            if (a.createdAt > b.createdAt) return 1
-            else return 0
+    })
+    socket.current?.on("getUserWritting", (data: GetMessageData) => {
+        // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
+        if (data.senderChat === allChatData._id) {
+            if (data.type === "text") {
+                if (data.text) setWritting(true)
+                else setWritting(false)
+            } else if (data.type === "audio") {
+                if (data.text) setSendingAudio(true)
+                else setSendingAudio(false)
+            }
+        }
+    })
+    if (allChatData.groupName) {
+        socket.current?.emit("join_room", {
+            room: allChatData?._id,
+            userId: currentUser?._id
         })
     }
+}, [socket, setPendingMessages])
 
-    return (
-        <div onClick={() => notificationsOff()} className={s.chat}>
-            <img src={allChatData.img ? allChatData.img : secondUserId?.image} alt="asd" width='50px' className={s.imagen} />
-            <div className={s.overFlow}>
-                <span>{allChatData.groupName ? allChatData?.groupName : secondUserId?.nickName}</span>
-                {
-                    writting && !allChatData.groupName ? <p className={s.writtingMessage}>Writting...</p>
-                        : sendingAudio && !allChatData.groupName ? <p className={s.writtingMessage}>Sending audio...</p> :
-                            <div>
-                                {
-                                    allMessages[allMessages?.length - 1]?.isImage
-                                        ? <div className={s.lastImage}><BiImageAlt />Image</div>
-                                        : allMessages[allMessages?.length - 1]?.isAudio
-                                            ? <div className={s.lastImage}><BsMicFill />Audio</div>
-                                            : <div> <p className={s.lastMessage}>{allMessages[allMessages.length - 1]?.textMessage}</p>{numberOfNotifications > 0 ? <div>{numberOfNotifications}</div> : ""}</div>
-                                }
-                            </div>
-                }
-            </div>
-            <span>{allMessages.length !== 0 && newDate(allMessages[allMessages.length - 1]?.createdAt)}</span>
-        </div>)
+//PARA RENDERIZAR EL ULTIMO MENSAJE DE SOCKET
+if (messageReceived.text !== "" && allChatData._id === messageReceived.senderChat) {
+    if (!allMessages.includes(inaki[0])) {
+        allMessages = [...allMessages, ...inaki]
+    }
+    allMessages = allMessages.sort((a, b) => {
+        if (a.createdAt < b.createdAt) return -1
+        if (a.createdAt > b.createdAt) return 1
+        else return 0
+    })
+}
+
+return (
+    <div onClick={() => notificationsOff()} className={s.chat}>
+        <img src={allChatData.img ? allChatData.img : secondUserId?.image} alt="asd" width='50px' className={s.imagen} />
+        <div className={s.overFlow}>
+            <span>{allChatData.groupName ? allChatData?.groupName : secondUserId?.nickName}</span>
+            {
+                writting && !allChatData.groupName ? <p className={s.writtingMessage}>Writting...</p>
+                    : sendingAudio && !allChatData.groupName ? <p className={s.writtingMessage}>Sending audio...</p> :
+                        <div>
+                            {
+                                allMessages[allMessages?.length - 1]?.isImage
+                                    ? <div className={s.lastImage}><BiImageAlt />Image</div>
+                                    : allMessages[allMessages?.length - 1]?.isAudio
+                                        ? <div className={s.lastImage}><BsMicFill />Audio</div>
+                                        : <div> <p className={s.lastMessage}>{allMessages[allMessages.length - 1]?.textMessage}</p>{(numberOfNotifications > 0 && currentChat !== allChatData._id )? <div>{numberOfNotifications}</div> : ""}</div>
+                            }
+                        </div>
+            }
+        </div>
+        <span>{allMessages.length !== 0 && newDate(allMessages[allMessages.length - 1]?.createdAt)}</span>
+    </div>)
 }
 
 
