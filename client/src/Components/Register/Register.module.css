@@ -1,0 +1,40 @@
+.contenedor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.formLogin {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.486);
+}
+
+.buttonRegister{
+    margin-top: 10px;
+}
+
+.imagePorfile{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin: 10px auto;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.inputNone{
+    display: none;
+}
+
+.labelRegister{
+    margin: 10px;
+}
+
+.arrowBack{
+    font-size: 30px;
+    cursor: pointer;
+}

@@ -1,0 +1,26 @@
+.imagen {
+    width: 200px;
+    height: 200px;
+    margin: 25px auto;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
+}
+
+.footer{
+    margin: 0px auto;
+}
+
+.closeDialog{
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.dialogHeader{
+    background-color: #EDF2F7;
+}
+

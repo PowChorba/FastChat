@@ -1,0 +1,110 @@
+.imagen {
+    width: 200px;
+    height: 200px;
+    margin: 25px auto;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
+}
+
+.divUsuarios{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 15px;
+}
+
+.divUsuarios:hover {
+    background-color: #EDF2F7;
+    cursor: pointer;
+}
+
+/* PARA LA SECCION DEL PERFIL DE GRUPOS */
+
+.imagenUsuarios {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    margin: 0px auto;
+    object-fit: cover;
+}
+
+.divAdmin{
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    padding: 10px;
+}
+
+.usersNames{
+    margin-left: 10px;
+}
+
+.usersLength{
+    margin: 5px;
+}
+
+.icons {
+    font-size: 20px;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.botonAddUsers{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 20px;
+}
+
+.arrowDown span{
+    visibility: hidden;
+    display: flex;
+    align-items: flex-start;
+}
+
+.arrowDown:hover span{
+    visibility: visible;
+    font-size: 20px;
+}
+
+.listOfUsers{
+    overflow-y: scroll;
+    height: 35vh;
+    max-height: 40vh;
+}
+
+.listOfUsers::-webkit-scrollbar{
+    width: 6px;
+}
+
+.listOfUsers::-webkit-scrollbar-track{
+    background: rgba(255, 0, 0, 0);
+}
+
+.listOfUsers::-webkit-scrollbar-thumb{
+    background-color: #EDF2F7;
+}
+
+.botonesGroupNameCheck{
+    position: absolute;
+    top: 10px;
+    right: 25px;
+}
+
+.botonesGroupNameClose{
+    position: absolute;
+    top: 10px;
+    right: 5px;
+}
+
+@media only screen and (max-width: 1280px){
+    .imagen{
+        width: 100px;
+        height: 100px;
+    }
+}

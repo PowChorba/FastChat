@@ -1,0 +1,43 @@
+.contenedor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.formLogin {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.486);
+}
+
+.tituloLogin{
+    font-size: 30px;
+}
+
+.divsForm {
+    margin: 10px auto;
+}   
+
+.linkRegister{
+    border-bottom: 1px solid black;
+}
+
+.divLinkRegister{
+    margin-top: 15px;
+}
+
+.mensajeError{
+    color: red;
+}
+
+.textoCreadores{
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    border-top: 1px solid #000;
+    text-align: center;
+}

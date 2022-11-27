@@ -1,0 +1,68 @@
+.divLeft {
+    display: flex;
+    text-align: left;
+}
+
+.divRight{
+    display: flex;
+    justify-content: right;
+}
+
+.textoMensajes{
+    padding: 3px;
+}
+
+.deletedMessage {
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #8696a0;
+}
+
+.textoMensajesHora{
+    padding: 3px;
+    font-size: 10px;
+}
+
+.divSubLeft {
+    display: flex;
+    margin: 5px;
+    padding: 5px 20px;
+    border-radius: 20px;
+    align-items: flex-end;
+    background-color: #fff;
+    max-width: 450px;
+    text-align: left;
+}
+
+.divSubRight {
+    margin: 5px;
+    padding: 5px 20px;
+    border-radius: 20px;
+    display: flex;
+    align-items: flex-end;
+    background-color: #d9fdd3;
+    max-width: 450px;
+    text-align: left;
+}
+
+.today{
+    display: flex;
+    width: 8%;
+    margin: 0px auto;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+.arrowDown span{
+    visibility: hidden;
+    display: flex;
+    align-items: flex-start;
+}
+
+.arrowDown:hover span{
+    visibility: visible;
+    font-size: 20px;
+}

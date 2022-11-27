@@ -1,0 +1,75 @@
+
+
+.profileUsers {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    position: relative;
+}
+
+.profileUsers:hover {
+    background-color: #EDF2F7;
+}
+
+.arrowDown{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 5px;
+}
+
+.arrowDown span{
+    visibility: hidden;
+    font-size: 20px;
+}
+
+.profileUsers:hover span{
+    visibility: visible;
+}
+
+.none {
+    display: none;
+}
+
+.formBusqueda{
+        width: 100%;
+        margin: 0px auto;
+        padding: 10px;
+        border-bottom: 1px solid #EDF2F7;
+}
+
+.sendMensaje{
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.imagenes {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.icono {
+    font-size: 20px;
+}
+
+.divContactsMap{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 65vh;
+    max-height: 65vh;
+}
+
+.divContactsMap::-webkit-scrollbar{
+    width: 6px;
+}
+
+.divContactsMap::-webkit-scrollbar-track{
+    background: rgba(255, 0, 0, 0);
+}
+
+.divContactsMap::-webkit-scrollbar-thumb{
+    background-color: #EDF2F7;
+}

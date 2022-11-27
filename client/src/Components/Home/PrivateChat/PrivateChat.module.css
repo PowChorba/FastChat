@@ -1,0 +1,72 @@
+.chat {
+    width: 100%;
+    padding: 5px;
+    text-align: left;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    cursor: pointer;
+    border-bottom: 2px solid #EDF2F7;
+}
+
+.imagen {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.overFlow{
+    margin-left: 5px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.lastMessage {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.probando{
+    height: 60px;
+    width: 60px;
+}
+
+.writtingMessage {
+    color: #1fa855;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.lastImage{
+    display: flex;
+    align-items: center;
+}
+
+/* NOTIFIACIONES  */
+
+.divNotification{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.notificationColor{
+    background-color: #25d366;
+    padding: 12px;
+    border-radius: 50%;
+}
+
+.notificationNumber{
+    z-index: 10;
+    position: absolute;
+    color: #fff;
+}
+
+.fechaMensajes{
+    color: #25d366;
+}
