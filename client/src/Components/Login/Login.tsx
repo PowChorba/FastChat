@@ -37,7 +37,8 @@ export default function Login(){
     }
 
     return(
-        <div className={s.contenedor}>
+        <div >
+            <div className={s.contenedor}>
             <h1 className={s.tituloLogin}>Login to FastChat!</h1>
             <form onSubmit={e => handleSubmit(e)} className={s.formLogin}>
                     {
@@ -59,5 +60,9 @@ export default function Login(){
                 <p>Don't have an account? <Link to='/register' className={s.linkRegister}>Register</Link></p>
             </div>
             </form>
+            </div>
+            <div className={s.textoCreadores}>
+                    <p>Created by Iñaki Elhaiek & Agop Chorbadjian</p>
+                </div>
         </div>)
 }

@@ -1,6 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import Users from '../../Components/Home/Users/Users';
-import { Chats, Messages, NewChat, User } from "../../types";
+import { Chats, Messages, User } from "../../types";
 import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, LAST_MESSAGE } from '../actions/actions'
 
 interface Reducer {
@@ -114,9 +113,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 console.log(action.payload.blockUserId)
                 state.userChats = userDeleted
             }
-            // } else if (action.payload.msg === "Contact unblocked successfully"){
-            //     state.userChats
-            // }
         }
     })
     callback.addCase(UNBLOCK_USER.fulfilled, (state, action) => {
@@ -193,11 +189,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
         state.messages.push(msgDeleted)
 
     })
-    callback.addCase(LAST_MESSAGE.fulfilled, (state, action) => {
-        let filterMessages = state.lastMesage.filter(e => e._id !== action.payload._id)
-        filterMessages.push(action.payload)
-        console.log(filterMessages, 'Reducer')
-        state.lastMesage = filterMessages
     callback.addCase(DELETE_NOTIFICATIONS.fulfilled, (state, action) => {
         if (action.payload.ok) {
             let copyMessages = state.messages
@@ -213,4 +204,4 @@ export const clientReducer = createReducer(initialState, (callback) => {
         }
 
     })
-})})
+})

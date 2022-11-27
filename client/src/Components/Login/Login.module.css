@@ -32,3 +32,12 @@
 .mensajeError{
     color: red;
 }
+
+.textoCreadores{
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    border-top: 1px solid #000;
+    text-align: center;
+}
