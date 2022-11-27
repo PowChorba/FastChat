@@ -83,9 +83,9 @@ export default function Home(){
     const [pendingMessages, setPendingMessages] = useState<Messages[]>([])
     
     //SETTEAR VALOR DEL CURRENT CHAT
-    const handleChat = (e: string ) => {
-        if(e) {
-            setCurrentChat(e)
+    const handleChat = (chatId: string ) => {
+        if(chatId) {
+            setCurrentChat(chatId)
         }
     }
     //PERFIL DEL CONTACTO QUE TIENE EL CHAT ABIERTO
@@ -120,7 +120,6 @@ export default function Home(){
         setCreateGroup(!createGroup)
     }
 
-
     return(
     <div className={s.contenedor}>
         <div className={s.divAside}>
@@ -145,13 +144,13 @@ export default function Home(){
                     ? filterUserChats && filterUserChats?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages}  currentChat={currentChat} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
                     : lastChat && lastChat?.map(e => {
                         return(
                             <div key={e._id} className={s.botonesChats}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} currentChat={currentChat} socket={socket}/></button>
                             </div>
                             )
                     }) 
