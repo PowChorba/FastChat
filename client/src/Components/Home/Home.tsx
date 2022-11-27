@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
 import { useEffect, useRef, useState} from 'react'
-import { ALL_CHATS, ALL_MESSAGES, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
+import { ALL_CHATS, ALL_MESSAGES, ALL_USERS, LAST_MESSAGE, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
@@ -34,6 +34,7 @@ export default function Home(){
     
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
+    const lastMessages = useAppSelector(state => state.clientReducer.lastMesage)
     const userChats = useAppSelector(state => state.clientReducer.userChats)
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
@@ -62,6 +63,8 @@ export default function Home(){
     const sortChatss = sortChats(filterMessagesIds, userChats)
     const probando = userChats.filter(e => e._id !== sortMessages[0]?.chatId)
     const lastChat = [...sortChatss, ...probando]
+
+    console.log(lastMessages)
 
     //PARA BUSCAR UN CHAT EN EL INPUT
     const filterUserChats = lastChat?.filter(e => e.chatsUsers[0]?.nickName.includes(searchChat) 

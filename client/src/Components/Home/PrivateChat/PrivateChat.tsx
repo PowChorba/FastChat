@@ -1,7 +1,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { BiImageAlt } from "react-icons/bi"
-import {  USER_CHATS } from "../../../Redux/actions/actions"
+import {  LAST_MESSAGE, USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
@@ -106,6 +106,10 @@ export default function PrivateChat({ chatUser, currentUser, socket, allChatData
             else return 0
         })
     }
+    // if(allMessages.length){
+    //     dispatch(LAST_MESSAGE(allMessages[allMessages.length - 1]))
+    // }
+    // console.log(allMessages[allMessages.length - 1 ])
 
     return (
         <div className={s.chat}>

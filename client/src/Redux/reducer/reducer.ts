@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import Users from '../../Components/Home/Users/Users';
-import { Chats, Messages, NewChat, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT } from '../actions/actions'
+import { Chats, Messages,  User } from "../../types";
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, LAST_MESSAGE } from '../actions/actions'
 
 interface Reducer {
     users: User[],
@@ -11,6 +11,7 @@ interface Reducer {
     messages: Messages[]
     userChats: Chats[]
     searchUser: User[]
+    lastMesage: Messages[]
 }
 
 const initialState: Reducer = {
@@ -21,6 +22,7 @@ const initialState: Reducer = {
     newChat: [],
     userChats: [],
     searchUser: [],
+    lastMesage: []
 }
 
 export const clientReducer = createReducer(initialState, (callback) => {
@@ -190,5 +192,11 @@ export const clientReducer = createReducer(initialState, (callback) => {
         state.messages = state.messages.filter(msg => msg._id !== action.payload.msgDeleted._id)
         state.messages.push(msgDeleted)
 
+    })
+    callback.addCase(LAST_MESSAGE.fulfilled, (state, action) => {
+        let filterMessages = state.lastMesage.filter(e => e._id !== action.payload._id)
+        filterMessages.push(action.payload)
+        console.log(filterMessages, 'Reducer')
+        state.lastMesage = filterMessages
     })
 })
