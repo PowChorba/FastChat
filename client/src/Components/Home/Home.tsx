@@ -10,7 +10,7 @@ import Contacts from "./Contacts/Contacts"
 import Profile from "./Profile/Profile"
 import { Alert, AlertIcon, AlertTitle, Input, Text } from '@chakra-ui/react'
 import { FiUsers } from 'react-icons/fi'
-import { BsChatSquare } from 'react-icons/bs'
+import { RiChatNewLine } from 'react-icons/ri'
 import { HiLogout } from 'react-icons/hi'
 import { GrGroup } from 'react-icons/gr'
 import BlockUsers from "./BlockUsers/BlockUsers"

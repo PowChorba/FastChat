@@ -8,9 +8,11 @@ import Register from './Components/Register/register';
 import Login from './Components/Login/Login';
 import { ChakraProvider } from '@chakra-ui/react'
 import Verification from './Components/Verification/Verification';
+import axios from 'axios';
 
 initializeApp(firebaseConfig)
 
+axios.defaults.baseURL= process.env.REACT_APP_API || 'http://localhost:3001'
 
 function App() {
   return (
