@@ -45,3 +45,28 @@
     display: flex;
     align-items: center;
 }
+
+/* NOTIFIACIONES  */
+
+.divNotification{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.notificationColor{
+    background-color: #25d366;
+    padding: 12px;
+    border-radius: 50%;
+}
+
+.notificationNumber{
+    z-index: 10;
+    position: absolute;
+    color: #fff;
+}
+
+.fechaMensajes{
+    color: #25d366;
+}

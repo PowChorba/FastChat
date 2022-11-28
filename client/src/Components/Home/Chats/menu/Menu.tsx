@@ -51,9 +51,6 @@ export default function IconsMenu({ currentChat, currentUser, setMessages, messa
         <MenuItem onClick={handleCamera} icon={<BsFillCameraFill />} >
           Camera
         </MenuItem>
-        <MenuItem icon={<IoMdContact />} >
-          Contact
-        </MenuItem>
         <label htmlFor="openFile">
           <div className={s.divOpenFile}><AiFillFileText className={s.fillFile}/> Open file</div>
           <Input id="openFile" type="file" accept="image/jpeg, image/png" name="image" onChange={handleImage} className={s.displayNone}/>

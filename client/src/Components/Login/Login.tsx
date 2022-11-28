@@ -23,6 +23,7 @@ export default function Login(){
     }
 
     const [error,setError] = useState('')
+    const [attemps,setAttemps] = useState('')
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -31,18 +32,20 @@ export default function Login(){
             navigate('/verification')
         } catch (error: any) {
                 setError(error)
+                setAttemps(error)
         }    
     }
 
-
     return(
-        <div className={s.contenedor}>
+        <div >
+            <div className={s.contenedor}>
             <h1 className={s.tituloLogin}>Login to FastChat!</h1>
             <form onSubmit={e => handleSubmit(e)} className={s.formLogin}>
                     {
-                        error !== '' && error.toString().includes('been temporarily disabled')
-                        ? <p className={s.mensajeError}>Too many attemps, try again later.</p>
-                        : <p className={s.mensajeError}>Email and password do not match.</p>
+                        (error !== ''  || (error.toString().includes('(auth/user-not-found)') || error.toString().includes('(auth/wrong-password)') )) && <p className={s.mensajeError}>Email and password do not match.</p>
+                    }
+                    {
+                        attemps.toString().includes('(auth/too-many-requests)') && <p className={s.mensajeError}>Too many attemps, try again later.</p>
                     }
                 <div className={s.divsForm}>
                     <label>Email: </label>
@@ -57,5 +60,9 @@ export default function Login(){
                 <p>Don't have an account? <Link to='/register' className={s.linkRegister}>Register</Link></p>
             </div>
             </form>
+            </div>
+            <div className={s.textoCreadores}>
+                    <p>Created by Iñaki Elhaiek & Agop Chorbadjian</p>
+                </div>
         </div>)
 }

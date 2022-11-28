@@ -1,12 +1,12 @@
 
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react"
-import { BiImageAlt } from "react-icons/bi"
-import { ALL_MESSAGES, DELETE_NOTIFICATIONS, USER_CHATS } from "../../../Redux/actions/actions"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { BiCircle, BiImageAlt } from "react-icons/bi"
+import { DELETE_NOTIFICATIONS, USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
 import { BsMicFill } from 'react-icons/bs'
-import { newDate } from "../Tools/Tools"
+import { fechasMensajes, newDate } from "../Tools/Tools"
 interface Props {
     chatUser: User[]
     currentUser: User
@@ -66,7 +66,6 @@ export default function PrivateChat({ currentChat, chatUser, currentUser, socket
 useEffect(() => {
     // SOCKET MESSAGE RECEIVED 
     socket.current?.on('getMessage', (data: GetMessageData) => {
-    console.log(currentChat)
         if (data.senderChat === allChatData._id) {
             // NOTIFICATION SOUND 
             notificationAudio()
@@ -127,6 +126,7 @@ useEffect(() => {
     }
 }, [socket, setPendingMessages])
 
+
 //PARA RENDERIZAR EL ULTIMO MENSAJE DE SOCKET
 if (messageReceived.text !== "" && allChatData._id === messageReceived.senderChat) {
     if (!allMessages.includes(inaki[0])) {
@@ -153,15 +153,19 @@ return (
                                     ? <div className={s.lastImage}><BiImageAlt />Image</div>
                                     : allMessages[allMessages?.length - 1]?.isAudio
                                         ? <div className={s.lastImage}><BsMicFill />Audio</div>
-                                        : <div> <p className={s.lastMessage}>{allMessages[allMessages.length - 1]?.textMessage}</p>{(numberOfNotifications > 0 && currentChat !== allChatData._id )? <div>{numberOfNotifications}</div> : ""}</div>
+                                        : <div> <p className={s.lastMessage}>{allMessages[allMessages.length - 1]?.textMessage}</p></div>
                             }
                         </div>
             }
         </div>
-        <span>{allMessages.length !== 0 && newDate(allMessages[allMessages.length - 1]?.createdAt)}</span>
+        <span>{(numberOfNotifications > 0 && currentChat !== allChatData._id )
+        ? <div>
+            <p className={s.fechaMensajes}>{fechasMensajes(allMessages[allMessages.length - 1]?.createdAt)}</p>
+            <div className={s.divNotification}>
+            <BiCircle className={s.notificationColor}/> 
+            <span className={s.notificationNumber}>{numberOfNotifications}</span>
+            </div>
+        </div>
+        : allMessages.length !== 0 && fechasMensajes(allMessages[allMessages.length - 1]?.createdAt)}</span>
     </div>)
 }
-
-
-
-

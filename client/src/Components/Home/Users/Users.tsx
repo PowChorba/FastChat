@@ -14,7 +14,8 @@ export default function Users({ currentUser }: Props) {
     const allUsers = useAppSelector(state => state.clientReducer.users)
     const respuesta = useAppSelector(state => state.clientReducer.response)
     const idBlockUsers = currentUser?.bloqUsers?.map(e => e._id)
-    const filterUsers = allUsers.filter(e => e._id !== currentUser?._id && !idBlockUsers?.includes(e._id))
+    const contactUsers = currentUser?.contacts?.map(e => e._id)
+    const filterUsers = allUsers.filter(e => e._id !== currentUser?._id && !idBlockUsers?.includes(e._id) && !contactUsers?.includes(e._id))
     const dispatch = useAppDispatch()
     // SET OFF ALERT 
     // if (respuesta?.ok){
@@ -88,7 +89,7 @@ export default function Users({ currentUser }: Props) {
                                         <MenuButton><IoIosArrowDown /></MenuButton>
                                         <MenuList>
                                             <MenuItem onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add User</MenuItem>
-                                            <MenuItem onMouseEnter={() => handleBlockId(e._id)} onClick={bloqUser}>Bloq User</MenuItem>
+                                            <MenuItem onMouseEnter={() => handleBlockId(e._id)} onClick={bloqUser}>Block User</MenuItem>
                                         </MenuList>
                                     </Menu>
                                 </div>
