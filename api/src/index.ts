@@ -35,7 +35,7 @@ const server = app.listen(app.get("port"), () => {
 
 const io = require('socket.io')(process.env.SOCKET_PORT, {
     cors: {
-        origin: 'http://localhost:3000'
+        origin: ['https://fast-chat-bice.vercel.app/','http://localhost:3000']
     }
 })
 
