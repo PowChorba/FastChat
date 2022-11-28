@@ -26,7 +26,7 @@ app.use('/', index_1.default);
 const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT);
 });
-const io = require('socket.io')('https://soketi-production-2f4a.up.railway.app/', {
+const io = require('socket.io')(process.env.SOCKETPORT, {
     cors: {
         origin: 'https://soketi-production-2f4a.up.railway.app/'
     }
