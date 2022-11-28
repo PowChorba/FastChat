@@ -37,7 +37,7 @@ const server = app.listen(app.get("port"), () => {
 
 const io = require('socket.io')('https://soketi-production-2f4a.up.railway.app/', {
     cors: {
-        origin: true
+        origin: 'https://fast-chat-bice.vercel.app/'
     }
 })
 
