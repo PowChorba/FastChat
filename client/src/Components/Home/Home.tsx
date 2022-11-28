@@ -43,8 +43,7 @@ export default function Home(){
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
-        socket.current = io('https://soketi-production-b7fe.up.railway.app/')
-        // socket.current = io('http://localhost:3002')
+        socket.current = io('http://127.0.0.1:5641')
         if(currentUser?._id){
             dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
@@ -59,7 +58,6 @@ export default function Home(){
             dispatch(CLEAR_RESPONSE())
         },3000)
     }
-    console.log(socket.current)
     //FILTER USER CHATS
     const [searchChat, setSearchChat] = useState('')
     const handleSearchChat = (e: React.ChangeEvent<HTMLInputElement>) =>{ 
