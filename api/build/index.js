@@ -26,9 +26,9 @@ app.use('/', index_1.default);
 const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT);
 });
-const io = require('socket.io')(3002, {
+const io = require('socket.io')('https://soketi-production-2f4a.up.railway.app/', {
     cors: {
-        origin: 'http://localhost:3000'
+        origin: '*'
     }
 });
 let users = [];
