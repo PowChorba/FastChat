@@ -33,7 +33,7 @@ const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT)
 })
 
-const io = require('socket.io')(process.env.SOCKETPORT, {
+const io = require('socket.io')('https://soketi-production-2f4a.up.railway.app/', {
     cors: {
         origin: 'http://localhost:3000'
     }
