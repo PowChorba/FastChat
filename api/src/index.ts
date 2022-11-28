@@ -36,7 +36,7 @@ const server = app.listen(app.get("port"), () => {
 
 const io: any = new SocketServer(server, {
     cors: {
-        // origin: ['http://127.0.0.1:5641','http://localhost:3000']
+        origin: ['http://127.0.0.1:5641','http://localhost:3000']
     }
 })
 

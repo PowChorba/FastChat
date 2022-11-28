@@ -43,7 +43,7 @@ export default function Home(){
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
-        socket.current = io()
+        socket.current = io('https://fastchat-production.up.railway.app/')
         if(currentUser?._id){
             dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
