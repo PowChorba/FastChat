@@ -3,6 +3,7 @@ const cors = require('cors')
 const { dbConnection } = require("./dataBase/db")
 import route from './routes/index'
 import { Socket, SocketRoom, SocketUser } from "./types"
+import { Server as SocketServer} from 'socket.io'
 require('dotenv').config()
 
 
@@ -33,9 +34,9 @@ const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT)
 })
 
-const io = require('socket.io')(process.env.SOCKET_PORT, {
+const io: any = new SocketServer(server, {
     cors: {
-        origin: ['http://127.0.0.1:5641','http://localhost:3000']
+        // origin: ['http://127.0.0.1:5641','http://localhost:3000']
     }
 })
 

@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors = require('cors');
 const { dbConnection } = require("./dataBase/db");
 const index_1 = __importDefault(require("./routes/index"));
+const socket_io_1 = require("socket.io");
 require('dotenv').config();
 const app = (0, express_1.default)();
 dbConnection();
@@ -26,9 +27,9 @@ app.use('/', index_1.default);
 const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT);
 });
-const io = new SocketServer(server, {
+const io = new socket_io_1.Server(server, {
     cors: {
-        // origin: ['http://127.0.0.1:5641','http://localhost:3000']
+    // origin: ['http://127.0.0.1:5641','http://localhost:3000']
     }
 });
 let users = [];
