@@ -44,7 +44,7 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
 
     useEffect(() => {
-        scroll.current?.scrollIntoView({ behavior: 'smooth' })
+        scroll.current?.scrollIntoView(false)
     })
 
     const [messageReceived, setMessageReceived] = useState({

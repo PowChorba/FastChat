@@ -156,6 +156,11 @@ export const UNBLOCK_USER = createAsyncThunk(
         }
     }
 )
+export const CLEAR_RESPONSE = createAsyncThunk(
+    'CLEAR_RESPONSE', async () => {
+            return ""
+    }
+)
 
 export const DELETE_MESSAGE = createAsyncThunk(
     'DELETE_MESSAGE', async (messageId: string) => {
@@ -210,7 +215,6 @@ export const DELETE_NOTIFICATIONS = createAsyncThunk(
             console.log(data)
             let chatId = {chatId: data}
             const response = await axios.put('http://localhost:3001/messages/notification', chatId)
-            console.log(response.data)
             return response.data
         } catch (error) {
             console.log(error)
