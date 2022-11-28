@@ -122,3 +122,8 @@ export interface UpdateGroup {
 }
 
 export type CombinedChats = Chats & GroupsChats
+
+export interface Response {
+    ok: boolean
+    msg: string
+}

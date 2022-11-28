@@ -1,8 +1,8 @@
-import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
+import { Alert, AlertIcon, AlertTitle, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
 import { IoIosArrowDown } from "react-icons/io"
-import { UNBLOCK_USER } from "../../../Redux/actions/actions"
-import { useAppDispatch } from "../../../Redux/hooks"
+import { CLEAR_RESPONSE, UNBLOCK_USER } from "../../../Redux/actions/actions"
+import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './BlockUsers.module.css'
 
@@ -52,7 +52,6 @@ export default function BlockUsers({currentUser}: Props){
                     ? busquedaBlock?.map(e => {
                         return(
                             <div key={e._id} className={s.profileUsers}>
-                                <div className={s.profileUsers}>
                                 <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
                                 <span>{e.nickName}</span>
                                 <br />
@@ -63,7 +62,6 @@ export default function BlockUsers({currentUser}: Props){
                                             <MenuItem onMouseEnter={() => getUserId(e._id)} onClick={deleteBlockUser}>Unblock</MenuItem>
                                         </MenuList>
                                     </Menu>
-                                </div>
                                 </div>
                             </div>)
                     })

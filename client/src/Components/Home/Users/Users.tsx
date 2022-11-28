@@ -1,6 +1,6 @@
-import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
+import { Alert, AlertIcon, AlertTitle, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
-import { BLOCK_USER, USER_CONTACTS } from "../../../Redux/actions/actions"
+import { BLOCK_USER, CLEAR_RESPONSE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './Users.module.css'
@@ -10,17 +10,24 @@ interface Props {
 }
 
 
-export default function Users({currentUser}: Props){    
+export default function Users({ currentUser }: Props) {
     const allUsers = useAppSelector(state => state.clientReducer.users)
+    const respuesta = useAppSelector(state => state.clientReducer.response)
     const idBlockUsers = currentUser?.bloqUsers?.map(e => e._id)
     const contactUsers = currentUser?.contacts?.map(e => e._id)
     const filterUsers = allUsers.filter(e => e._id !== currentUser?._id && !idBlockUsers?.includes(e._id) && !contactUsers?.includes(e._id))
     const dispatch = useAppDispatch()
-
+    // SET OFF ALERT 
+    // if (respuesta?.ok){
+    //     setTimeout(()=>{
+    //         dispatch(CLEAR_RESPONSE())
+    //     },3000)
+    // }
+    // console.log(respuesta?.msg)
     //BUSQUEDA DE CONTACTOS
     const [busqueda, setBusqueda] = useState('')
-    const searchUsers = filterUsers.filter(e => e.nickName.includes(busqueda) 
-        || e.nickName.toLowerCase().includes(busqueda) 
+    const searchUsers = filterUsers.filter(e => e.nickName.includes(busqueda)
+        || e.nickName.toLowerCase().includes(busqueda)
         || e.nickName.toUpperCase().includes(busqueda))
 
     const handleBusqueda = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +41,7 @@ export default function Users({currentUser}: Props){
     })
 
     const handleDataNewContact = (e: string) => {
-        if(currentUser._id !== undefined){
+        if (currentUser._id !== undefined) {
             setAddContact({
                 userId: currentUser._id,
                 contact: e
@@ -65,45 +72,59 @@ export default function Users({currentUser}: Props){
         dispatch(BLOCK_USER(block))
     }
 
-    return(
+    return (
         <div className={s.contenedor}>
             <div className={s.formBusqueda}>
-                <Input variant='filled' type="text" name="busqueda" value={busqueda} onChange={handleBusqueda} placeholder='Search user...'/>
+                <Input variant='filled' type="text" name="busqueda" value={busqueda} onChange={handleBusqueda} placeholder='Search user...' />
             </div>
             <div className={s.divContactsMap}>
-            {
-                     searchUsers.length !== 0 
-                    ? searchUsers.map(e => {
-                        return(<div key={e._id} className={s.profileUsers}>
-                            <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
-                            <span>{e.nickName}</span>
-                            <div className={s.arrowDown}>
+                {
+                    searchUsers.length !== 0
+                        ? searchUsers.map(e => {
+                            return (<div key={e._id} className={s.profileUsers}>
+                                <img src={e.image} alt="asd" width='50px' className={s.imagenes} />
+                                <span>{e.nickName}</span>
+                                <div className={s.arrowDown}>
                                     <Menu>
-                                        <MenuButton><IoIosArrowDown/></MenuButton>
+                                        <MenuButton><IoIosArrowDown /></MenuButton>
                                         <MenuList>
                                             <MenuItem onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add User</MenuItem>
                                             <MenuItem onMouseEnter={() => handleBlockId(e._id)} onClick={bloqUser}>Block User</MenuItem>
                                         </MenuList>
                                     </Menu>
-                            </div>
+                                </div>
                             </div>)
-                    })
-                    : filterUsers && filterUsers.map(e => {
-                        return(<div key={e._id} className={s.profileUsers}>
-                            <img src={e.image} alt="asd" width='50px' className={s.imagenes}/>
-                            <span>{e.nickName}</span>
-                            <div className={s.arrowDown}>
+                        })
+                        : filterUsers && filterUsers.map(e => {
+                            return (<div key={e._id} className={s.profileUsers}>
+                                <img src={e.image} alt="asd" width='50px' className={s.imagenes} />
+                                <span>{e.nickName}</span>
+                                <div className={s.arrowDown}>
                                     <Menu>
-                                        <MenuButton><IoIosArrowDown/></MenuButton>
+                                        <MenuButton><IoIosArrowDown /></MenuButton>
                                         <MenuList>
                                             <MenuItem onMouseEnter={() => handleDataNewContact(e._id)} onClick={handleNewContact}>Add User</MenuItem>
                                             <MenuItem onMouseEnter={() => handleBlockId(e._id)} onClick={bloqUser}>Bloq User</MenuItem>
                                         </MenuList>
                                     </Menu>
-                            </div>
+                                </div>
                             </div>)
-                    })
+                        })
                 }
-            </div>    
+            </div>
+            {/* {
+                (respuesta?.ok && respuesta.msg=== "contact created" )&&
+                <Alert status="success">
+                    <AlertIcon />
+                    <AlertTitle>User added successfully </AlertTitle>
+                </Alert>
+            }
+              {
+                (respuesta?.ok && respuesta.msg=== "Contact blocked successfully" )&&
+                <Alert status="success">
+                    <AlertIcon />
+                    <AlertTitle>User blocked successfully  </AlertTitle>
+                </Alert>
+            } */}
         </div>)
 }

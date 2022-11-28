@@ -26,10 +26,10 @@ export const newChat = async (req: Request,res: Response) => {
                 admin,
                 img
             }
-            res.json({ ok: true, message:"succesfully created" ,chat: groupsCreated })
+            res.json({ ok: true, msg:"succesfully created" ,chat: groupsCreated })
         }
         else if(alreadyChatOne || alreadyChatTwo){
-            return res.send('You have already created a chat with that user')
+            return res.json({ok:true, msg:'Chat already created'})
         }else {
             const newChat = await Chats.create({
                 chatsUsers: [firstUser, secondUser]
