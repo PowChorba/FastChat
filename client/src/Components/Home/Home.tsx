@@ -43,7 +43,7 @@ export default function Home(){
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
-        socket.current = io('http://127.0.0.1:5641')
+        socket.current = io('http://127.0.0.1:9601')
         if(currentUser?._id){
             dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
