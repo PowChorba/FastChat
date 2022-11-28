@@ -32,6 +32,7 @@ export default function Home(){
         signOut(auth)
         navigate('/')
     }
+    // const portSocket = process.env.SOCKET_PORT || 6976 || 3002
     
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
@@ -42,7 +43,7 @@ export default function Home(){
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
-        socket.current = io('https://soketi-production-2f4a.up.railway.app/')
+        socket.current = io('https://fastchat-production.up.railway.app/')
         if(currentUser?._id){
             dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
