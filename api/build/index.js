@@ -6,10 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors = require('cors');
 const { dbConnection } = require("./dataBase/db");
-const path = require("path");
-const http = require("http");
-const { Server } = require("socket.io");
 const index_1 = __importDefault(require("./routes/index"));
+const socket_io_1 = require("socket.io");
 require('dotenv').config();
 const app = (0, express_1.default)();
 dbConnection();
@@ -27,15 +25,76 @@ app.use((req, res, next) => {
 app.use(express_1.default.json());
 app.use('/', index_1.default);
 const server = app.listen(app.get("port"), () => {
-    console.log("server is on port" + " " + process.env.PORT);
+    console.log("Server is on port" + " " + process.env.PORT);
 });
-const serverSocket = http.createServer(app);
-const io = new Server(server, {
+const io = new socket_io_1.Server(server, {
     cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST", "DELETE"],
-    },
+    // origin: ['http://127.0.0.1:5641','http://localhost:3000']
+    }
 });
-io.on("connection", (socket) => {
-    console.log(`new connection: ${socket.id}`);
+let users = [];
+let groups = [];
+const addUser = (userId, socketId) => {
+    !users.some((user) => (user === null || user === void 0 ? void 0 : user.userId) === userId) && users.push({ userId, socketId });
+};
+const addGroup = (room, userId) => {
+    !groups.some((groups) => (groups === null || groups === void 0 ? void 0 : groups.room) === room) && groups.push({ room, userId });
+};
+const removeUser = (socketId) => {
+    users = users.filter((user) => user.socketId !== socketId);
+};
+const getUser = (userId) => {
+    return users.find((user) => user.userId === userId);
+};
+const getGroup = (groupId) => {
+    return groups.find((group) => group.userId === groupId);
+};
+io.on('connection', (socket) => {
+    console.log(`User connected ${socket.id}`);
+    socket.on('addUser', (userId) => {
+        addUser(userId, socket.id);
+        io.emit('getUsers', users);
+    });
+    socket.on('disconnect', () => {
+        console.log('a user disconnected');
+        removeUser(socket.id);
+        io.emit('getUsers', users);
+    });
+    socket.on('sendMessage', ({ senderId, receiverId, text, senderChat, messageId, isGroup, isImage, isAudio }) => {
+        if (!isGroup) {
+            const user = getUser(receiverId);
+            io.to(user === null || user === void 0 ? void 0 : user.socketId).emit('getMessage', {
+                senderId, text, senderChat, messageId, isImage, isAudio
+            });
+        }
+        else {
+            io.to(senderChat).emit("getMessage", {
+                senderId, text, senderChat, messageId, isImage, isAudio
+            });
+        }
+    });
+    socket.on("sendEscribiendo", ({ senderId, receiverId, text, senderChat }) => {
+        let type = "text";
+        const user = getUser(receiverId);
+        io.to(user === null || user === void 0 ? void 0 : user.socketId).emit("getUserWritting", {
+            senderId, text, senderChat, type
+        });
+    });
+    socket.on("sendAudioRecording", ({ senderId, receiverId, text, senderChat }) => {
+        let type = "audio";
+        const user = getUser(receiverId);
+        io.to(user === null || user === void 0 ? void 0 : user.socketId).emit("getUserWritting", {
+            senderId, text, senderChat, type
+        });
+    });
+    socket.on("deleteMessage", ({ senderId, receiverId, text, senderChat, messageId, createdAt }) => {
+        const user = getUser(receiverId);
+        io.to(user === null || user === void 0 ? void 0 : user.socketId).emit("getDeleteMessage", {
+            senderId, text, senderChat, messageId, receiverId, createdAt
+        });
+    });
+    socket.on("join_room", ({ room, userId }) => {
+        socket.join(room);
+        addGroup(room, userId);
+    });
 });

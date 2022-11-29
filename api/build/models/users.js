@@ -21,7 +21,15 @@ const UserSchema = new mongoose_1.Schema({
     },
     contacts: [{
             type: mongoose_1.Schema.Types.ObjectId,
-            ref: "Users"
+            ref: "Users",
+        }],
+    groups: [{
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: "Groups",
+        }],
+    bloqUsers: [{
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: "Users",
         }]
 });
 UserSchema.plugin(require("mongoose-autopopulate"));

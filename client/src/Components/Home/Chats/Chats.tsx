@@ -47,7 +47,7 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
     const filterGroupChat = allChats.filter(e => e._id === currentChat)[0]
 
     useEffect(() => {
-        scroll.current?.scrollIntoView({ behavior: 'smooth' })
+        scroll.current?.scrollIntoView(false)
     })
 
     const [messageReceived, setMessageReceived] = useState({
@@ -339,7 +339,7 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                                         : filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id} ref={scroll}>
-                                                    <Message friendId={friendId._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat} />
+                                                    <Message friendId={friendId?._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat} />
                                                 </div>)
                                         })
                                 }

@@ -1,6 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Chats, Messages, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, LAST_MESSAGE } from '../actions/actions'
+import Users from '../../Components/Home/Users/Users';
+import { Chats, Messages, NewChat, Response, User } from "../../types";
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE } from '../actions/actions'
+
 
 interface Reducer {
     users: User[],
@@ -10,7 +12,7 @@ interface Reducer {
     messages: Messages[]
     userChats: Chats[]
     searchUser: User[]
-    lastMesage: Messages[]
+    response: Response
 }
 
 const initialState: Reducer = {
@@ -21,7 +23,7 @@ const initialState: Reducer = {
     newChat: [],
     userChats: [],
     searchUser: [],
-    lastMesage: []
+    response: {ok:false, msg: ""}
 }
 
 export const clientReducer = createReducer(initialState, (callback) => {
@@ -39,28 +41,30 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(NEW_CHAT.fulfilled, (state, action) => {
         let payloadChats;
-        console.log(action.payload.chat)
         if (action.payload.ok) {
-            payloadChats = {
-                _id: action.payload.chat._id,
-                chatsUsers: action.payload.chat.chatsUsers,
-                creator: action.payload.chat.chatsUsers[0]._id,
-                groupName: action.payload.chat.groupName || ""
-            }
+            if (action.payload.msg !== 'Chat already created'){
 
-            let newChat = {
-                _id: action.payload.chat._id,
-                chatsUsers: action.payload.chat.chatsUsers,
-                creator: action.payload.chat.chatsUsers[0]._id,
+                payloadChats = {
+                    _id: action.payload.chat._id,
+                    chatsUsers: action.payload.chat.chatsUsers,
+                    creator: action.payload.chat.chatsUsers[0]._id,
+                    groupName: action.payload.chat.groupName || ""
+                }
+                
+                let newChat = {
+                    _id: action.payload.chat._id,
+                    chatsUsers: action.payload.chat.chatsUsers,
+                    creator: action.payload.chat.chatsUsers[0]._id,
+                }
+                state.chats = [...state.chats, newChat]
+                state.userChats = [...state.chats, payloadChats]
             }
-            state.chats = [...state.chats, newChat]
-            state.userChats = [...state.chats, payloadChats]
+            state.response = {ok:true, msg: action.payload.msg}
         }
 
     })
     callback.addCase(CREATE_GROUP_CHAT.fulfilled, (state, action) => {
         let payloadChats;
-        console.log(action.payload.chat)
         if (action.payload.ok) {
             payloadChats = {
                 _id: action.payload.chat._id,
@@ -73,6 +77,7 @@ export const clientReducer = createReducer(initialState, (callback) => {
 
             state.chats = [...state.chats, payloadChats]
             state.userChats = [...state.userChats, payloadChats]
+            state.response = {ok:true, msg:action.payload.msg}
         }
 
     })
@@ -87,6 +92,9 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(USER_FILTER.fulfilled, (state, action) => {
         state.searchUser = action.payload
+    })
+    callback.addCase(CLEAR_RESPONSE.fulfilled, (state, action) => {
+        state.response = {ok:false, msg:""}
     })
     callback.addCase(BLOCK_USER.fulfilled, (state, action) => {
         console.log(action.payload)
@@ -109,14 +117,12 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 state.users = stateUserCopy
                 let userChatsCopy = state.userChats
                 let userDeleted = userChatsCopy.filter(user => user.chatsUsers[1]._id !== action.payload.blockUserId)
-                console.log(userDeleted)
-                console.log(action.payload.blockUserId)
+                state.response = {ok:true, msg:action.payload.msg}
                 state.userChats = userDeleted
             }
         }
     })
     callback.addCase(UNBLOCK_USER.fulfilled, (state, action) => {
-        console.log(action.payload)
         if (action.payload.ok) {
             let stateUserCopy = state.users
             let indexActualUser = state.users.findIndex((user) => {
@@ -129,6 +135,7 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 stateUserCopy[indexActualUser].bloqUsers = unblockUser
                 stateUserCopy[indexActualUser].contacts = unblockUser
                 state.users = stateUserCopy
+                state.response = {ok:true, msg: action.payload.msg}
             }
         }
     })
@@ -162,6 +169,7 @@ export const clientReducer = createReducer(initialState, (callback) => {
             let userChatsCopy = state.userChats
             let userDeleted = userChatsCopy.filter(chat => chat._id !== action.payload.contactId)
             state.userChats = userDeleted
+            state.response = {ok:true, msg: action.payload.msg}
         }
     })
     callback.addCase(USER_CONTACTS.fulfilled, (state, action) => {
@@ -173,6 +181,19 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 })
                 stateUserCopy[indexActualUser].contacts?.push(action.payload.findUserDos)
                 state.users = stateUserCopy
+                state.response = {ok:true, msg:action.payload.msg}
+            } else if(action.payload.msg === "User updated"){
+                console.log(action.payload.userUpdate)
+                console.log(action.payload)
+                let stateUserCopy = state.users
+                 let indexActualUser = state.users.findIndex((user) => {
+                    return user._id === action.payload.userUpdate.userId
+                })
+                stateUserCopy[indexActualUser].image = action.payload.userUpdate.image
+                stateUserCopy[indexActualUser].nickName = action.payload.userUpdate.nickName
+                stateUserCopy[indexActualUser].password = action.payload.userUpdate.password
+                state.users = stateUserCopy
+                state.response = {ok:true, msg:action.payload.msg}
             }
         }
     })

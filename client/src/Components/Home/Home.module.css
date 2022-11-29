@@ -21,12 +21,12 @@
 }
 
 /* PERFIL USUARIO EN ASIDE  */
-.perfilAside {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 15px;
-  background-color: #edf2f7;
+.perfilAside{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1em;
+    background-color: #EDF2F7;
 }
 
 /* BUSQUEDA DE USUARIOS/CHATS (ASIDE) */

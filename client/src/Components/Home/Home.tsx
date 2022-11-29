@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
 import { useEffect, useRef, useState} from 'react'
-import { ALL_CHATS, ALL_MESSAGES, ALL_USERS, USER_CHATS } from "../../Redux/actions/actions"
+import { ALL_CHATS, ALL_MESSAGES, ALL_USERS, CLEAR_RESPONSE, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom"
 import Users from "./Users/Users"
 import Contacts from "./Contacts/Contacts"
 import Profile from "./Profile/Profile"
-import { Input, Text } from '@chakra-ui/react'
+import { Alert, AlertIcon, AlertTitle, Input, Text } from '@chakra-ui/react'
+import { FiUsers } from 'react-icons/fi'
 import { RiChatNewLine } from 'react-icons/ri'
 import { HiLogout } from 'react-icons/hi'
 import { GrGroup } from 'react-icons/gr'
@@ -32,16 +33,18 @@ export default function Home(){
         signOut(auth)
         navigate('/')
     }
+    // const portSocket = process.env.SOCKET_PORT || 6976 || 3002
     
     //ESTADOS DEL REDUCER
     const allUsers = useAppSelector(state => state.clientReducer.users)
+    const respuesta = useAppSelector(state => state.clientReducer.response)
     const userChats = useAppSelector(state => state.clientReducer.userChats)
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
-        socket.current = io('ws://localhost:3002')
+        socket.current = io('https://fastchat-production.up.railway.app/')
         if(currentUser?._id){
             dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
@@ -49,6 +52,13 @@ export default function Home(){
             socket.current?.emit('addUser', currentUser?._id)
         }
     }, [dispatch, currentUser?._id])
+
+    // SET OFF ALERT 
+    if (respuesta?.ok){
+        setTimeout(()=>{
+            dispatch(CLEAR_RESPONSE())
+        },3000)
+    }
     //FILTER USER CHATS
     const [searchChat, setSearchChat] = useState('')
     const handleSearchChat = (e: React.ChangeEvent<HTMLInputElement>) =>{ 
@@ -263,6 +273,13 @@ export default function Home(){
                 </div>
                 <ChatGroups setCreateGroup={setCreateGroup} currentUser={currentUser}/>
             </div>
+        {
+                respuesta?.ok &&
+                <Alert status="success">
+                    <AlertIcon />
+                    <AlertTitle>{respuesta.msg} </AlertTitle>
+                </Alert>
+            }
         </div>
         <div className={chatResponsive ? s.asd : s.divChats}>
             <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats} setChatResponsive={setChatResponsive}/>

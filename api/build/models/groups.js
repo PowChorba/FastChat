@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Groups = void 0;
 const mongoose_1 = require("mongoose");
 const GroupsSchema = new mongoose_1.Schema({
     groupName: {
         type: String,
-        require: true
     },
     members: [{
             type: mongoose_1.Schema.Types.ObjectId,
@@ -14,9 +14,9 @@ const GroupsSchema = new mongoose_1.Schema({
             type: mongoose_1.Schema.Types.ObjectId,
             ref: "User"
         }],
-    chats: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: "Chats"
+    img: {
+        type: String,
+        require: true
     }
 });
-module.exports = (0, mongoose_1.model)('Groups', GroupsSchema);
+exports.Groups = (0, mongoose_1.model)('Groups', GroupsSchema);
