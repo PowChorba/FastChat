@@ -64,9 +64,6 @@ export default function Profile({currentUser}: Props){
             nickName: '',
             password: ''
         })
-        setTimeout(() =>{
-            window.location.reload()
-        }, 1500)
     }
 
 

@@ -64,7 +64,14 @@ export const updateUsers = async (req: Request, res: Response) => {
       }
     } else if (!contact && findUser && !contactId && !bloqUserId) {
       await findUser.updateOne({ image, password, nickName });
-      return res.json({ok:true, msg:"User updated"});
+      let userUpdate = {
+        image,
+        password,
+        nickName,
+        userId
+      }
+      console.log(userUpdate)
+      return res.json({ok:true ,userUpdate, msg:"User updated"});
     } else if (findUser && contactId) {
       const filterContact = findUser.contacts?.filter(
         (e) => e._id?.toString() === contactId
