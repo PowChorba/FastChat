@@ -9,7 +9,7 @@ import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
-import { AiOutlineSearch, AiOutlineSend } from "react-icons/ai"
+import { AiOutlineArrowLeft, AiOutlineSearch, AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
 import { BsMicFill } from 'react-icons/bs'
@@ -17,6 +17,8 @@ import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
 import SearchMessages from "../Extras/SearchMessages"
 import { date, fechaActual, sortMessagesChat } from "../Tools/Tools"
+import ChatImg from '../../../assets/chat.svg'
+
 interface Props {
     currentUser: User
     currentChat: string
@@ -26,9 +28,10 @@ interface Props {
     setPendingMessages: Dispatch<SetStateAction<Messages[]>>
     pendingMessages: Messages[]
     setCurrentChat: React.Dispatch<React.SetStateAction<string>>
+    setChatResponsive: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
+export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages, setChatResponsive }: Props) {
     const [audioStatus, setAudioStatus] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
@@ -283,16 +286,28 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
         dispatch(BLOCK_USER(block))
         dispatch(DELETE_CHAT(currentChat))
     }
+
+    //RESPONSIVE
+    const handleResponsive = () => {
+        setChatResponsive(false)
+    }
+
     return (
         <div>
             {
                 currentChat === ''
                     ? <div className={s.divChatsCerrados}>
-                        <h4>Open a conversation or start a new one!</h4>
+                        <h4 className={s.tituloPen}>Open a conversation or start a new one!</h4>
+                        <div className={s.probando}>
+                            <img src={ChatImg} alt="asd" width='400px'/>
+                        </div>
                     </div>
                     :
                     <div className={profileChat || searchMessages ? s.contenedor : s.asd}>
                         <div className={s.divMensajes}>
+                            <div className={s.arrowBackResponsive}>
+                                <AiOutlineArrowLeft onClick={handleResponsive}/>
+                            </div>
                             <div className={s.divDatosUserChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
                                 <div className={s.contenedorPerfil} onClick={handleProfileChat}>
                                     <p>{filterGroupChat?.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
