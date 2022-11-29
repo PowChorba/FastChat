@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged, updateCurrentUser } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { RaceBy } from "@uiball/loaders";
 import s from './Context.module.css'

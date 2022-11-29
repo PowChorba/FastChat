@@ -21,6 +21,7 @@ import Chatss from "./Chats/Chats"
 import { GetMessageData, Messages } from "../../types"
 import { sortChats, sortMessagees } from "./Tools/Tools"
 import { AiOutlineUserAdd } from "react-icons/ai"
+import { HiBars3 } from 'react-icons/hi2'
 
 export default function Home(){
     const dispatch = useAppDispatch()
@@ -175,11 +176,27 @@ export default function Home(){
         setCreateGroup(!createGroup)
     }
 
+    //INAKI LA PROXIMA DEPLOYAS Y HACES RESPONSIVE VOS PELOTUDO
+    const [btnResponsive, setBtnResponsive] = useState(false)
+    const [chatResponsive, setChatResponsive] = useState(false)
+
+    const handleResponsive = () => {
+        setBtnResponsive(!btnResponsive)
+    }
+
+    const handleChatResponsive = () => {
+        setChatResponsive(true)
+    }
+
     return(
     <div className={s.contenedor}>
-        <div className={s.divAside}>
+        <div className={chatResponsive ? s.responsiveNone : s.divAside}>
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile || !block || !createGroup ? s.none : s.asdasd}>
+                <div className={s.divResponsiveBards} onClick={handleResponsive}>
+                    <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
+                    <HiBars3 className={s.hiBars} />
+                </div>
                 <div className={s.perfilAside}>
                     <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
                     <div>
@@ -190,6 +207,14 @@ export default function Home(){
                         <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
                     </div>
                 </div>
+                {/* ACA PARA EL RESPONSIVE  */}
+                <div className={btnResponsive ? s.perfilResponsive : s.none}>
+                        <button onClick={handleContacts}><RiChatNewLine className={s.iconos}/></button>
+                        <button onClick={handleGroups}><GrGroup className={s.iconos}/></button>
+                        <button onClick={handleBlock}><TbUserOff className={s.iconos}/></button>
+                        <button onClick={handleUsuarios}><AiOutlineUserAdd className={s.iconos}/></button>
+                        <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
+                </div>
                     <div className={s.inputChats}>
                         <Input variant='filled' type="text" placeholder="Search chat.." value={searchChat} onChange={handleSearchChat} />
                     </div>
@@ -198,7 +223,7 @@ export default function Home(){
                     filterUserChats.length !== 0 
                     ? filterUserChats && filterUserChats?.map(e => {
                         return(
-                            <div key={e._id} className={s.botonesChats}>
+                            <div key={e._id} className={s.botonesChats} onClick={handleChatResponsive}>
                                 <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} currentChat={currentChat} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
@@ -259,8 +284,8 @@ export default function Home(){
                 </Alert>
             }
         </div>
-        <div>
-            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
+        <div className={chatResponsive ? s.asd : s.divChats}>
+            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats} setChatResponsive={setChatResponsive} chatResponsive={chatResponsive}/>
         </div>
     </div>)
 }

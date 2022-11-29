@@ -9,7 +9,7 @@ import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
-import { AiOutlineSearch, AiOutlineSend } from "react-icons/ai"
+import { AiOutlineArrowLeft, AiOutlineSearch, AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
 import { BsMicFill } from 'react-icons/bs'
@@ -17,6 +17,8 @@ import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
 import SearchMessages from "../Extras/SearchMessages"
 import { date, fechaActual, sortMessagesChat } from "../Tools/Tools"
+import ChatImg from '../../../assets/chat.svg'
+
 interface Props {
     currentUser: User
     currentChat: string
@@ -26,9 +28,11 @@ interface Props {
     setPendingMessages: Dispatch<SetStateAction<Messages[]>>
     pendingMessages: Messages[]
     setCurrentChat: React.Dispatch<React.SetStateAction<string>>
+    setChatResponsive: React.Dispatch<React.SetStateAction<boolean>>
+    chatResponsive: boolean
 }
 
-export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
+export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages, setChatResponsive, chatResponsive }: Props) {
     const [audioStatus, setAudioStatus] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
@@ -283,16 +287,28 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
         dispatch(BLOCK_USER(block))
         dispatch(DELETE_CHAT(currentChat))
     }
+
+    //RESPONSIVE
+    const handleResponsive = () => {
+        setChatResponsive(false)
+    }
+
     return (
         <div>
             {
                 currentChat === ''
                     ? <div className={s.divChatsCerrados}>
-                        <h4>Open a conversation or start a new one!</h4>
+                        <h4 className={s.tituloPen}>Open a conversation or start a new one!</h4>
+                        <div className={s.probando}>
+                            <img src={ChatImg} alt="asd" width='400px'/>
+                        </div>
                     </div>
                     :
-                    <div className={profileChat || searchMessages ? s.contenedor : s.asd}>
+                    <div className={(profileChat || searchMessages) && chatResponsive ? s.displayNone : s.contenedor}>
                         <div className={s.divMensajes}>
+                            <div className={s.arrowBackResponsive}>
+                                <AiOutlineArrowLeft onClick={handleResponsive}/>
+                            </div>
                             <div className={s.divDatosUserChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
                                 <div className={s.contenedorPerfil} onClick={handleProfileChat}>
                                     <p>{filterGroupChat?.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
@@ -320,11 +336,10 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                                     )}
                                 </div>
                                 {
-                                    filterMessages?.length === 0 ? <p>Today</p>
-                                        : filterMessages?.map((e) => {
+                                    filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id} ref={scroll}>
-                                                    <Message friendId={friendId._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat} />
+                                                    <Message friendId={friendId?._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat} />
                                                 </div>)
                                         })
                                 }
@@ -364,6 +379,27 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                             <SearchMessages filterMessages={filterMessages}/>
                         </div> 
                     </div>
+            }
+            {
+                chatResponsive && <div>
+                    <div className={profileChat ? s.divMensajes : s.displayNone}>
+                            <div className={s.divCerrarInfo}>
+                                <button onClick={handleCloseProfileChat} className={s.botonCerrarInfo}><GrClose /></button>
+                                <span>{' '}{filterGroupChat?.groupName ? 'Group info' : 'Contact info'}</span>
+                            </div>
+                            {
+                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
+                                    : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat = {setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser}/>
+                            }
+                        </div>
+                        <div className={searchMessages ? s.divMensajes : s.displayNone}>
+                            <div className={s.divCerrarInfo}>
+                                <button onClick={handleCloseSearchMessages} className={s.botonCerrarInfo}><GrClose /></button>
+                                <span>{' '}Search Messages</span>
+                            </div>
+                            <SearchMessages filterMessages={filterMessages}/>
+                        </div> 
+                </div>
             }
         </div>)
 }

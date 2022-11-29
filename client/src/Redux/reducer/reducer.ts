@@ -182,6 +182,18 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 stateUserCopy[indexActualUser].contacts?.push(action.payload.findUserDos)
                 state.users = stateUserCopy
                 state.response = {ok:true, msg:action.payload.msg}
+            } else if(action.payload.msg === "User updated"){
+                console.log(action.payload.userUpdate)
+                console.log(action.payload)
+                let stateUserCopy = state.users
+                 let indexActualUser = state.users.findIndex((user) => {
+                    return user._id === action.payload.userUpdate.userId
+                })
+                stateUserCopy[indexActualUser].image = action.payload.userUpdate.image
+                stateUserCopy[indexActualUser].nickName = action.payload.userUpdate.nickName
+                stateUserCopy[indexActualUser].password = action.payload.userUpdate.password
+                state.users = stateUserCopy
+                state.response = {ok:true, msg:action.payload.msg}
             }
         }
     })
