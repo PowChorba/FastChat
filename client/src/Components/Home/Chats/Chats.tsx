@@ -29,9 +29,10 @@ interface Props {
     pendingMessages: Messages[]
     setCurrentChat: React.Dispatch<React.SetStateAction<string>>
     setChatResponsive: React.Dispatch<React.SetStateAction<boolean>>
+    chatResponsive: boolean
 }
 
-export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages, setChatResponsive }: Props) {
+export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages, setChatResponsive, chatResponsive }: Props) {
     const [audioStatus, setAudioStatus] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
@@ -303,7 +304,7 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                         </div>
                     </div>
                     :
-                    <div className={profileChat || searchMessages ? s.contenedor : s.asd}>
+                    <div className={(profileChat || searchMessages) && chatResponsive ? s.displayNone : s.contenedor}>
                         <div className={s.divMensajes}>
                             <div className={s.arrowBackResponsive}>
                                 <AiOutlineArrowLeft onClick={handleResponsive}/>
@@ -335,8 +336,7 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                                     )}
                                 </div>
                                 {
-                                    filterMessages?.length === 0 ? <p>Today</p>
-                                        : filterMessages?.map((e) => {
+                                    filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id} ref={scroll}>
                                                     <Message friendId={friendId?._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat} />
@@ -379,6 +379,27 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                             <SearchMessages filterMessages={filterMessages}/>
                         </div> 
                     </div>
+            }
+            {
+                chatResponsive && <div>
+                    <div className={profileChat ? s.divMensajes : s.displayNone}>
+                            <div className={s.divCerrarInfo}>
+                                <button onClick={handleCloseProfileChat} className={s.botonCerrarInfo}><GrClose /></button>
+                                <span>{' '}{filterGroupChat?.groupName ? 'Group info' : 'Contact info'}</span>
+                            </div>
+                            {
+                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
+                                    : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat = {setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser}/>
+                            }
+                        </div>
+                        <div className={searchMessages ? s.divMensajes : s.displayNone}>
+                            <div className={s.divCerrarInfo}>
+                                <button onClick={handleCloseSearchMessages} className={s.botonCerrarInfo}><GrClose /></button>
+                                <span>{' '}Search Messages</span>
+                            </div>
+                            <SearchMessages filterMessages={filterMessages}/>
+                        </div> 
+                </div>
             }
         </div>)
 }

@@ -193,7 +193,10 @@ export default function Home(){
         <div className={chatResponsive ? s.responsiveNone : s.divAside}>
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile || !block || !createGroup ? s.none : s.asdasd}>
-                <div className={s.divResponsiveBards} onClick={handleResponsive}><HiBars3 className={s.hiBars} />FastChat</div>
+                <div className={s.divResponsiveBards} onClick={handleResponsive}>
+                    <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
+                    <HiBars3 className={s.hiBars} />
+                </div>
                 <div className={s.perfilAside}>
                     <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
                     <div>
@@ -282,7 +285,7 @@ export default function Home(){
             }
         </div>
         <div className={chatResponsive ? s.asd : s.divChats}>
-            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats} setChatResponsive={setChatResponsive}/>
+            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats} setChatResponsive={setChatResponsive} chatResponsive={chatResponsive}/>
         </div>
     </div>)
 }

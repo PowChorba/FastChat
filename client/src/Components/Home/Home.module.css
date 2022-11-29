@@ -137,7 +137,10 @@
 
   .divResponsiveBards{
     display: flex;
+    align-items: center;
+    justify-content: space-around;
     padding: 15px;
+    background-color: #008069;
   }
 
   .perfilAside{
@@ -155,12 +158,12 @@
     display: none;
   }
 
-  .imagenPerfil{
+  /* .imagenPerfil{
     display: none;
-  }
+  } */
 
   .hiBars {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .divChats {
