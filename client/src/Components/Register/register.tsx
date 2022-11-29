@@ -22,6 +22,8 @@ export default function Register() {
         password: '',
         image: ''
     })
+    const [errorEmail, setErrorEmail] = useState('')
+
 
     const auth = getAuth()
     const dispatch = useAppDispatch()
@@ -64,8 +66,9 @@ export default function Register() {
             if(user.image === '') user.image = defaultImage
             dispatch(NEW_USER(user))
             navigate('/verification')
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+            setErrorEmail(error)
         }
     }
 
@@ -115,6 +118,9 @@ export default function Register() {
                         <label>Password: </label>
                         <Input type="password" isInvalid focusBorderColor='teal.500' errorBorderColor='crimson' name="password" value={user.password} onChange={handleChange}/>
                       </div>
+                }
+                {
+                    (errorEmail !== '' || errorEmail.toString().includes('(auth/email-already-in-use)')) && <p className={s.mensajeError}>Email already in use</p>
                 }
                 <Button type="submit" className={s.buttonRegister} disabled={user.nickName === '' || user.password === '' || user.userEmail === '' || user.password.length < 6 ? true : false}>Register</Button>
             </form>
