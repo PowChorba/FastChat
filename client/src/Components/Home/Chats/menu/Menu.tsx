@@ -1,14 +1,15 @@
 import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { ImAttachment } from 'react-icons/im'
 import { BsFillCameraFill } from 'react-icons/bs'
-import { IoMdContact } from 'react-icons/io'
 import { AiFillFileText } from 'react-icons/ai'
+import { GrAttachment } from "react-icons/gr"
 import { useState } from "react";
 // import Webcamera from "./camera/Camera";
 import OpenCamera from "../../Dialogs/OpenCamera";
 import { CreateMessages, User } from "../../../../types";
 import s from './IconsMenu.module.css'
 import axios from "axios";
+import {BiLinkAlt} from "react-icons/bi"
 
 interface Props {
   // setCameraStatus: React.Dispatch<React.SetStateAction<boolean>>
@@ -17,14 +18,14 @@ interface Props {
   currentChat: string
   currentUser: User
 }
-export default function IconsMenu({ currentChat, currentUser, setMessages, messages}: Props){
-    const [openCam, setOpenCam] = useState(false)
+export default function IconsMenu({ currentChat, currentUser, setMessages, messages }: Props) {
+  const [openCam, setOpenCam] = useState(false)
 
-    const handleCamera = () => {
-      setOpenCam(!openCam)
-    }
+  const handleCamera = () => {
+    setOpenCam(!openCam)
+  }
 
-    //PARA PODER MODIFICAR LA IMAGEN
+  //PARA PODER MODIFICAR LA IMAGEN
   const handleImage = async (e: any) => {
     try {
       const file = e.target.files[0];
@@ -44,22 +45,26 @@ export default function IconsMenu({ currentChat, currentUser, setMessages, messa
       console.log(error);
     }
   };
-    return(
-        <Menu>
-      <MenuButton><ImAttachment/></MenuButton>
-      <MenuList>
-        <MenuItem onClick={handleCamera} icon={<BsFillCameraFill />} >
-          Camera
-        </MenuItem>
-        <label htmlFor="openFile">
-          <div className={s.divOpenFile}><AiFillFileText className={s.fillFile}/> Open file</div>
-          <Input id="openFile" type="file" accept="image/jpeg, image/png" name="image" onChange={handleImage} className={s.displayNone}/>
-        </label>
-      </MenuList>
-  {
-    openCam ? <OpenCamera setOpenCam={setOpenCam} currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/> : ''
-  }
-  
-</Menu>
-    )
+  return (
+    <Menu>
+      {({ isOpen }) => (
+        <>
+          <MenuButton>{isOpen ? <BiLinkAlt size="1.5em" color="#008069" /> : <BiLinkAlt size="1.5em" />}</MenuButton>
+          <MenuList>
+            <MenuItem onClick={handleCamera} icon={<BsFillCameraFill />} >
+              Camera
+            </MenuItem>
+            <label htmlFor="openFile">
+              <div className={s.divOpenFile}><AiFillFileText className={s.fillFile} /> Open file</div>
+              <Input id="openFile" type="file" accept="image/jpeg, image/png" name="image" onChange={handleImage} className={s.displayNone} />
+            </label>
+          </MenuList>
+          {
+            openCam ? <OpenCamera setOpenCam={setOpenCam} currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages} /> : ''
+          }
+
+        </>
+      )}
+    </Menu>
+  )
 }
