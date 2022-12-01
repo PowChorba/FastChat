@@ -28,7 +28,7 @@ interface Props {
     setCurrentChat: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function Chatss({ setCurrentChat,currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
+export default function Chatss({ setCurrentChat, currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
     const [audioStatus, setAudioStatus] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
@@ -154,9 +154,9 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
     }
 
     useEffect(() => {
-        setTest(()=>{
+        setTest(() => {
             // CADA VEZ QUE ABREN UN CHAT LIMPIA EL ESTADO CON MENSAJES NUEVOS
-            let renewMsgState = pendingMessages.filter(msg=> msg.chatId === currentChat)
+            let renewMsgState = pendingMessages.filter(msg => msg.chatId === currentChat)
             return renewMsgState
         })
         let myPendingMsg = pendingMessages.filter(msg => msg.chatId === currentChat)
@@ -232,17 +232,17 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
     useEffect(() => {
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
-                if (data.type === "text"){
+                if (data.type === "text") {
                     if (data.text) setWritting(true)
                     else setWritting(false)
-                } else if (data.type === "audio"){
+                } else if (data.type === "audio") {
                     if (data.text) setSendingAudio(true)
                     else setSendingAudio(false)
                 }
             }
         })
     }, [messageReceived, currentChat, socket])
-    
+
     const [online, setOnline] = useState<string[]>([])
 
     useEffect(() => {
@@ -266,7 +266,7 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
 
     //BLOQUEAR CONTACTOS
     const [block, setBlock] = useState({
-        userId: '', 
+        userId: '',
         bloqUserId: ''
     })
 
@@ -299,25 +299,25 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                                     <p className={s.conection}>
                                         {
                                             filterGroupChat?.groupName
-                                            ? filterGroupChat.chatsUsers.map(e => {
-                                                return(<span key={e._id}>{e.nickName}{' '}</span>)
-                                            })
-                                            : writting ? "Writting..." : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
+                                                ? filterGroupChat.chatsUsers.map(e => {
+                                                    return (<span key={e._id}>{e.nickName}{' '}</span>)
+                                                })
+                                                : writting ? "Writting..." : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
                                         }
                                     </p>
                                 </div>
-                                <div><AiOutlineSearch onClick={handleSearchMessages}/></div>
+                                <div><AiOutlineSearch onClick={handleSearchMessages} /></div>
                             </div>
                             <div className={s.contenedorMensajes}>
                                 <div className={s.buttonsAddBloq}>
                                     {
                                         !filterGroupChat?.groupName && (prueba?.length !== 0 || !pows ? <span></span>
-                                                : <div className={s.divAgregarBloquear}>
-                                                    <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
-                                                    <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
-                                                    <Button variant='outline' colorScheme='red' onMouseEnter={() => handleBlockId(friendId?._id)} onClick={bloqUser}>Block User</Button>
-                                                </div>
-                                    )}
+                                            : <div className={s.divAgregarBloquear}>
+                                                <p>If you know this user, press de <b>Add button</b>. If not, press the <b>Block button</b></p>
+                                                <Button variant='outline' colorScheme='green' onMouseEnter={() => handleDataNewContact(friendId?._id)} onClick={handleNewContact}>Add Contact</Button>{' '}
+                                                <Button variant='outline' colorScheme='red' onMouseEnter={() => handleBlockId(friendId?._id)} onClick={bloqUser}>Block User</Button>
+                                            </div>
+                                        )}
                                 </div>
                                 {
                                     filterMessages?.length === 0 ? <p>Today</p>
@@ -328,23 +328,27 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                                                 </div>)
                                         })
                                 }
-                                {emoji && <Emojis id={currentUser?._id} chat={currentChat}  setMessages={setMessages}/>}
+                            {/* <div className={s.divGridForm}> */}
+                                {/* <div className={s.divImagenIconos}> */}
+                                {emoji && <Emojis scroll={scroll} id={currentUser?._id} chat={currentChat} setMessages={setMessages} />}
+                                {/* </div> */}
+                            {/* </div> */}
                             </div>
-                               <div className={s.divGridForm}>
-                                    <div className={s.divImagenIconos}>
-                                        <BiHappyAlt size="1.5em" onClick={()=>setEmoji(!emoji)}/>
-                                        <IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages}/>
-                                        <BsMicFill onClick={()=> setAudioStatus(!audioStatus)}/>
-                                    </div>
-                                    {
-                                        audioStatus 
-                                        ? <div className={s.formMandarMensaje}><AudioRecorderTest group={filterGroupChat.groupName} friend={friendId._id} chat={currentChat} userId={currentUser?._id} socket={socket} setAudioStatus={setAudioStatus}/></div>
+                            <div className={s.divGridForm}>
+                                <div className={s.divImagenIconos}>
+                                    <BiHappyAlt size="1.5em" onClick={() => setEmoji(!emoji)} />
+                                    <IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages} />
+                                    <BsMicFill onClick={() => setAudioStatus(!audioStatus)} />
+                                </div>
+                                {
+                                    audioStatus
+                                        ? <div className={s.formMandarMensaje}><AudioRecorderTest group={filterGroupChat.groupName} friend={friendId._id} chat={currentChat} userId={currentUser?._id} socket={socket} setAudioStatus={setAudioStatus} /></div>
                                         : <form onSubmit={(e) => handleSubmit(e)} className={currentChat === '' ? s.divContactos : s.formMandarMensaje}>
                                             <Input size='sm' name="message" placeholder="Write a message" id={currentUser?._id} value={messages.textMessage} onChange={handleMessage} />
-                                            <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}><AiOutlineSend className={s.iconos}/></button>
-                                        </form> 
-                                    }
-                               </div>
+                                            <button type="submit" className={messages.textMessage === '' ? s.noneButton : s.sendMensaje}><AiOutlineSend className={s.iconos} /></button>
+                                        </form>
+                                }
+                            </div>
                         </div>
                         <div className={profileChat ? s.divMensajes : s.displayNone}>
                             <div className={s.divCerrarInfo}>
@@ -353,7 +357,7 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                             </div>
                             {
                                 filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
-                                    : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat = {setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser}/>
+                                    : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat={setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser} />
                             }
                         </div>
                         <div className={searchMessages ? s.divMensajes : s.displayNone}>
@@ -361,8 +365,8 @@ export default function Chatss({ setCurrentChat,currentUser, currentChat, friend
                                 <button onClick={handleCloseSearchMessages} className={s.botonCerrarInfo}><GrClose /></button>
                                 <span>{' '}Search Messages</span>
                             </div>
-                            <SearchMessages filterMessages={filterMessages}/>
-                        </div> 
+                            <SearchMessages filterMessages={filterMessages} />
+                        </div>
                     </div>
             }
         </div>)

@@ -43,7 +43,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
         let payloadChats;
         if (action.payload.ok) {
             if (action.payload.msg !== 'Chat already created'){
-
                 payloadChats = {
                     _id: action.payload.chat._id,
                     chatsUsers: action.payload.chat.chatsUsers,
@@ -57,7 +56,7 @@ export const clientReducer = createReducer(initialState, (callback) => {
                     creator: action.payload.chat.chatsUsers[0]._id,
                 }
                 state.chats = [...state.chats, newChat]
-                state.userChats = [...state.chats, payloadChats]
+                state.userChats = [...state.userChats, payloadChats]
             }
             state.response = {ok:true, msg: action.payload.msg}
         }
