@@ -304,7 +304,9 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                         </div>
                     </div>
                     :
-                    <div className={(profileChat || searchMessages) && chatResponsive ? s.displayNone : s.contenedor}>
+                    // <div className={(profileChat || searchMessages) && chatResponsive ? s.displayNone : s.contenedor}>
+                    <div className={(profileChat || searchMessages) && chatResponsive ? s.displayNone : (profileChat || searchMessages) ? s.contenedor : s.asd}>
+
                         <div className={s.divMensajes}>
                             <div className={s.arrowBackResponsive}>
                                 <AiOutlineArrowLeft onClick={handleResponsive}/>
@@ -343,11 +345,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                                 </div>)
                                         })
                                 }
-                            {/* <div className={s.divGridForm}> */}
-                                {/* <div className={s.divImagenIconos}> */}
                                 {emoji && <Emojis scroll={scroll} id={currentUser?._id} chat={currentChat} setMessages={setMessages} />}
-                                {/* </div> */}
-                            {/* </div> */}
                             </div>
                             <div className={s.divGridForm}>
                                 <div className={s.divImagenIconos}>
@@ -405,5 +403,6 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                         </div> 
                 </div>
             }
+            
         </div>)
 }
