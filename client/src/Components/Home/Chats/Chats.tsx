@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineArrowLeft, AiOutlineSearch, AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
-import { BsMicFill } from 'react-icons/bs'
+import { BiMicrophone } from 'react-icons/bi'
 import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
 import SearchMessages from "../Extras/SearchMessages"
@@ -349,9 +349,9 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                             </div>
                             <div className={s.divGridForm}>
                                 <div className={s.divImagenIconos}>
-                                    <BiHappyAlt size="1.5em" onClick={() => setEmoji(!emoji)} />
-                                    <IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages} />
-                                    <BsMicFill onClick={() => setAudioStatus(!audioStatus)} />
+                                    {emoji ? <BiHappyAlt size="1.5em" color="#008069" onClick={() => setEmoji(!emoji)}/> : <BiHappyAlt size="1.5em" onClick={() => setEmoji(!emoji)} />}
+                                    {<IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages} />}
+                                    {audioStatus ? <BiMicrophone size="1.5em" color="#008069" onClick={() => setAudioStatus(!audioStatus)} /> : <BiMicrophone size="1.5em" onClick={() => setAudioStatus(!audioStatus)} />}
                                 </div>
                                 {
                                     audioStatus
