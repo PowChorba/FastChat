@@ -1,4 +1,4 @@
-import { filter, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
+import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
 import { IoIosArrowDown } from "react-icons/io"
 import { BLOCK_USER, DELETE_CONTACT, NEW_CHAT } from "../../../Redux/actions/actions"

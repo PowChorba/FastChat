@@ -21,7 +21,6 @@
 }
 
 .divChatsCerrados{
-    /* margin: 0px auto; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -178,4 +177,18 @@
         left: 5px;
         font-size: 16px;
     }
+
+    .contenedorMensajes{
+        height: 90vh;
+    }
+
+    .buttonsAddBloq{
+        width: 75%;
+        font-size: 12px;
+    }
+
+    .divMensajes{
+        width: 100%;
+    }
+
 }

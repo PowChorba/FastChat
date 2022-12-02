@@ -1,7 +1,7 @@
 .contenedor {
     display: flex;
     flex-direction: column;
-    max-width: 425px;
+    
 }
 
 .contenedorInput{
@@ -41,10 +41,21 @@
     background-color: #EDF2F7;
 }
 
-@media only screen and (max-width: 1280px){
+@media only screen and (max-width: 1500px){
     .contenedor {
         display: flex;
         flex-direction: column;
         max-width: 315px;
     }
   }
+
+@media only screen and (max-width: 500px) {
+    .contenedor{
+        max-width: 100%;
+    }
+
+    .divContactsMap{
+        height: 80vh;
+        max-height: 80vh;
+    }
+}
