@@ -9,7 +9,6 @@ import Users from "./Users/Users"
 import Contacts from "./Contacts/Contacts"
 import Profile from "./Profile/Profile"
 import { Alert, AlertIcon, AlertTitle, Input, Text } from '@chakra-ui/react'
-import { FiUsers } from 'react-icons/fi'
 import { RiChatNewLine } from 'react-icons/ri'
 import { HiLogout } from 'react-icons/hi'
 import { GrGroup } from 'react-icons/gr'
@@ -44,7 +43,7 @@ export default function Home(){
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
-        socket.current = io('https://fastchat-production.up.railway.app/')
+        socket.current = io('ws://localhost:3001')
         if(currentUser?._id){
             dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
@@ -177,15 +176,12 @@ export default function Home(){
     }
 
     //INAKI LA PROXIMA DEPLOYAS Y HACES RESPONSIVE VOS PELOTUDO
-    const [btnResponsive, setBtnResponsive] = useState(false)
     const [chatResponsive, setChatResponsive] = useState(false)
 
-    const handleResponsive = () => {
-        setBtnResponsive(!btnResponsive)
-    }
-
     const handleChatResponsive = () => {
-        setChatResponsive(true)
+        if(window.innerWidth <= 500){
+            setChatResponsive(true)
+        }
     }
 
     return(
@@ -193,9 +189,8 @@ export default function Home(){
         <div className={chatResponsive ? s.responsiveNone : s.divAside}>
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile || !block || !createGroup ? s.none : s.asdasd}>
-                <div className={s.divResponsiveBards} onClick={handleResponsive}>
+                <div className={s.divResponsiveBards}>
                     <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
-                    <HiBars3 className={s.hiBars} />
                 </div>
                 <div className={s.perfilAside}>
                     <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
@@ -208,7 +203,7 @@ export default function Home(){
                     </div>
                 </div>
                 {/* ACA PARA EL RESPONSIVE  */}
-                <div className={btnResponsive ? s.perfilResponsive : s.none}>
+                <div className={s.perfilResponsive}>
                         <button onClick={handleContacts}><RiChatNewLine className={s.iconos}/></button>
                         <button onClick={handleGroups}><GrGroup className={s.iconos}/></button>
                         <button onClick={handleBlock}><TbUserOff className={s.iconos}/></button>
@@ -229,7 +224,7 @@ export default function Home(){
                     })
                     : lastChat && lastChat?.map(e => {
                         return(
-                            <div key={e._id} className={s.botonesChats}>
+                            <div key={e._id} className={s.botonesChats} onClick={handleChatResponsive}>
                                 <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} currentChat={currentChat} socket={socket}/></button>
                             </div>
                             )

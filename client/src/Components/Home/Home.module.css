@@ -87,6 +87,7 @@
   overflow-y: scroll;
   height: 72vh;
   max-height: 72vh;
+  max-width: 400px;
 }
 
 .divChatsDefault::-webkit-scrollbar {
@@ -157,10 +158,6 @@
   .responsiveNone{
     display: none;
   }
-
-  /* .imagenPerfil{
-    display: none;
-  } */
 
   .hiBars {
     font-size: 24px;

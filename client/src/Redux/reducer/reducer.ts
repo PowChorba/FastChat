@@ -1,6 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import Users from '../../Components/Home/Users/Users';
-import { Chats, Messages, NewChat, Response, User } from "../../types";
+import { Chats, Messages, Response, User } from "../../types";
 import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE } from '../actions/actions'
 
 
@@ -43,7 +42,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
         let payloadChats;
         if (action.payload.ok) {
             if (action.payload.msg !== 'Chat already created'){
-
                 payloadChats = {
                     _id: action.payload.chat._id,
                     chatsUsers: action.payload.chat.chatsUsers,
@@ -57,7 +55,7 @@ export const clientReducer = createReducer(initialState, (callback) => {
                     creator: action.payload.chat.chatsUsers[0]._id,
                 }
                 state.chats = [...state.chats, newChat]
-                state.userChats = [...state.chats, payloadChats]
+                state.userChats = [...state.userChats, payloadChats]
             }
             state.response = {ok:true, msg: action.payload.msg}
         }

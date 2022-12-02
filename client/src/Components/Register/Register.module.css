@@ -42,3 +42,14 @@
 .mensajeError{
     color: red;
 }
+
+@media only screen and (max-width: 500px) {
+    .formLogin {
+        padding: 25px;
+        width: 350px;
+    }
+
+    .mensajeError{
+        font-size: 12px;
+    }
+}
