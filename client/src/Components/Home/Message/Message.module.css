@@ -107,6 +107,9 @@
         max-width: 250px;
         text-align: left;
         overflow: hidden;
+    }
 
+    .audio{
+        width: 200px;
     }
 }

@@ -48,13 +48,13 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
                                 ?   <div>
                                         <p>{e.messageAuthor === currentUser?._id ? '' : nameOfUsers[idOfUsers.indexOf(e.messageAuthor)]}</p>
                                         {
-                                            e.isImage ? <img src={e.textMessage} alt="Not Found" className={s.image}/> : e.isAudio ? <audio src={e.textMessage} controls /> : <p className={s.textoMensajes}>{e.textMessage}</p> 
+                                            e.isImage ? <img src={e.textMessage} alt="Not Found" className={s.image}/> : e.isAudio ? <audio src={e.textMessage} controls className={s.audio}/> : <p className={s.textoMensajes}>{e.textMessage}</p> 
                                         }
                                     </div> 
                                 : <div>
                                     {
                                             e.isImage ? <img src={e.textMessage} alt="Not Found" className={s.image}/> : e.isAudio ? 
-                                            <audio src={e.textMessage} controls /> :<p className={s.textoMensajes}>{e.textMessage}</p> 
+                                            <audio src={e.textMessage} controls className={s.audio}/> :<p className={s.textoMensajes}>{e.textMessage}</p> 
                                     }
                                 </div>
                             }
