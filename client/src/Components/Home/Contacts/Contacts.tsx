@@ -90,7 +90,7 @@ export default function Contacts({currentUser}: Props) {
                 </div>
                 <div className={s.divContactsMap}>
                 {
-                    currentUser && currentUser.contacts?.length === 0 ? <p>No tienes contactos.</p>
+                    currentUser && currentUser.contacts?.length === 0 ? <p className={s.noContacts}>No contacts added</p>
                     : busquedaContacts?.length !== 0 
                     ? busquedaContacts?.map(e => {
                         return(

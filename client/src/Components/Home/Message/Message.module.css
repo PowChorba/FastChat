@@ -68,5 +68,7 @@
 }
 
 @media only screen and (max-width: 500px) {
-    
+    .today{
+        width: 20%;
+    }
 }
