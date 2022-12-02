@@ -399,10 +399,11 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                 <button onClick={handleCloseSearchMessages} className={s.botonCerrarInfo}><GrClose /></button>
                                 <span>{' '}Search Messages</span>
                             </div>
+                            <div>
                             <SearchMessages filterMessages={filterMessages}/>
+                            </div>
                         </div> 
                 </div>
             }
-            
         </div>)
 }

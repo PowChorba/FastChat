@@ -20,7 +20,6 @@ import Chatss from "./Chats/Chats"
 import { GetMessageData, Messages } from "../../types"
 import { sortChats, sortMessagees } from "./Tools/Tools"
 import { AiOutlineUserAdd } from "react-icons/ai"
-import { HiBars3 } from 'react-icons/hi2'
 
 export default function Home(){
     const dispatch = useAppDispatch()
@@ -65,8 +64,8 @@ export default function Home(){
     }
 
     //ACA VA UN CODIGO A LO BOCA
-    const [inaki, setInaki] = useState<Messages[]>([])
-    const [messageReceived, setMessageReceived] = useState({
+    const [, setInaki] = useState<Messages[]>([])
+    const [, setMessageReceived] = useState({
         senderId: "",
         text: "",
         senderChat: ""

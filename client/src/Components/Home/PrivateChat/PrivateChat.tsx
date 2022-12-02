@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
 import { Chats, GetMessageData, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
 import { BsMicFill } from 'react-icons/bs'
-import { fechasMensajes, newDate } from "../Tools/Tools"
+import { fechasMensajes } from "../Tools/Tools"
 interface Props {
     chatUser: User[]
     currentUser: User
