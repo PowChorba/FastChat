@@ -211,7 +211,6 @@ export const UPDATE_GROUP = createAsyncThunk(
 
 export const LAST_MESSAGE = createAsyncThunk(
     'LAST_MESSAGE', (data: Messages) => {
-        console.log(data, 'Action')
         return data
     }
 )

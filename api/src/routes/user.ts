@@ -70,7 +70,6 @@ export const updateUsers = async (req: Request, res: Response) => {
         nickName,
         userId
       }
-      console.log(userUpdate)
       return res.json({ok:true ,userUpdate, msg:"User updated"});
     } else if (findUser && contactId) {
       const filterContact = findUser.contacts?.filter(

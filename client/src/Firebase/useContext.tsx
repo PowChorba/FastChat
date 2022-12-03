@@ -16,17 +16,19 @@ const AuthRoute: React.FunctionComponent<AuthRouteProps> = ({children}: AuthRout
         AuthCheck()
     })
 
+    //DESLOGEAR
+    const logOut = () =>{
+        signOut(auth)
+    }
+    
 
     const AuthCheck = onAuthStateChanged(auth, (user) => {
         if(user && user.emailVerified === true){
             setLoading(false)
-        }else if(user?.emailVerified === false){
-            navigte('/verification')
         }
         else {
-            console.log('Acceso denegado')
+            logOut()
             navigte('/')
-            
         }
     })
 

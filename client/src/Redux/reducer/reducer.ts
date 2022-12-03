@@ -95,7 +95,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
         state.response = {ok:false, msg:""}
     })
     callback.addCase(BLOCK_USER.fulfilled, (state, action) => {
-        console.log(action.payload)
         if (action.payload.ok) {
             if (action.payload.msg === "Contact blocked successfully") {
                 let stateUserCopy = state.users
@@ -138,14 +137,12 @@ export const clientReducer = createReducer(initialState, (callback) => {
         }
     })
     callback.addCase(DELETE_CHAT.fulfilled, (state, action) => {
-        console.log(action.payload)
         if (action.payload.ok) {
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
             let chatDeleted = stateChatsCopy.filter((chat) => {
                 return chat._id !== action.payload.chatId
             })
-            // console.log(chatDeleted)
             let userChatDeleted = userChatsCopy.filter((chat) => {
                 return chat._id !== action.payload.chatId
             })
@@ -181,8 +178,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 state.users = stateUserCopy
                 state.response = {ok:true, msg:action.payload.msg}
             } else if(action.payload.msg === "User updated"){
-                console.log(action.payload.userUpdate)
-                console.log(action.payload)
                 let stateUserCopy = state.users
                  let indexActualUser = state.users.findIndex((user) => {
                     return user._id === action.payload.userUpdate.userId
