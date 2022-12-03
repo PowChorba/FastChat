@@ -16,7 +16,7 @@ const AuthRoute: React.FunctionComponent<AuthRouteProps> = ({children}: AuthRout
         AuthCheck()
     })
     const AuthCheck = onAuthStateChanged(auth, (user) => {
-        if(user){
+        if(user && user.emailVerified === true){
             setLoading(false)
         }else {
             console.log('Acceso denegado')
