@@ -272,10 +272,12 @@ export default function Home(){
             </div>
         {
                 respuesta?.ok &&
+                <div className={s.alert}>
                 <Alert status="success">
                     <AlertIcon />
                     <AlertTitle>{respuesta.msg} </AlertTitle>
                 </Alert>
+                </div>
             }
         </div>
         <div className={chatResponsive ? s.asd : s.divChats}>

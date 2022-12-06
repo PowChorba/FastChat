@@ -113,6 +113,13 @@
   text-align: center;
 }
 
+.alert{
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 300px;
+}
+
 @media only screen and (max-width: 1500px) {
   .contenedor {
     width: 100%;
