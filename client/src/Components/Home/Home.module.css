@@ -117,10 +117,7 @@
   position: absolute;
   bottom: 5px;
   left: 5px;
-  width: 500px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
+  width: 300px;
 }
 
 @media only screen and (max-width: 1500px) {
