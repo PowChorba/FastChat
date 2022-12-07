@@ -18,6 +18,9 @@ password: {
 image: {
     type: String,
 },
+lastConnection: {
+    type: String,
+},
 contacts: [{
     type: Schema.Types.ObjectId,
     ref: "Users",

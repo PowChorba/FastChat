@@ -2,7 +2,7 @@ import {Router} from 'express'
 import { allChats, deleteChat, newChat, updateGroup, userChat } from './chats'
 // import { allGroups, deleteGroup, newGroup, updateGroup } from './groups'
 import { allMessages, deleteMessages, deleteNotifications, messageChat, newMessage } from './messages'
-import { allUsers, updateUsers, newUser, userById } from './user'
+import { allUsers, updateUsers, newUser, userById, lastConnection } from './user'
 
 const router = Router()
 
@@ -11,6 +11,7 @@ router.get('/users', allUsers)
 router.get('/users/:userId', userById)
 router.post('/users', newUser)
 router.put('/users', updateUsers)
+router.put('/users/disconnect', lastConnection)
 
 //CHAT
 router.post('/chats', newChat)
