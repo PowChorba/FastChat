@@ -11,7 +11,7 @@ router.get('/users', user_1.allUsers);
 router.get('/users/:userId', user_1.userById);
 router.post('/users', user_1.newUser);
 router.put('/users', user_1.updateUsers);
-router.put('/disconnect', user_1.lastConnection);
+router.put('/users/disconnect', user_1.lastConnection);
 //CHAT
 router.post('/chats', chats_1.newChat);
 router.get('/chats', chats_1.allChats);
@@ -24,9 +24,4 @@ router.get('/messages/:chatId', messages_1.messageChat);
 router.get('/messages', messages_1.allMessages);
 router.put('/messages', messages_1.deleteMessages);
 router.put("/messages/notification", messages_1.deleteNotifications);
-//GROUPS
-// router.get("/groups",allGroups)
-// router.put("/groups",updateGroup)
-// router.post("/groups",newGroup)
-// router.delete("/groups",deleteGroup)
 exports.default = router;
