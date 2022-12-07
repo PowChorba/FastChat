@@ -392,7 +392,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                 <span>{' '}{filterGroupChat?.groupName ? 'Group info' : 'Contact info'}</span>
                             </div>
                             {
-                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
+                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} setCurrentChat={setCurrentChat}/>
                                     : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat = {setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser}/>
                             }
                         </div>
