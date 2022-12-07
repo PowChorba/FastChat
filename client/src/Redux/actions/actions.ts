@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { CreateGroup, CreateMessages, CreateUser, DeleteUser, Messages, NewChat, UpdateGroup } from '../../types'
+import { CreateGroup, CreateMessages, CreateUser, DeleteUser, Messages, NewChat, UpdateGroup, userDisconnected } from '../../types'
 
 export const ALL_USERS = createAsyncThunk(
     'ALL_USERS', async () => {
@@ -199,7 +199,67 @@ export const CREATE_GROUP_CHAT = createAsyncThunk(
 )
 
 export const UPDATE_GROUP = createAsyncThunk(
-    'ADD_USER_GROUP',async (data: UpdateGroup) => {
+    'UPDATE_GROUP',async (data: UpdateGroup) => {
+        try {
+            const response = await axios.put('/chats', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+export const CHANGE_IMG = createAsyncThunk(
+    'CHANGE_IMG',async (data: UpdateGroup) => {
+        try {
+            const response = await axios.put('/chats', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+export const SET_ADMIN = createAsyncThunk(
+    'SET_ADMIN',async (data: UpdateGroup) => {
+        try {
+            const response = await axios.put('/chats', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+export const REMOVE_ADMIN = createAsyncThunk(
+    'REMOVE_ADMIN',async (data: UpdateGroup) => {
+        try {
+            const response = await axios.put('/chats', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+export const ADD_USER = createAsyncThunk(
+    'ADD_USER',async (data: UpdateGroup) => {
+        try {
+            const response = await axios.put('/chats', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+export const REMOVE_USER = createAsyncThunk(
+    'REMOVE_USER',async (data: UpdateGroup) => {
+        try {
+            const response = await axios.put('/chats', data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+export const LEAVE_GROUP = createAsyncThunk(
+    'LEAVE_GROUP',async (data: UpdateGroup) => {
         try {
             const response = await axios.put('/chats', data)
             return response.data
@@ -214,12 +274,17 @@ export const LAST_MESSAGE = createAsyncThunk(
         return data
     }
 )
+export const LAST_CONNECTION = createAsyncThunk(
+    'LAST_CONNECTION', (data: userDisconnected) => {
+        console.log(data, 'Action')
+        return data
+    }
+)
 
  
 export const DELETE_NOTIFICATIONS = createAsyncThunk(
     'DELETE_NOTIFICATIONS',async (data: string) => {
         try {
-            console.log(data)
             let chatId = {chatId: data}
             const response = await axios.put('/messages/notification', chatId)
             return response.data

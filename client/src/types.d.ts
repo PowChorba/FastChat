@@ -8,6 +8,7 @@ export type User = {
     image: string
     contacts?: User[]
     bloqUsers: User[]
+    lastConnection: string
 }
 
 export type CreateUser = {
@@ -126,4 +127,11 @@ export type CombinedChats = Chats & GroupsChats
 export interface Response {
     ok: boolean
     msg: string
+}
+export interface userDisconnected {
+    userId: string,
+    data: {
+        ok: boolean,
+        msg: string
+    }
 }

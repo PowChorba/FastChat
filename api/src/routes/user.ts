@@ -119,4 +119,17 @@ export const userById = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
+export const lastConnection = async (req: Request, res:Response)=>{
+  const { userId } = req.body;
+  try {
+    const lastConnection = new Date().toISOString()
+    const findUser = await Users.findById(userId)
+    if(findUser){
+      const updateUser = await findUser?.updateOne({lastConnection:lastConnection})
+      return res.json({ok:true, msg: lastConnection})
+    } else return res.json({ok:true, msg:"couldnt find your user fujk"})
+  } catch(e){
+    res.status(401).json({ok:false, msg:e})
+  }
+}
 

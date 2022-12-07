@@ -10,7 +10,7 @@ import {
   } from '@chakra-ui/react'
 import axios from 'axios'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { UPDATE_GROUP } from '../../../Redux/actions/actions'
+import { CHANGE_IMG, UPDATE_GROUP } from '../../../Redux/actions/actions'
 import { useAppDispatch } from '../../../Redux/hooks'
 import { Chats } from '../../../types'
 import s from './ChangeImg.module.css'
@@ -55,8 +55,8 @@ export default function ChangeImg({setChangePhoto, currentChat, filterGroupChat}
         setChangePhoto(false)
     }
 
-    const handleAddUser = () => {
-        dispatch(UPDATE_GROUP(inputImg))
+    const changeImg = () => {
+        dispatch(CHANGE_IMG(inputImg))
         setOpen(false)
         setChangePhoto(false)
     }
@@ -77,13 +77,13 @@ export default function ChangeImg({setChangePhoto, currentChat, filterGroupChat}
                 <AlertDialogBody>
                   <form>
                     <label htmlFor="groupImgModify">
-                      <img src={inputImg.img !== '' ? inputImg?.img : filterGroupChat?.img} alt="asd" width='200px' className={s.imagen}/>
+                      <img src={inputImg.img ? inputImg.img : filterGroupChat?.img} alt="asd" width='200px' className={s.imagen}/>
                       <Input type="file" accept="image/jpeg, image/png" id="groupImgModify" name="img" onChange={handleImage} className={s.hide}/>
                     </label>
                   </form>
                 </AlertDialogBody>
                 <AlertDialogFooter className={s.footer}>
-                    <Button colorScheme='teal' ml={3} variant='outline' onClick={handleAddUser} disabled={inputImg.img === '' ? true : false}>
+                    <Button colorScheme='teal' ml={3} variant='outline' onClick={changeImg} disabled={inputImg.img === '' ? true : false}>
                       Change
                     </Button>
                 </AlertDialogFooter>

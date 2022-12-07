@@ -7,7 +7,7 @@ import {
     Button,
   } from '@chakra-ui/react'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import {  UPDATE_GROUP } from '../../../Redux/actions/actions'
+import {  SET_ADMIN, UPDATE_GROUP } from '../../../Redux/actions/actions'
 import { useAppDispatch } from '../../../Redux/hooks'
 
 interface Props {
@@ -40,7 +40,7 @@ export default function Admins({setAddAdmin, currentChat, userRemove}: Props) {
     }
 
     const handleAddUser = () => {
-        dispatch(UPDATE_GROUP(admin))
+        dispatch(SET_ADMIN(admin))
         setOpen(false)
         setAddAdmin(false)
     }

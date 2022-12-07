@@ -16,7 +16,7 @@ import { BiMicrophone } from 'react-icons/bi'
 import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
 import SearchMessages from "../Extras/SearchMessages"
-import { date, fechaActual, sortMessagesChat } from "../Tools/Tools"
+import { date, fechaActual, lastConnectionDate, newDate, sortMessagesChat } from "../Tools/Tools"
 import ChatImg from '../../../assets/chat.svg'
 
 interface Props {
@@ -251,7 +251,9 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
 
     useEffect(() => {
         socket.current?.on('getUsers', (users: SocketUser[]) => {
-            setOnline(users?.map((e) => e.userId))
+            let usersConnectedArr = users?.map((e) => e.userId)
+            console.log("entreee", usersConnectedArr)
+            setOnline(usersConnectedArr)
         })
     }, [currentUser, socket])
 
@@ -320,7 +322,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                                 ? filterGroupChat.chatsUsers.map(e => {
                                                     return (<span key={e._id}>{e.nickName}{' '}</span>)
                                                 })
-                                                : writting ? "Writting..." : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : 'offline')
+                                                : writting ? "Writting..." : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' :  lastConnectionDate(friendId?.lastConnection) || "offline")
                                         }
                                     </p>
                                 </div>
@@ -369,7 +371,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                 <span>{' '}{filterGroupChat?.groupName ? 'Group info' : 'Contact info'}</span>
                             </div>
                             {
-                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
+                                filterGroupChat?.groupName ? <ProfileGroup setCurrentChat={setCurrentChat} filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
                                     : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat={setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser} />
                             }
                         </div>
@@ -390,7 +392,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                 <span>{' '}{filterGroupChat?.groupName ? 'Group info' : 'Contact info'}</span>
                             </div>
                             {
-                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
+                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} setCurrentChat={setCurrentChat}/>
                                     : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat = {setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser}/>
                             }
                         </div>

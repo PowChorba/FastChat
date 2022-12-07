@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks"
 import { useEffect, useRef, useState} from 'react'
-import { ALL_CHATS, ALL_MESSAGES, ALL_USERS, CLEAR_RESPONSE, USER_CHATS } from "../../Redux/actions/actions"
+import { ALL_CHATS, ALL_MESSAGES, ALL_USERS, CLEAR_RESPONSE, LAST_CONNECTION, USER_CHATS } from "../../Redux/actions/actions"
 import { getAuth, signOut } from "firebase/auth"
 import PrivateChat from "./PrivateChat/PrivateChat"
 import s from './Home.module.css'
@@ -17,7 +17,7 @@ import { TbUserOff } from 'react-icons/tb'
 import { io } from "socket.io-client"
 import ChatGroups from "./ChatGroups/ChatGroups"
 import Chatss from "./Chats/Chats"
-import { GetMessageData, Messages } from "../../types"
+import { GetMessageData, Messages, userDisconnected } from "../../types"
 import { sortChats, sortMessagees } from "./Tools/Tools"
 import { AiOutlineUserAdd } from "react-icons/ai"
 
@@ -28,6 +28,7 @@ export default function Home(){
     const socket: any = useRef()
     //DESLOGEAR
     const logOut = () => {
+        socket.current.disconnect()
         signOut(auth)
         navigate('/')
     }
@@ -107,6 +108,9 @@ export default function Home(){
                     createdAt: new Date().toISOString(),
                     isAudio: data?.isAudio
                 }])
+        })
+        socket.current?.on("userDisconnected",(data:userDisconnected)=>{
+            dispatch(LAST_CONNECTION(data))
         })
     }, [socket, setPendingMessages])
     //ORDENAR LOS CHATS SEGUN LA HORA DEL ULTIMO

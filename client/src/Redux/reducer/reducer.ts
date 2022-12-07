@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Chats, Messages, Response, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE } from '../actions/actions'
-
+import Users from '../../Components/Home/Users/Users';
+import { Chats, Messages, NewChat, Response, User } from "../../types";
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG } from '../actions/actions'
 
 interface Reducer {
     users: User[],
@@ -203,6 +203,23 @@ export const clientReducer = createReducer(initialState, (callback) => {
         state.messages.push(msgDeleted)
 
     })
+    callback.addCase(LAST_CONNECTION.fulfilled, (state, action) => {
+        if (action.payload.data.ok && action.payload.data.msg !== "couldnt find your user fujk"){
+            let stateUserCopy = state.users
+            let indexActualUser = state.users.findIndex((user) => {
+                return user._id === action.payload.userId
+            })
+            stateUserCopy[indexActualUser].lastConnection = action.payload.data.msg
+            state.users = stateUserCopy
+
+            let stateChatsCopy = state.chats
+             stateChatsCopy.forEach((chat)=>{
+                chat.chatsUsers.forEach(user=> {
+                return user._id === action.payload.userId ? user.lastConnection = action.payload.data.msg: ""}) 
+            })
+            state.chats = stateChatsCopy
+        }
+    })
     callback.addCase(DELETE_NOTIFICATIONS.fulfilled, (state, action) => {
         if (action.payload.ok) {
             let copyMessages = state.messages
@@ -215,6 +232,141 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 messages.push(message)
             })
             state.messages = messages
+        }
+
+    })
+    callback.addCase(LEAVE_GROUP.fulfilled, (state, action) => {
+        if (action.payload.ok) {
+            console.log(action.payload)
+            let stateChatsCopy = state.chats
+            let userChatsCopy = state.userChats
+            let chatDeleted = stateChatsCopy.filter((chat) => {
+                return chat._id !== action.payload.groupId
+            })
+            let userChatDeleted = userChatsCopy.filter((chat) => {
+                return chat._id !== action.payload.groupId
+            })
+            state.chats = chatDeleted
+            state.userChats = userChatDeleted
+        }
+
+    })
+    callback.addCase(UPDATE_GROUP.fulfilled, (state, action) => {
+        if (action.payload.ok) {
+            let stateChatsCopy = state.chats
+            let userChatsCopy = state.userChats
+            stateChatsCopy.forEach((chat)=>{
+                if (chat._id === action.payload.groupId) return chat.groupName = action.payload.groupName
+            })
+            userChatsCopy.forEach((chat) => {
+                if (chat._id === action.payload.groupId) return chat.groupName = action.payload.groupName
+            })
+            state.chats = stateChatsCopy
+            state.userChats = userChatsCopy
+        }
+
+    })
+    callback.addCase(ADD_USER.fulfilled, (state, action) => {
+        if (action.payload.ok) {
+            let stateChatsCopy = state.chats
+            let userChatsCopy = state.userChats
+
+            let user:any = state.users.find((user)=> user._id === action.payload.members)
+            stateChatsCopy.forEach((chat)=>{
+                if (chat._id === action.payload.groupId) return chat.chatsUsers.push(user)
+            })
+            userChatsCopy.forEach((chat) => {
+                if (chat._id === action.payload.groupId) return chat.chatsUsers.push(user) 
+            })
+            state.chats = stateChatsCopy
+            state.userChats = userChatsCopy
+        }
+
+    })
+    callback.addCase(REMOVE_USER.fulfilled, (state, action) => {
+        if (action.payload.ok) {
+            console.log(action.payload)
+            let stateChatsCopy = state.chats
+            let userChatsCopy = state.userChats
+
+            stateChatsCopy.forEach((chat,i)=>{
+                if (chat._id === action.payload.groupId){
+                     stateChatsCopy[i].chatsUsers = chat.chatsUsers.filter((user)=> user._id !== action.payload.leaveGroup)
+                }
+            })
+            userChatsCopy.forEach((chat, i) => {
+                if (chat._id === action.payload.groupId) {
+                    userChatsCopy[i].chatsUsers = chat.chatsUsers.filter((user)=> user._id !== action.payload.leaveGroup)
+                }
+            })
+            state.chats = stateChatsCopy
+            state.userChats = userChatsCopy
+        }
+
+    })
+    callback.addCase(SET_ADMIN.fulfilled, (state, action) => {
+        if (action.payload.ok) {
+            console.log(action.payload)
+            let stateChatsCopy = state.chats
+            let userChatsCopy = state.userChats
+
+            let user:any = state.users.find((user)=> user._id === action.payload.admin)
+            stateChatsCopy.forEach((chat)=>{
+                if (chat._id === action.payload.groupId){
+                     return chat.admin?.push(user)
+                }
+            })
+            userChatsCopy.forEach((chat) => {
+                if (chat._id === action.payload.groupId) {
+                    return chat.admin?.push(user)
+                }
+            })
+            state.chats = stateChatsCopy
+            state.userChats = userChatsCopy
+        }
+
+    })
+    callback.addCase(REMOVE_ADMIN.fulfilled, (state, action) => {
+        if (action.payload.ok) {
+            console.log(action.payload)
+            let stateChatsCopy = state.chats
+            let userChatsCopy = state.userChats
+
+            let user:any = state.users.find((user)=> user._id === action.payload.removeAdmin)
+            stateChatsCopy.forEach((chat,i)=>{
+                if (chat._id === action.payload.groupId){
+                    stateChatsCopy[i].admin = chat.admin?.filter((user)=> user._id !== action.payload.removeAdmin)
+                }
+            })
+            userChatsCopy.forEach((chat,i) => {
+                if (chat._id === action.payload.groupId){   
+                    stateChatsCopy[i].admin = chat.admin?.filter((user)=> user._id !== action.payload.removeAdmin)
+                }
+            })
+            state.chats = stateChatsCopy
+            state.userChats = userChatsCopy
+        }
+
+    })
+    callback.addCase(CHANGE_IMG.fulfilled, (state, action) => {
+        if (action.payload.ok) {
+            console.log(action.payload)
+            let stateChatsCopy = state.chats
+            let userChatsCopy = state.userChats
+
+            let user:any = state.users.find((user)=> user._id === action.payload.removeAdmin)
+            stateChatsCopy.forEach((chat,i)=>{
+                if (chat._id === action.payload.groupId){
+                    return chat.img = action.payload.img
+                }
+            })
+            userChatsCopy.forEach((chat,i) => {
+                if (chat._id === action.payload.groupId){   
+                    return chat.img = action.payload.img
+                }
+            })
+            state.chats = stateChatsCopy
+            state.userChats = userChatsCopy
         }
 
     })

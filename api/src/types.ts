@@ -7,6 +7,7 @@ export interface User {
     contacts?: User[]
     groups?: any[]
     bloqUsers: User[]
+    lastConnection?: string
 }
 
 export interface ChatsType {

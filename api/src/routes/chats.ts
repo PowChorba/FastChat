@@ -82,24 +82,25 @@ export const updateGroup = async (req: Request, res: Response) => {
         if (groupSearch) {
             if (members) {
                 await groupSearch.updateOne({ $push: { chatsUsers: members } })
-                return res.json({ ok: true, msg: "succesfully updated" })
+                return res.json({ ok: true, msg: "succesfully updated", groupId, members })
             }
             else if (admin) {
                 await groupSearch.updateOne({ $push: { admin: admin } })
-                return res.json({ ok: true, msg: "succesfully updated" })
+                return res.json({ ok: true, msg: "succesfully updated", groupId, admin })
             }
             else if (groupName) {
                 await groupSearch.updateOne({ groupName })
-                return res.json({ ok: true, msg: "succesfully updated" })
+                return res.json({ ok: true, msg: "succesfully updated", groupId, groupName })
             }
             else if (leaveGroup){
                 await groupSearch.updateOne({ $pull: { chatsUsers: leaveGroup }})
-                return res.json({ ok: true, msg: "succesfully removed" })
+                return res.json({ ok: true, msg: "succesfully leave group", groupId, leaveGroup })
             }else if (removeAdmin){
                 await groupSearch.updateOne({ $pull: { admin: removeAdmin }})
-                return res.json({ ok: true, msg: "succesfully removed" })
+                return res.json({ ok: true, msg: "succesfully removed", groupId, removeAdmin })
             }else if (img){
                 await groupSearch.updateOne({ img })
+                return res.json({ok:true, msg:"Image change succesfully", img, groupId})
             }
         } else return res.json({ ok: false, msg: "error" })
     } catch (e) {

@@ -8,7 +8,7 @@ import {
     Button,
   } from '@chakra-ui/react'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { UPDATE_GROUP } from '../../../Redux/actions/actions'
+import { REMOVE_USER, UPDATE_GROUP } from '../../../Redux/actions/actions'
 import { useAppDispatch } from '../../../Redux/hooks'
 import { Chats, User } from '../../../types'
 
@@ -43,7 +43,7 @@ export default function RemoveUser({setDeleteDialog, filterGroupChat, currentCha
     }
 
     const handleAddUser = () => {
-        dispatch(UPDATE_GROUP(removeUser))
+        dispatch(REMOVE_USER(removeUser))
         setOpen(false)
         setDeleteDialog(false)
     }

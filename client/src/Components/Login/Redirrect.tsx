@@ -23,6 +23,7 @@ export default function Redirrect({children}: Props)  {
     })
 
     if(logeado){
+        console.log("logeado")
         navigate('/home')
     }
 
