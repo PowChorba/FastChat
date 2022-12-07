@@ -39,7 +39,7 @@ export default function SearchMessages({filterMessages}: Props){
             </div>
             <div className={s.divContactsMap}>
             {
-                inputText !== '' 
+                inputText !== '' && inputText.length >= 2
                 ? <div>
                 {
                     requireMessage && requireMessage.map(e => {

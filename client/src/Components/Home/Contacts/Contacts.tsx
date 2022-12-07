@@ -1,4 +1,4 @@
-import { filter, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
+import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
 import { IoIosArrowDown } from "react-icons/io"
 import { BLOCK_USER, DELETE_CONTACT, NEW_CHAT } from "../../../Redux/actions/actions"
@@ -90,7 +90,7 @@ export default function Contacts({currentUser}: Props) {
                 </div>
                 <div className={s.divContactsMap}>
                 {
-                    currentUser && currentUser.contacts?.length === 0 ? <p>No tienes contactos.</p>
+                    currentUser && currentUser.contacts?.length === 0 ? <p className={s.noContacts}>No contacts added</p>
                     : busquedaContacts?.length !== 0 
                     ? busquedaContacts?.map(e => {
                         return(

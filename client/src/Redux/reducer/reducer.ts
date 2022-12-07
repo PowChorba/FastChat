@@ -3,7 +3,6 @@ import Users from '../../Components/Home/Users/Users';
 import { Chats, Messages, NewChat, Response, User } from "../../types";
 import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG } from '../actions/actions'
 
-
 interface Reducer {
     users: User[],
     newUser: User[]
@@ -96,7 +95,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
         state.response = {ok:false, msg:""}
     })
     callback.addCase(BLOCK_USER.fulfilled, (state, action) => {
-        console.log(action.payload)
         if (action.payload.ok) {
             if (action.payload.msg === "Contact blocked successfully") {
                 let stateUserCopy = state.users
@@ -145,7 +143,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
             let chatDeleted = stateChatsCopy.filter((chat) => {
                 return chat._id !== action.payload.chatId
             })
-            // console.log(chatDeleted)
             let userChatDeleted = userChatsCopy.filter((chat) => {
                 return chat._id !== action.payload.chatId
             })
@@ -181,8 +178,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 state.users = stateUserCopy
                 state.response = {ok:true, msg:action.payload.msg}
             } else if(action.payload.msg === "User updated"){
-                console.log(action.payload.userUpdate)
-                console.log(action.payload)
                 let stateUserCopy = state.users
                  let indexActualUser = state.users.findIndex((user) => {
                     return user._id === action.payload.userUpdate.userId

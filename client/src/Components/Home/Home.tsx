@@ -9,7 +9,6 @@ import Users from "./Users/Users"
 import Contacts from "./Contacts/Contacts"
 import Profile from "./Profile/Profile"
 import { Alert, AlertIcon, AlertTitle, Input, Text } from '@chakra-ui/react'
-import { FiUsers } from 'react-icons/fi'
 import { RiChatNewLine } from 'react-icons/ri'
 import { HiLogout } from 'react-icons/hi'
 import { GrGroup } from 'react-icons/gr'
@@ -44,9 +43,7 @@ export default function Home(){
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
-        // socket.current = io('https://fastchat-production.up.railway.app/')
-        socket.current = io('http://localhost:3001')
-        console.log("fuck")
+        socket.current = io('https://fastchat-production.up.railway.app')
         if(currentUser?._id){
             dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
@@ -68,8 +65,8 @@ export default function Home(){
     }
 
     //ACA VA UN CODIGO A LO BOCA
-    const [inaki, setInaki] = useState<Messages[]>([])
-    const [messageReceived, setMessageReceived] = useState({
+    const [, setInaki] = useState<Messages[]>([])
+    const [, setMessageReceived] = useState({
         senderId: "",
         text: "",
         senderChat: ""
@@ -181,11 +178,23 @@ export default function Home(){
         setCreateGroup(!createGroup)
     }
 
+    //INAKI LA PROXIMA DEPLOYAS Y HACES RESPONSIVE VOS PELOTUDO
+    const [chatResponsive, setChatResponsive] = useState(false)
+
+    const handleChatResponsive = () => {
+        if(window.innerWidth <= 500){
+            setChatResponsive(true)
+        }
+    }
+
     return(
     <div className={s.contenedor}>
-        <div className={s.divAside}>
+        <div className={chatResponsive ? s.responsiveNone : s.divAside}>
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile || !block || !createGroup ? s.none : s.asdasd}>
+                <div className={s.divResponsiveBards}>
+                    <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
+                </div>
                 <div className={s.perfilAside}>
                     <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
                     <div>
@@ -196,6 +205,14 @@ export default function Home(){
                         <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
                     </div>
                 </div>
+                {/* ACA PARA EL RESPONSIVE  */}
+                <div className={s.perfilResponsive}>
+                        <button onClick={handleContacts}><RiChatNewLine className={s.iconos}/></button>
+                        <button onClick={handleGroups}><GrGroup className={s.iconos}/></button>
+                        <button onClick={handleBlock}><TbUserOff className={s.iconos}/></button>
+                        <button onClick={handleUsuarios}><AiOutlineUserAdd className={s.iconos}/></button>
+                        <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
+                </div>
                     <div className={s.inputChats}>
                         <Input variant='filled' type="text" placeholder="Search chat.." value={searchChat} onChange={handleSearchChat} />
                     </div>
@@ -204,13 +221,13 @@ export default function Home(){
                     filterUserChats.length !== 0 
                     ? filterUserChats && filterUserChats?.map(e => {
                         return(
-                            <div key={e._id} className={s.botonesChats}>
+                            <div key={e._id} className={s.botonesChats} onClick={handleChatResponsive}>
                                 <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} currentChat={currentChat} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
                     : lastChat && lastChat?.map(e => {
                         return(
-                            <div key={e._id} className={s.botonesChats}>
+                            <div key={e._id} className={s.botonesChats} onClick={handleChatResponsive}>
                                 <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} currentChat={currentChat} socket={socket}/></button>
                             </div>
                             )
@@ -259,14 +276,16 @@ export default function Home(){
             </div>
         {
                 respuesta?.ok &&
+                <div className={s.alert}>
                 <Alert status="success">
                     <AlertIcon />
                     <AlertTitle>{respuesta.msg} </AlertTitle>
                 </Alert>
+                </div>
             }
         </div>
-        <div>
-            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
+        <div className={chatResponsive ? s.asd : s.divChats}>
+            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats} setChatResponsive={setChatResponsive} chatResponsive={chatResponsive}/>
         </div>
     </div>)
 }

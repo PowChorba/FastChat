@@ -1,8 +1,8 @@
-import { Alert, AlertIcon, AlertTitle, Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
+import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import { useState } from "react"
 import { IoIosArrowDown } from "react-icons/io"
-import { CLEAR_RESPONSE, UNBLOCK_USER } from "../../../Redux/actions/actions"
-import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
+import { UNBLOCK_USER } from "../../../Redux/actions/actions"
+import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import s from './BlockUsers.module.css'
 
