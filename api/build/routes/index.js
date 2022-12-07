@@ -11,7 +11,7 @@ router.get('/users', user_1.allUsers);
 router.get('/users/:userId', user_1.userById);
 router.post('/users', user_1.newUser);
 router.put('/users', user_1.updateUsers);
-router.put('/users/disconnect', user_1.lastConnection);
+router.put('/disconnect', user_1.lastConnection);
 //CHAT
 router.post('/chats', chats_1.newChat);
 router.get('/chats', chats_1.allChats);

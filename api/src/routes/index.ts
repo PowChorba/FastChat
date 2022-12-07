@@ -11,7 +11,7 @@ router.get('/users', allUsers)
 router.get('/users/:userId', userById)
 router.post('/users', newUser)
 router.put('/users', updateUsers)
-router.put('/users/disconnect', lastConnection)
+router.put('/disconnect', lastConnection)
 
 //CHAT
 router.post('/chats', newChat)
