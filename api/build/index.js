@@ -28,9 +28,9 @@ const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT);
 });
 const io = new socket_io_1.Server(server, {
-cors: {
-    origin: 'https://fastchat-production.up.railway.app'
-}
+    cors: {
+    // origin: ['http://127.0.0.1:5641','http://localhost:3000']
+    }
 });
 let users = [];
 let groups = [];

@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import Users from '../../Components/Home/Users/Users';
 import { Chats, Messages, NewChat, Response, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG } from '../actions/actions'
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG } from '../actions/actions'
 
 interface Reducer {
     users: User[],
@@ -78,9 +78,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
             state.response = {ok:true, msg:action.payload.msg}
         }
 
-    })
-    callback.addCase(USER_BY_ID.fulfilled, (state, action) => {
-        state.users = action.payload
     })
     callback.addCase(ALL_MESSAGES.fulfilled, (state, action) => {
         state.messages = action.payload

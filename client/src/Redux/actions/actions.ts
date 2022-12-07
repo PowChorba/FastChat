@@ -24,17 +24,6 @@ export const NEW_USER = createAsyncThunk(
     }
 )
 
-export const USER_BY_ID = createAsyncThunk(
-    'USER_BY_ID', async (userId: string) => {
-        try {
-            const response = await axios.get(`http://localhost3001/users/${userId}`)
-            return response.data
-        } catch (error) {
-            console.log(error)
-        }
-    }
-)
-
 export const USER_CHATS = createAsyncThunk(
     'USER_CHATS',async (userId: string | undefined) => {
         try {
