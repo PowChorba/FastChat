@@ -234,7 +234,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(LEAVE_GROUP.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
             let chatDeleted = stateChatsCopy.filter((chat) => {
@@ -282,7 +281,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(REMOVE_USER.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
@@ -303,7 +301,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(SET_ADMIN.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
@@ -325,7 +322,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(REMOVE_ADMIN.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
@@ -347,7 +343,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(CHANGE_IMG.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 

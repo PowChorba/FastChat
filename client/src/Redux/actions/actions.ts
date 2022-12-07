@@ -165,7 +165,6 @@ export const DELETE_MESSAGE = createAsyncThunk(
 
 export const ALL_GROUPS_CHATS = createAsyncThunk(
     'ALL_GROUPS_CHATS', async () => {
-        console.log( 'asd')
         try {
             const response = await axios.get('/groups')
             return response.data.msg
@@ -265,7 +264,6 @@ export const LAST_MESSAGE = createAsyncThunk(
 )
 export const LAST_CONNECTION = createAsyncThunk(
     'LAST_CONNECTION', (data: userDisconnected) => {
-        console.log(data, 'Action')
         return data
     }
 )

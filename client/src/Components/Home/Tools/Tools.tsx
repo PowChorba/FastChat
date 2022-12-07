@@ -69,10 +69,6 @@ export const lastConnectionDate = (e: string) => {
     hours = hr - hours
     minutes = mn - minutes
     
-    console.log(month)
-    console.log(day)
-    console.log(hours)
-    console.log(minutes)
 
     if (month == 1) return (`Last connection was ${month} month ago`)
     else if (month > 0) return (`Last connection was ${month} months ago`)
