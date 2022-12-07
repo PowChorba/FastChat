@@ -96,26 +96,27 @@ const updateGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (groupSearch) {
             if (members) {
                 yield groupSearch.updateOne({ $push: { chatsUsers: members } });
-                return res.json({ ok: true, msg: "succesfully updated" });
+                return res.json({ ok: true, msg: "succesfully updated", groupId, members });
             }
             else if (admin) {
                 yield groupSearch.updateOne({ $push: { admin: admin } });
-                return res.json({ ok: true, msg: "succesfully updated" });
+                return res.json({ ok: true, msg: "succesfully updated", groupId, admin });
             }
             else if (groupName) {
                 yield groupSearch.updateOne({ groupName });
-                return res.json({ ok: true, msg: "succesfully updated" });
+                return res.json({ ok: true, msg: "succesfully updated", groupId, groupName });
             }
             else if (leaveGroup) {
                 yield groupSearch.updateOne({ $pull: { chatsUsers: leaveGroup } });
-                return res.json({ ok: true, msg: "succesfully removed" });
+                return res.json({ ok: true, msg: "succesfully leave group", groupId, leaveGroup });
             }
             else if (removeAdmin) {
                 yield groupSearch.updateOne({ $pull: { admin: removeAdmin } });
-                return res.json({ ok: true, msg: "succesfully removed" });
+                return res.json({ ok: true, msg: "succesfully removed", groupId, removeAdmin });
             }
             else if (img) {
                 yield groupSearch.updateOne({ img });
+                return res.json({ ok: true, msg: "Image change succesfully", img, groupId });
             }
         }
         else

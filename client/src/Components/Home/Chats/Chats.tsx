@@ -252,7 +252,6 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
     useEffect(() => {
         socket.current?.on('getUsers', (users: SocketUser[]) => {
             let usersConnectedArr = users?.map((e) => e.userId)
-            console.log("entreee", usersConnectedArr)
             setOnline(usersConnectedArr)
         })
     }, [currentUser, socket])
