@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,16 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors = require('cors');
 const { dbConnection } = require("./dataBase/db");
 const index_1 = __importDefault(require("./routes/index"));
-const socket_io_1 = require("socket.io");
 const axios_1 = __importDefault(require("axios"));
+const socket_io_1 = require("socket.io");
 require('dotenv').config();
 const app = (0, express_1.default)();
 dbConnection();
@@ -38,9 +38,9 @@ const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT);
 });
 const io = new socket_io_1.Server(server, {
-// cors: {
-//     origin: ['http://127.0.0.1:5641', 'http://localhost:3000']
-// }
+    cors: {
+    // origin: ['http://127.0.0.1:5641','http://localhost:3000']
+    }
 });
 let users = [];
 let groups = [];
