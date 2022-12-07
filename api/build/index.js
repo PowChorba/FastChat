@@ -28,9 +28,9 @@ const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT);
 });
 const io = new socket_io_1.Server(server, {
-// cors: {
-//     origin: ['http://127.0.0.1:5641', 'http://localhost:3000']
-// }
+cors: {
+    origin: 'https://fastchat-production.up.railway.app'
+}
 });
 let users = [];
 let groups = [];
@@ -58,19 +58,19 @@ io.on('connect', (socket) => {
         addUser(userId, socket.id);
         io.emit('getUsers', users);
     });
-    // socket.on('disconnect', async() => {
-    //     let user = getUserBySocket(socket.id)
-    //     removeUser(user?.userId||"")
-    //     console.log('a user disconnected', user?.userId)
-    //     io.emit('getUsers', users)
-    //     try {
-    //         const res = await axios.put("https://fastchat-production.up.railway.app/disconnect", user)
-    //         console.log(res.data)
-    //         io.emit("userDisconnected", {userId:user?.userId, data:(res.data.ok? res.data : "")})
-    //     }catch (e){
-    //         console.log(e)
-    //     }
-    // })
+    socket.on('disconnect', async() => {
+        let user = getUserBySocket(socket.id)
+        removeUser(user?.userId||"")
+        console.log('a user disconnected', user?.userId)
+        io.emit('getUsers', users)
+        try {
+            const res = await axios.put("https://fastchat-production.up.railway.app/disconnect", user)
+            console.log(res.data)
+            io.emit("userDisconnected", {userId:user?.userId, data:(res.data.ok? res.data : "")})
+        }catch (e){
+            console.log(e)
+        }
+    })
     socket.on('sendMessage', ({ senderId, receiverId, text, senderChat, messageId, isGroup, isImage, isAudio }) => {
         if (!isGroup) {
             const user = getUser(receiverId);

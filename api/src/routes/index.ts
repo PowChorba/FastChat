@@ -27,10 +27,4 @@ router.get('/messages', allMessages)
 router.put('/messages', deleteMessages)
 router.put("/messages/notification",deleteNotifications)
 
-//GROUPS
-// router.get("/groups",allGroups)
-// router.put("/groups",updateGroup)
-// router.post("/groups",newGroup)
-// router.delete("/groups",deleteGroup)
-
 export default router
