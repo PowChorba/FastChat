@@ -74,7 +74,7 @@ io.on('connect', (socket) => {
         console.log('a user disconnected', user === null || user === void 0 ? void 0 : user.userId);
         io.emit('getUsers', users);
         try {
-            const res = yield axios_1.default.put("https://fastchat-production.up.railway.app/disconnect", user);
+            const res = yield axios_1.default.put("https://fastchat-production.up.railway.app/users/disconnect", user);
             console.log(res.data);
             io.emit("userDisconnected", { userId: user === null || user === void 0 ? void 0 : user.userId, data: (res.data.ok ? res.data : "") });
         }
