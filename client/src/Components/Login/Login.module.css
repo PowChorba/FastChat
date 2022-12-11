@@ -41,3 +41,18 @@
     border-top: 1px solid #000;
     text-align: center;
 }
+
+@media only screen and (max-width: 500px) {
+    .formLogin {
+        padding: 25px;
+        width: 350px;
+    }
+
+    .mensajeError{
+        font-size: 12px;
+    }
+
+    .tituloLogin{
+        font-size: 24px;
+    }
+}

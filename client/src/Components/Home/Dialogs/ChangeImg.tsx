@@ -60,8 +60,6 @@ export default function ChangeImg({setChangePhoto, currentChat, filterGroupChat}
         setOpen(false)
         setChangePhoto(false)
     }
-    console.log("img:",inputImg.img)
-    console.log(filterGroupChat)
 
     return (
         <>

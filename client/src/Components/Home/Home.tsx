@@ -135,11 +135,23 @@ export default function Home(){
         setCreateGroup(!createGroup)
     }
 
+    //INAKI LA PROXIMA DEPLOYAS Y HACES RESPONSIVE VOS PELOTUDO
+    const [chatResponsive, setChatResponsive] = useState(false)
+
+    const handleChatResponsive = () => {
+        if(window.innerWidth <= 500){
+            setChatResponsive(true)
+        }
+    }
+
     return(
     <div className={s.contenedor}>
-        <div className={s.divAside}>
+        <div className={chatResponsive ? s.responsiveNone : s.divAside}>
             {/* DEFAULT UI  */}
             <div className={!contacts || !usuarios || !profile || !block || !createGroup ? s.none : s.asdasd}>
+                <div className={s.divResponsiveBards}>
+                    <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
+                </div>
                 <div className={s.perfilAside}>
                     <img src={currentUser?.image} alt="asd" width='48px' className={s.imagenPerfil} onClick={handleProfile}/>
                     <div>
@@ -149,6 +161,14 @@ export default function Home(){
                         <button onClick={handleUsuarios}><AiOutlineUserAdd className={s.iconos}/></button>
                         <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
                     </div>
+                </div>
+                {/* ACA PARA EL RESPONSIVE  */}
+                <div className={s.perfilResponsive}>
+                        <button onClick={handleContacts}><RiChatNewLine className={s.iconos}/></button>
+                        <button onClick={handleGroups}><GrGroup className={s.iconos}/></button>
+                        <button onClick={handleBlock}><TbUserOff className={s.iconos}/></button>
+                        <button onClick={handleUsuarios}><AiOutlineUserAdd className={s.iconos}/></button>
+                        <button onClick={() => logOut()}><HiLogout className={s.iconos}/></button>
                 </div>
                     <div className={s.inputChats}>
                         <Input variant='filled' type="text" placeholder="Search chat.." value={searchChat} onChange={handleSearchChat} />
@@ -213,10 +233,12 @@ export default function Home(){
             </div>
         {
                 respuesta?.ok &&
+                <div className={s.alert}>
                 <Alert status="success">
                     <AlertIcon />
                     <AlertTitle>{respuesta.msg} </AlertTitle>
                 </Alert>
+                </div>
             }
         </div>
         <div>

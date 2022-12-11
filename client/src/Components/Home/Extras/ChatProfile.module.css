@@ -102,9 +102,25 @@
     right: 5px;
 }
 
-@media only screen and (max-width: 1280px){
+@media only screen and (max-width: 1500px){
     .imagen{
         width: 100px;
         height: 100px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .imagenUsuarios {
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        margin: 0px auto;
+        object-fit: cover;
+    }
+
+    .listOfUsers{
+        overflow-y: scroll;
+        height: 50vh;
+        max-height: 50vh;
     }
 }

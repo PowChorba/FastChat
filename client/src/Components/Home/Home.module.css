@@ -1,14 +1,22 @@
 .contenedor {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    width: 90%;
-    margin: auto;
-    box-shadow: 7px 9px 5px -4px rgba(0,0,0,0.16);
-    background-color: #fff;
-    justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  width: 90%;
+  margin: auto;
+  box-shadow: 7px 9px 5px -4px rgba(0, 0, 0, 0.16);
+  background-color: #fff;
+  justify-content: center;
 }
 
 .none {
+  display: none;
+}
+
+.perfilResponsive {
+  display: none;
+}
+
+.divResponsiveBards {
     display: none;
 }
 
@@ -23,95 +31,146 @@
 
 /* BUSQUEDA DE USUARIOS/CHATS (ASIDE) */
 .contactosHide {
-    display: none;
+  display: none;
 }
 
-.abrirChat{
-    width: 100%;
+.abrirChat {
+  width: 100%;
 }
 
 .imagenes {
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
 }
 
-.imagenPerfil{
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    cursor: pointer;
+.imagenPerfil {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  cursor: pointer;
 }
 
 /* DIV PERFIL  */
 .divProfile {
-    margin-bottom: 20px;
-    background-color: #008069;
-    width: 100%;
-    padding: 37.5px;
-    display: flex;
-    color: #fff;
+  margin-bottom: 20px;
+  background-color: #008069;
+  width: 100%;
+  padding: 37.5px;
+  display: flex;
+  color: #fff;
 }
 
-.botonAtras{
-    margin-right: 10px;
+.botonAtras {
+  margin-right: 10px;
 }
 
 /* INPUT CHATS  */
 .inputChats {
-    width: 100%;
-    margin: 0px auto;
-    padding: 5px;
-    border-bottom: 1px solid #EDF2F7;
+  width: 100%;
+  margin: 0px auto;
+  padding: 5px;
+  border-bottom: 1px solid #edf2f7;
 }
 
 .iconos {
-    font-size: 20px;
-    margin-left: 10px ;
+  font-size: 20px;
+  margin-left: 10px;
 }
 
 /* CHATS DEL USUARIO  */
-.divChatsDefault{
-    width: 100%;
-    margin: 20px auto;
-    overflow-y: scroll;
-    height: 72vh;
-    max-height: 72vh;
-
+.divChatsDefault {
+  width: 100%;
+  margin: 20px auto;
+  overflow-y: scroll;
+  height: 72vh;
+  max-height: 72vh;
+  max-width: 400px;
 }
 
-.divChatsDefault::-webkit-scrollbar{
-    width: 6px;
+.divChatsDefault::-webkit-scrollbar {
+  width: 6px;
 }
 
-.divChatsDefault::-webkit-scrollbar-track{
-    background: rgba(255, 0, 0, 0);
+.divChatsDefault::-webkit-scrollbar-track {
+  background: rgba(255, 0, 0, 0);
 }
 
-.divChatsDefault::-webkit-scrollbar-thumb{
-    background-color: #EDF2F7;
+.divChatsDefault::-webkit-scrollbar-thumb {
+  background-color: #edf2f7;
 }
 
-.botonesChats:hover{
-    background-color: #EDF2F7;
+.botonesChats:hover {
+  background-color: #edf2f7;
 }
 
-.textoCreadores{
-    padding: 10px;
-    width: 90%;
-    border-top: 1px solid #000;
-    text-align: center;
+.textoCreadores {
+  padding: 10px;
+  width: 90%;
+  border-top: 1px solid #000;
+  text-align: center;
 }
 
-@media only screen and (max-width: 1500px){
- .contenedor {
+.alert{
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 300px;
+}
+
+@media only screen and (max-width: 1500px) {
+  .contenedor {
     width: 100%;
     margin: auto;
- }
- .textoCreadores{
+  }
+  .textoCreadores {
     padding: 0px;
     font-size: 8px;
- } 
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .contenedor {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    box-shadow: 7px 9px 5px -4px rgba(0, 0, 0, 0);
+    background-color: #fff;
+    justify-content: center;
+  }
+
+  .divResponsiveBards{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 15px;
+    background-color: #008069;
+  }
+
+  .perfilAside{
+    display: none;
+  }
+
+  .perfilResponsive{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px;
+  }
+
+  .responsiveNone{
+    display: none;
+  }
+
+  .hiBars {
+    font-size: 24px;
+  }
+
+  .divChats {
+    display: none;
+  }
 }

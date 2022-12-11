@@ -1,18 +1,13 @@
 import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { ImAttachment } from 'react-icons/im'
 import { BsFillCameraFill } from 'react-icons/bs'
 import { AiFillFileText } from 'react-icons/ai'
-import { GrAttachment } from "react-icons/gr"
 import { useState } from "react";
-// import Webcamera from "./camera/Camera";
 import OpenCamera from "../../Dialogs/OpenCamera";
 import { CreateMessages, User } from "../../../../types";
 import s from './IconsMenu.module.css'
 import axios from "axios";
 import {BiLinkAlt} from "react-icons/bi"
-
 interface Props {
-  // setCameraStatus: React.Dispatch<React.SetStateAction<boolean>>
   setMessages: React.Dispatch<React.SetStateAction<CreateMessages>>
   messages: CreateMessages
   currentChat: string
