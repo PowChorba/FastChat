@@ -197,6 +197,16 @@ export const CREATE_GROUP_CHAT = createAsyncThunk(
         }
     }
 )
+export const RECEIVE_SOCKET_MESSAGE = createAsyncThunk(
+    'RECEIVE_SOCKET_MESSEGE', (data: Messages) => {
+        return data
+    }
+)
+export const DELETE_SOCKET_MESSAGE = createAsyncThunk(
+    'DELETE_SOCKET_MESSEGE', (data: Messages) => {
+        return data
+    }
+)
 
 export const UPDATE_GROUP = createAsyncThunk(
     'UPDATE_GROUP',async (data: UpdateGroup) => {
@@ -271,13 +281,11 @@ export const LEAVE_GROUP = createAsyncThunk(
 
 export const LAST_MESSAGE = createAsyncThunk(
     'LAST_MESSAGE', (data: Messages) => {
-        console.log(data, 'Action')
         return data
     }
 )
 export const LAST_CONNECTION = createAsyncThunk(
     'LAST_CONNECTION', (data: userDisconnected) => {
-        console.log(data, 'Action')
         return data
     }
 )

@@ -1,8 +1,8 @@
 import { Button, Input } from "@chakra-ui/react"
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User, CreateMessages } from "../../../types"
+import { Chats, GetMessageData, SocketUser, User, CreateMessages } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
@@ -16,26 +16,22 @@ import { BiMicrophone } from 'react-icons/bi'
 import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
 import SearchMessages from "../Extras/SearchMessages"
-import { date, fechaActual, lastConnectionDate, newDate, sortMessagesChat } from "../Tools/Tools"
+import { date, fechaActual, lastConnectionDate, sortMessagesChat } from "../Tools/Tools"
 interface Props {
     currentUser: User
     currentChat: string
     friendId: User
     socket: any
     allChats: Chats[]
-    setPendingMessages: Dispatch<SetStateAction<Messages[]>>
-    pendingMessages: Messages[]
     setCurrentChat: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function Chatss({ setCurrentChat, currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages }: Props) {
+export default function Chatss({ setCurrentChat, currentUser, currentChat, friendId, socket, allChats }: Props) {
     const [audioStatus, setAudioStatus] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
     const [emoji, setEmoji] = useState(false)
-    const [test, setTest] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
-    const [deleteMessage, setDeleteMessage] = useState<Messages>()
     const scroll = useRef<HTMLDivElement>(null)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
@@ -47,12 +43,6 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
         scroll.current?.scrollIntoView(false)
     })
 
-    const [messageReceived, setMessageReceived] = useState({
-        senderId: "",
-        text: "",
-        senderChat: "",
-        id: ""
-    })
 
     const [messages, setMessages] = useState<CreateMessages>({
         textMessage: '',
@@ -154,82 +144,6 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
     }
 
     useEffect(() => {
-        setTest(() => {
-            // CADA VEZ QUE ABREN UN CHAT LIMPIA EL ESTADO CON MENSAJES NUEVOS
-            let renewMsgState = pendingMessages.filter(msg => msg.chatId === currentChat)
-            return renewMsgState
-        })
-        let myPendingMsg = pendingMessages.filter(msg => msg.chatId === currentChat)
-
-        setMessageReceived({
-            id: myPendingMsg[myPendingMsg.length - 1]?._id,
-            senderId: myPendingMsg[myPendingMsg.length - 1]?.messageAuthor,
-            text: myPendingMsg[myPendingMsg.length - 1]?.textMessage,
-            senderChat: myPendingMsg[myPendingMsg.length - 1]?.chatId
-        })
-
-        socket.current?.on('getMessage', (data: GetMessageData) => {
-            if (data.senderChat === currentChat) {
-                setMessageReceived({
-                    id: data.messageId || uuidv4(),
-                    senderId: data.senderId,
-                    text: data.text,
-                    senderChat: data.senderChat,
-                })
-                setTest((prevState) => {
-                    let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                    getSocketMessage.push({
-                        _id: data.messageId,
-                        textMessage: data.text,
-                        messageAuthor: data.senderId,
-                        chatId: data.senderChat,
-                        isImage: data.isImage,
-                        createdAt: new Date().toISOString(),
-                        isAudio: data.isAudio
-                    })
-                    return getSocketMessage
-                })
-            }
-        })
-        socket.current?.on("getDeleteMessage", (data: GetMessageDeleted) => {
-            if (data.senderChat === currentChat) {
-                setDeleteMessage({
-                    _id: data.messageId,
-                    textMessage: "Message Deleted",
-                    messageAuthor: data.senderId,
-                    chatId: data.senderChat,
-                    createdAt: data.createdAt,
-                    isDeleted: true
-                })
-            }
-            setPendingMessages((prevState) => {
-                let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                deleteSocketMessage.push({
-                    _id: data.messageId,
-                    textMessage: "Message Deleted",
-                    messageAuthor: data.senderId,
-                    chatId: data.senderChat,
-                    createdAt: data.createdAt,
-                    isDeleted: true
-                })
-                return deleteSocketMessage
-            })
-            setTest((prevState) => {
-                let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                deleteSocketMessage.push({
-                    _id: data.messageId,
-                    textMessage: "Message Deleted",
-                    messageAuthor: data.senderId,
-                    chatId: data.senderChat,
-                    createdAt: data.createdAt,
-                    isDeleted: true
-                })
-                return deleteSocketMessage
-            })
-        })
-    }, [socket, currentChat])
-
-    useEffect(() => {
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
                 if (data.type === "text") {
@@ -241,27 +155,19 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                 }
             }
         })
-    }, [messageReceived, currentChat, socket])
+    }, [ currentChat, socket.current])
 
     const [online, setOnline] = useState<string[]>([])
 
     useEffect(() => {
         socket.current?.on('getUsers', (users: SocketUser[]) => {
             let usersConnectedArr = users?.map((e) => e.userId)
-            console.log("entreee", usersConnectedArr)
+            // console.log("entreee", usersConnectedArr)
             setOnline(usersConnectedArr)
         })
-    }, [currentUser, socket])
+    }, [currentUser, socket.current])
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
-
-    // BORRA O AGREGA MENSAJE 
-    if (currentChat === messageReceived.senderChat || currentChat === deleteMessage?.chatId) {
-        test.forEach((msgState) => {
-            filterMessages = filterMessages.filter(ele => ele._id !== msgState._id && ele.chatId === currentChat)
-        })
-        filterMessages = [...filterMessages, ...test]
-    }
 
     // ORDENA LOS MENSAJES POR FECHA
     filterMessages = sortMessagesChat(filterMessages)
