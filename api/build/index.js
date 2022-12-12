@@ -27,7 +27,6 @@ const { dbConnection } = require("./dataBase/db");
 const index_1 = __importDefault(require("./routes/index"));
 const axios_1 = __importDefault(require("axios"));
 const socket_io_1 = require("socket.io");
-const axios_1 = __importDefault(require("axios"));
 require('dotenv').config();
 const app = (0, express_1.default)();
 dbConnection();
