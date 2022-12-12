@@ -1,45 +1,37 @@
 import { Button, Input } from "@chakra-ui/react"
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { Chats, GetMessageData, Messages, SocketUser, GetMessageDeleted, User, CreateMessages } from "../../../types"
+import { Chats, GetMessageData, SocketUser, User, CreateMessages } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
 import { GrClose } from 'react-icons/gr'
 import ProfileGroup from "../Extras/ProfileGroup"
 import { v4 as uuidv4 } from 'uuid';
-import { AiOutlineArrowLeft, AiOutlineSearch, AiOutlineSend } from "react-icons/ai"
+import { AiOutlineSearch, AiOutlineSend } from "react-icons/ai"
 import Emojis from "./emojis/emojis"
 import { BiHappyAlt } from 'react-icons/bi'
 import { BiMicrophone } from 'react-icons/bi'
 import IconsMenu from "./menu/Menu"
 import AudioRecorderTest from "./Audio/Audio"
 import SearchMessages from "../Extras/SearchMessages"
-import { date, fechaActual, lastConnectionDate, newDate, sortMessagesChat } from "../Tools/Tools"
-import ChatImg from '../../../assets/chat.svg'
-
+import { date, fechaActual, lastConnectionDate, sortMessagesChat } from "../Tools/Tools"
 interface Props {
     currentUser: User
     currentChat: string
     friendId: User
     socket: any
     allChats: Chats[]
-    setPendingMessages: Dispatch<SetStateAction<Messages[]>>
-    pendingMessages: Messages[]
     setCurrentChat: React.Dispatch<React.SetStateAction<string>>
-    setChatResponsive: React.Dispatch<React.SetStateAction<boolean>>
-    chatResponsive: boolean
 }
 
-export default function Chatss({ setCurrentChat, currentUser, currentChat, friendId, socket, allChats, pendingMessages, setPendingMessages, setChatResponsive , chatResponsive }: Props) {
+export default function Chatss({ setCurrentChat, currentUser, currentChat, friendId, socket, allChats }: Props) {
     const [audioStatus, setAudioStatus] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     const [pows, setPows] = useState(true)
     const [emoji, setEmoji] = useState(false)
-    const [test, setTest] = useState<Messages[]>([])
     const [writting, setWritting] = useState(false)
-    const [deleteMessage, setDeleteMessage] = useState<Messages>()
     const scroll = useRef<HTMLDivElement>(null)
     const dispatch = useAppDispatch()
     const allMessages = useAppSelector(state => state.clientReducer.messages)
@@ -51,12 +43,6 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
         scroll.current?.scrollIntoView(false)
     })
 
-    const [messageReceived, setMessageReceived] = useState({
-        senderId: "",
-        text: "",
-        senderChat: "",
-        id: ""
-    })
 
     const [messages, setMessages] = useState<CreateMessages>({
         textMessage: '',
@@ -158,82 +144,6 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
     }
 
     useEffect(() => {
-        setTest(() => {
-            // CADA VEZ QUE ABREN UN CHAT LIMPIA EL ESTADO CON MENSAJES NUEVOS
-            let renewMsgState = pendingMessages.filter(msg => msg.chatId === currentChat)
-            return renewMsgState
-        })
-        let myPendingMsg = pendingMessages.filter(msg => msg.chatId === currentChat)
-
-        setMessageReceived({
-            id: myPendingMsg[myPendingMsg.length - 1]?._id,
-            senderId: myPendingMsg[myPendingMsg.length - 1]?.messageAuthor,
-            text: myPendingMsg[myPendingMsg.length - 1]?.textMessage,
-            senderChat: myPendingMsg[myPendingMsg.length - 1]?.chatId
-        })
-
-        socket.current?.on('getMessage', (data: GetMessageData) => {
-            if (data.senderChat === currentChat) {
-                setMessageReceived({
-                    id: data.messageId || uuidv4(),
-                    senderId: data.senderId,
-                    text: data.text,
-                    senderChat: data.senderChat,
-                })
-                setTest((prevState) => {
-                    let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                    getSocketMessage.push({
-                        _id: data.messageId,
-                        textMessage: data.text,
-                        messageAuthor: data.senderId,
-                        chatId: data.senderChat,
-                        isImage: data.isImage,
-                        createdAt: new Date().toISOString(),
-                        isAudio: data.isAudio
-                    })
-                    return getSocketMessage
-                })
-            }
-        })
-        socket.current?.on("getDeleteMessage", (data: GetMessageDeleted) => {
-            if (data.senderChat === currentChat) {
-                setDeleteMessage({
-                    _id: data.messageId,
-                    textMessage: "Message Deleted",
-                    messageAuthor: data.senderId,
-                    chatId: data.senderChat,
-                    createdAt: data.createdAt,
-                    isDeleted: true
-                })
-            }
-            setPendingMessages((prevState) => {
-                let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                deleteSocketMessage.push({
-                    _id: data.messageId,
-                    textMessage: "Message Deleted",
-                    messageAuthor: data.senderId,
-                    chatId: data.senderChat,
-                    createdAt: data.createdAt,
-                    isDeleted: true
-                })
-                return deleteSocketMessage
-            })
-            setTest((prevState) => {
-                let deleteSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                deleteSocketMessage.push({
-                    _id: data.messageId,
-                    textMessage: "Message Deleted",
-                    messageAuthor: data.senderId,
-                    chatId: data.senderChat,
-                    createdAt: data.createdAt,
-                    isDeleted: true
-                })
-                return deleteSocketMessage
-            })
-        })
-    }, [socket, currentChat])
-
-    useEffect(() => {
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
                 if (data.type === "text") {
@@ -245,7 +155,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                 }
             }
         })
-    }, [messageReceived, currentChat, socket])
+    }, [ currentChat, socket])
 
     const [online, setOnline] = useState<string[]>([])
 
@@ -257,14 +167,6 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
     }, [currentUser, socket])
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
-
-    // BORRA O AGREGA MENSAJE 
-    if (currentChat === messageReceived.senderChat || currentChat === deleteMessage?.chatId) {
-        test.forEach((msgState) => {
-            filterMessages = filterMessages.filter(ele => ele._id !== msgState._id && ele.chatId === currentChat)
-        })
-        filterMessages = [...filterMessages, ...test]
-    }
 
     // ORDENA LOS MENSAJES POR FECHA
     filterMessages = sortMessagesChat(filterMessages)
@@ -289,29 +191,16 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
         dispatch(DELETE_CHAT(currentChat))
     }
 
-    //RESPONSIVE
-    const handleResponsive = () => {
-        setChatResponsive(false)
-    }
-
     return (
         <div>
             {
                 currentChat === ''
                     ? <div className={s.divChatsCerrados}>
-                        <h4 className={s.tituloPen}>Open a conversation or start a new one!</h4>
-                        <div className={s.probando}>
-                            <img src={ChatImg} alt="asd" width='400px'/>
-                        </div>
+                        <h4>Open a conversation or start a new one!</h4>
                     </div>
                     :
-                    // <div className={(profileChat || searchMessages) && chatResponsive ? s.displayNone : s.contenedor}>
-                    <div className={(profileChat || searchMessages) && chatResponsive ? s.displayNone : (profileChat || searchMessages) ? s.contenedor : s.asd}>
-
+                    <div className={profileChat || searchMessages ? s.contenedor : s.asd}>
                         <div className={s.divMensajes}>
-                            <div className={s.arrowBackResponsive}>
-                                <AiOutlineArrowLeft onClick={handleResponsive}/>
-                            </div>
                             <div className={s.divDatosUserChat}><img src={filterGroupChat?.img ? filterGroupChat?.img : friendId?.image} alt="asd" className={s.imagenes} />
                                 <div className={s.contenedorPerfil} onClick={handleProfileChat}>
                                     <p>{filterGroupChat?.groupName ? filterGroupChat.groupName : friendId?.nickName}</p>
@@ -339,7 +228,8 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                         )}
                                 </div>
                                 {
-                                    filterMessages?.map((e) => {
+                                    filterMessages?.length === 0 ? <p>Today</p>
+                                        : filterMessages?.map((e) => {
                                             return (
                                                 <div key={e._id} ref={scroll}>
                                                     <Message friendId={friendId?._id} socket={socket} mensajes={[e]} currentUser={currentUser} currentChat={currentChat} actualDayMessages={actualDayMessages} filterGroupChat={filterGroupChat} />
@@ -382,29 +272,6 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                             <SearchMessages filterMessages={filterMessages} />
                         </div>
                     </div>
-            }
-            {
-                chatResponsive && <div>
-                    <div className={profileChat ? s.divMensajes : s.displayNone}>
-                            <div className={s.divCerrarInfo}>
-                                <button onClick={handleCloseProfileChat} className={s.botonCerrarInfo}><GrClose /></button>
-                                <span>{' '}{filterGroupChat?.groupName ? 'Group info' : 'Contact info'}</span>
-                            </div>
-                            {
-                                filterGroupChat?.groupName ? <ProfileGroup filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} setCurrentChat={setCurrentChat}/>
-                                    : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat = {setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser}/>
-                            }
-                        </div>
-                        <div className={searchMessages ? s.divMensajes : s.displayNone}>
-                            <div className={s.divCerrarInfo}>
-                                <button onClick={handleCloseSearchMessages} className={s.botonCerrarInfo}><GrClose /></button>
-                                <span>{' '}Search Messages</span>
-                            </div>
-                            <div>
-                            <SearchMessages filterMessages={filterMessages}/>
-                            </div>
-                        </div> 
-                </div>
             }
         </div>)
 }

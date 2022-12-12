@@ -1,9 +1,9 @@
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { BiCircle, BiImageAlt } from "react-icons/bi"
-import { DELETE_NOTIFICATIONS, USER_CHATS } from "../../../Redux/actions/actions"
-import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { Chats, GetMessageData, Messages, User } from "../../../types"
+import { DELETE_NOTIFICATIONS, DELETE_SOCKET_MESSAGE, RECEIVE_SOCKET_MESSAGE, USER_CHATS } from "../../../Redux/actions/actions"
+import { useAppDispatch } from "../../../Redux/hooks"
+import { Chats, GetMessageData, GetMessageDeleted, Messages, User } from "../../../types"
 import s from './PrivateChat.module.css'
 import { BsMicFill } from 'react-icons/bs'
 import { fechasMensajes } from "../Tools/Tools"
@@ -13,26 +13,17 @@ interface Props {
     socket: any
     allChatData: Chats
     allMessages: Messages[]
-    setPendingMessages: Dispatch<SetStateAction<Messages[]>>
     currentChat: string
 }
 
-export default function PrivateChat({ currentChat, chatUser, currentUser, socket, allChatData, setPendingMessages, allMessages }: Props) {
-    const [messageReceived, setMessageReceived] = useState({
-        senderId: "",
-        text: "",
-        senderChat: ""
-    })
-    const [inaki, setInaki] = useState<Messages[]>([])
+export default function PrivateChat({ currentChat, chatUser, currentUser, socket, allChatData, allMessages }: Props) {
     const [writting, setWritting] = useState(false)
     const [sendingAudio, setSendingAudio] = useState(false)
     //PARA AGARRAR MENSAJES DE CADA CHAT
     const secondUserId = chatUser.find((e) => e._id !== currentUser?._id)
     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
-    let allChats = useAppSelector(state => state.clientReducer.userChats)
     const dispatch = useAppDispatch()
     // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
-    allChats = allChats.filter(e => e.chatsUsers[0]?._id === secondUserId?._id || e.chatsUsers[1]?._id === secondUserId?._id)
     allMessages = allMessages.filter(e => e.chatId === allChatData?._id)
     // PARA NOTIFICACIONES 
     const [notificationCounter, setNotificationCounter] = useState(0)
@@ -70,44 +61,32 @@ useEffect(() => {
             // NOTIFICATION SOUND 
             notificationAudio()
             // ----------------
-            setMessageReceived({
-                senderId: data.senderId,
-                text: data.text,
-                senderChat: data.senderChat
-            })
-
                 setNotificationCounter((prevNumber) => {
                     return prevNumber + 1
                 })
-
-            setPendingMessages((prevState) => {
-                let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                getSocketMessage.push({
+                dispatch(RECEIVE_SOCKET_MESSAGE({
                     _id: data.messageId,
-                    textMessage: data.text,
-                    messageAuthor: data.senderId,
-                    chatId: data.senderChat,
-                    isImage: data?.isImage,
-                    createdAt: new Date().toISOString(),
-                    isAudio: data.isAudio
-                })
-                return getSocketMessage
-            })
-
-            setInaki((prev: Messages[]) => [...prev, {
+                   textMessage: data.text,
+                   messageAuthor: data.senderId,
+                   chatId: data.senderChat,
+                   isImage: data.isImage,
+                   createdAt: new Date().toISOString(),
+                   isAudio: data.isAudio}))
+        }
+    })
+    socket.current?.on("getDeleteMessage", (data: GetMessageDeleted) => {
+        if (data.senderChat === currentChat) {
+            dispatch(DELETE_SOCKET_MESSAGE({
                 _id: data.messageId,
-                textMessage: data.text,
-                messageAuthor: data.senderChat,
-                // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
-                chatId: allChats[0]?._id,
-                isImage: data?.isImage,
-                createdAt: new Date().toISOString(),
-                isAudio: data?.isAudio
-            }])
+                textMessage: "Message Deleted",
+                messageAuthor: data.senderId,
+                chatId: data.senderChat,
+                createdAt: data.createdAt,
+                isDeleted: true
+            }))
         }
     })
     socket.current?.on("getUserWritting", (data: GetMessageData) => {
-        // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
         if (data.senderChat === allChatData._id) {
             if (data.type === "text") {
                 if (data.text) setWritting(true)
@@ -124,20 +103,7 @@ useEffect(() => {
             userId: currentUser?._id
         })
     }
-}, [socket, setPendingMessages])
-
-
-//PARA RENDERIZAR EL ULTIMO MENSAJE DE SOCKET
-if (messageReceived.text !== "" && allChatData._id === messageReceived.senderChat) {
-    if (!allMessages.includes(inaki[0])) {
-        allMessages = [...allMessages, ...inaki]
-    }
-    allMessages = allMessages.sort((a, b) => {
-        if (a.createdAt < b.createdAt) return -1
-        if (a.createdAt > b.createdAt) return 1
-        else return 0
-    })
-}
+}, [socket.current])
 
 return (
     <div onClick={() => notificationsOff()} className={s.chat}>

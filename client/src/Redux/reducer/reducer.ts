@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { Chats, Messages, Response, User } from "../../types";
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG, RECEIVE_SOCKET_MESSAGE, DELETE_SOCKET_MESSAGE } from '../actions/actions'
 import Users from '../../Components/Home/Users/Users';
-import { Chats, Messages, NewChat, Response, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG } from '../actions/actions'
 
 interface Reducer {
     users: User[],
@@ -84,6 +84,11 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(NEW_MESSAGE.fulfilled, (state, action) => {
         state.messages = state.messages?.concat(action.payload)
+    })
+    callback.addCase(RECEIVE_SOCKET_MESSAGE.fulfilled, (state, action) => {
+        if (!state.messages.some(msg=> msg._id === action.payload._id)){
+            state.messages = state.messages?.concat(action.payload)
+        }
     })
     callback.addCase(USER_FILTER.fulfilled, (state, action) => {
         state.searchUser = action.payload
@@ -197,6 +202,19 @@ export const clientReducer = createReducer(initialState, (callback) => {
             createdAt: action.payload.msgDeleted.createdAt
         }
         state.messages = state.messages.filter(msg => msg._id !== action.payload.msgDeleted._id)
+        state.messages.push(msgDeleted)
+
+    })
+    callback.addCase(DELETE_SOCKET_MESSAGE.fulfilled, (state, action) => {
+        let msgDeleted = {
+            textMessage: "Message deleted",
+            messageAuthor: action.payload.messageAuthor,
+            chatId: action.payload.chatId,
+            isDeleted: true,
+            _id: action.payload._id,
+            createdAt: action.payload.createdAt
+        }
+        state.messages = state.messages.filter(msg => msg._id !== action.payload._id)
         state.messages.push(msgDeleted)
 
     })
@@ -325,7 +343,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
-            let user:any = state.users.find((user)=> user._id === action.payload.removeAdmin)
             stateChatsCopy.forEach((chat,i)=>{
                 if (chat._id === action.payload.groupId){
                     stateChatsCopy[i].admin = chat.admin?.filter((user)=> user._id !== action.payload.removeAdmin)
@@ -346,7 +363,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
-            let user:any = state.users.find((user)=> user._id === action.payload.removeAdmin)
             stateChatsCopy.forEach((chat,i)=>{
                 if (chat._id === action.payload.groupId){
                     return chat.img = action.payload.img
@@ -362,4 +378,5 @@ export const clientReducer = createReducer(initialState, (callback) => {
         }
 
     })
+    
 })

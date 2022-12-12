@@ -185,6 +185,16 @@ export const CREATE_GROUP_CHAT = createAsyncThunk(
         }
     }
 )
+export const RECEIVE_SOCKET_MESSAGE = createAsyncThunk(
+    'RECEIVE_SOCKET_MESSEGE', (data: Messages) => {
+        return data
+    }
+)
+export const DELETE_SOCKET_MESSAGE = createAsyncThunk(
+    'DELETE_SOCKET_MESSEGE', (data: Messages) => {
+        return data
+    }
+)
 
 export const UPDATE_GROUP = createAsyncThunk(
     'UPDATE_GROUP',async (data: UpdateGroup) => {

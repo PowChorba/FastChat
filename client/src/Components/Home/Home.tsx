@@ -17,7 +17,7 @@ import { TbUserOff } from 'react-icons/tb'
 import { io } from "socket.io-client"
 import ChatGroups from "./ChatGroups/ChatGroups"
 import Chatss from "./Chats/Chats"
-import { GetMessageData, Messages, userDisconnected } from "../../types"
+import { userDisconnected } from "../../types"
 import { sortChats, sortMessagees } from "./Tools/Tools"
 import { AiOutlineUserAdd } from "react-icons/ai"
 
@@ -40,10 +40,18 @@ export default function Home(){
     const userChats = useAppSelector(state => state.clientReducer.userChats)
     const allMessages = useAppSelector(state => state.clientReducer.messages)
     const currentUser = allUsers?.filter(e => e.userEmail === auth?.currentUser?.email)[0]
+
+    // SOCKET CONNECTION 
+    useEffect(() => {
+        socket.current = io('https://fastchat-production.up.railway.app/')
+        socket.current?.on("userDisconnected",(data:userDisconnected)=>{
+            dispatch(LAST_CONNECTION(data))
+        })
+    }, [dispatch])
+
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())
-        socket.current = io('https://fastchat-production.up.railway.app')
         if(currentUser?._id){
             dispatch(ALL_MESSAGES())
             dispatch(USER_CHATS(currentUser._id))
@@ -64,62 +72,9 @@ export default function Home(){
         setSearchChat(e.target.value)
     }
 
-    //ACA VA UN CODIGO A LO BOCA
-    const [, setInaki] = useState<Messages[]>([])
-    const [, setMessageReceived] = useState({
-        senderId: "",
-        text: "",
-        senderChat: ""
-    })
-    const [pendingMessages, setPendingMessages] = useState<Messages[]>([])
-
-    useEffect(() => {
-        // SOCKET MESSAGE RECEIVED 
-        socket.current?.on('getMessage', (data: GetMessageData) => {
-
-                setMessageReceived({
-                    senderId: data.senderId,
-                    text: data.text,
-                    senderChat: data.senderChat
-                })
-    
-    
-                setPendingMessages((prevState) => {
-                    let getSocketMessage = prevState.filter(msg => msg._id !== data.messageId)
-                    getSocketMessage.push({
-                        _id: data.messageId,
-                        textMessage: data.text,
-                        messageAuthor: data.senderId,
-                        chatId: data.senderChat,
-                        isImage: data?.isImage,
-                        createdAt: new Date().toISOString(),
-                        isAudio: data.isAudio
-                    })
-                    return getSocketMessage
-                })
-    
-                setInaki((prev: Messages[]) => [...prev, {
-                    _id: data.messageId,
-                    textMessage: data.text,
-                    messageAuthor: data.senderChat,
-                    // CAPAZ SE PUEDE MODIFICAR !!!!!!!!!!!!!!
-                    chatId: allChats[0]?._id,
-                    isImage: data?.isImage,
-                    createdAt: new Date().toISOString(),
-                    isAudio: data?.isAudio
-                }])
-        })
-        socket.current?.on("userDisconnected",(data:userDisconnected)=>{
-            dispatch(LAST_CONNECTION(data))
-        })
-    }, [socket, setPendingMessages])
     //ORDENAR LOS CHATS SEGUN LA HORA DEL ULTIMO
     const mapIdChats = userChats.map(e => e._id)
     let filterMessagesIds = allMessages.filter(e => mapIdChats.includes(e.chatId))
-    const pendingMessagesFilter = pendingMessages.filter(e => !filterMessagesIds.includes(e))
-    if(pendingMessagesFilter.length > 0){
-        pendingMessages.map(e => filterMessagesIds.push(e))
-    }
     const sortMessages = sortMessagees(filterMessagesIds)
     const sortChatss = sortChats(filterMessagesIds, userChats)
     const probando = userChats.filter(e => e._id !== sortMessages[0]?.chatId)
@@ -221,14 +176,14 @@ export default function Home(){
                     filterUserChats.length !== 0 
                     ? filterUserChats && filterUserChats?.map(e => {
                         return(
-                            <div key={e._id} className={s.botonesChats} onClick={handleChatResponsive}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} currentChat={currentChat} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
+                            <div key={e._id} className={s.botonesChats}>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} currentChat={currentChat}  allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} socket={socket}/></button>
                             </div>)
                     })
                     : lastChat && lastChat?.map(e => {
                         return(
-                            <div key={e._id} className={s.botonesChats} onClick={handleChatResponsive}>
-                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages} setPendingMessages={setPendingMessages} allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} currentChat={currentChat} socket={socket}/></button>
+                            <div key={e._id} className={s.botonesChats}>
+                                <button onClick={() => handleChat(e._id)} className={s.abrirChat}><PrivateChat allMessages={allMessages}  allChatData={e} chatUser={e.chatsUsers} currentUser={currentUser} currentChat={currentChat} socket={socket}/></button>
                             </div>
                             )
                     }) 
@@ -284,8 +239,8 @@ export default function Home(){
                 </div>
             }
         </div>
-        <div className={chatResponsive ? s.asd : s.divChats}>
-            <Chatss pendingMessages={pendingMessages} setPendingMessages={setPendingMessages} currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats} setChatResponsive={setChatResponsive} chatResponsive={chatResponsive}/>
+        <div>
+            <Chatss currentChat={currentChat} setCurrentChat = {setCurrentChat} currentUser={currentUser} friendId={friendId} socket={socket} allChats={allChats}/>
         </div>
     </div>)
 }

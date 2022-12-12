@@ -17,13 +17,6 @@ export default function Users({ currentUser }: Props) {
     const contactUsers = currentUser?.contacts?.map(e => e._id)
     const filterUsers = allUsers.filter(e => e._id !== currentUser?._id && !idBlockUsers?.includes(e._id) && !contactUsers?.includes(e._id))
     const dispatch = useAppDispatch()
-    // SET OFF ALERT 
-    // if (respuesta?.ok){
-    //     setTimeout(()=>{
-    //         dispatch(CLEAR_RESPONSE())
-    //     },3000)
-    // }
-    // console.log(respuesta?.msg)
     //BUSQUEDA DE CONTACTOS
     const [busqueda, setBusqueda] = useState('')
     const searchUsers = filterUsers.filter(e => e.nickName.includes(busqueda)
