@@ -6,13 +6,16 @@ import { useAppDispatch } from "../../../Redux/hooks"
 import { User } from "../../../types"
 import defaultImage from '../../../assets/deaflutGroupImg.png'
 import s from './ChatGroups.module.css'
+import { v4 as uuidv4 } from 'uuid';
+
 
 interface Props {
     currentUser: User
     setCreateGroup: React.Dispatch<React.SetStateAction<boolean>>
+    socket: any
 }
 
-export default function ChatGroups({currentUser, setCreateGroup}: Props){
+export default function ChatGroups({currentUser, setCreateGroup, socket}: Props){
     const dispatch = useAppDispatch()
     const [group, setGroup] = useState({
         img: '',
@@ -55,7 +58,12 @@ export default function ChatGroups({currentUser, setCreateGroup}: Props){
     const handleCreateGroup = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if(!group.img) group.img = defaultImage
-        dispatch(CREATE_GROUP_CHAT(group))
+        let _id = uuidv4()
+        let createGroupChat = {...group, _id}
+        dispatch(CREATE_GROUP_CHAT(createGroupChat))
+        // socket.current.emit("getGroupChat",{
+        //     ...createGroupChat
+        // })
         setCreateGroup(true)
     } 
 

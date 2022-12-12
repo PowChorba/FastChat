@@ -19,6 +19,9 @@ const UserSchema = new mongoose_1.Schema({
     image: {
         type: String,
     },
+    lastConnection: {
+        type: String,
+    },
     contacts: [{
             type: mongoose_1.Schema.Types.ObjectId,
             ref: "Users",

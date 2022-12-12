@@ -18,8 +18,8 @@ interface Props {
 
 export default function Message({mensajes, currentUser, actualDayMessages, socket, currentChat, friendId, filterGroupChat}: Props){
     //PARA PODER AGREGAR EL NOMBRE ARRIBA DEL MENSAJE CUANDO NO ES DEL USUARIO LOGEADO
-    const idOfUsers = filterGroupChat.chatsUsers.map(e => e._id)
-    const nameOfUsers = filterGroupChat.chatsUsers.map(e => e.nickName)
+    const idOfUsers = filterGroupChat?.chatsUsers?.map(e => e._id)
+    const nameOfUsers = filterGroupChat?.chatsUsers?.map(e => e.nickName)
     const [dialog, setDialog] = useState(false)
 
     const handleDialog = () => {

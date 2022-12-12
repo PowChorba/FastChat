@@ -2,7 +2,7 @@ import express from "express"
 const cors = require('cors')
 const { dbConnection } = require("./dataBase/db")
 import route from './routes/index'
-import { Socket, SocketRoom, SocketUser } from "./types"
+import { AddUser, CreateGroup, NewChat, Socket, SocketRoom, SocketUser } from "./types"
 import { Server as SocketServer } from 'socket.io'
 import axios from "axios"
 require('dotenv').config()
@@ -81,7 +81,6 @@ io.on('connect', (socket: any) => {
         io.emit('getUsers', users)
         try {
             const res = await axios.put("http://localhost:3001/users/disconnect", user)
-            console.log(res.data)
             io.emit("userDisconnected", {userId:user?.userId, data:(res.data.ok? res.data : "")})
         }catch (e){
             console.log(e)
@@ -100,6 +99,23 @@ io.on('connect', (socket: any) => {
                 senderId, text, senderChat, messageId, isImage, isAudio
             })
         }
+    })
+    socket.on("joinGroupChat",({groupId,members}:AddUser)=>{
+        const user = getUser(members)
+        io.to(groupId).emit("addUserGroup",{
+            groupId, members
+        })
+        io.to(user?.socketId).emit("addUserGroup",{
+            groupId, members
+        })
+    })
+    socket.on("getNewChat",({firstUser,secondUser,_id}:NewChat)=>{
+        const user = getUser(secondUser)
+        io.to(user?.socketId).emit("newChat",{
+            firstUser,
+            secondUser,
+            _id
+        })
     })
 
     socket.on("sendEscribiendo", ({ senderId, receiverId, text, senderChat }: Socket) => {

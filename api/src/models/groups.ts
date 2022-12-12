@@ -15,6 +15,6 @@ const GroupsSchema = new Schema({
     img: {
         type: String,
         require: true
-    } 
+    }
 })
 export const Groups = model('Groups', GroupsSchema)

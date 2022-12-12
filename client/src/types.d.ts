@@ -33,13 +33,6 @@ export type Chats = {
     groupName?: string
     admin?: User[]
 }
-
-export type NewChat = {
-    _id?: string
-    firstUser: string | User
-    secondUser: string | User
-}
-
 // TYPES PARA LOS MENSAJES
 
 export type Messages = {
@@ -100,6 +93,7 @@ export interface GetMessageDeleted extends GetMessageData {
 
 
 export interface CreateGroup {
+    _id: string
     groupName: string
     creator: string
     admin: string
@@ -134,4 +128,28 @@ export interface userDisconnected {
         ok: boolean,
         msg: string
     }
+}
+export interface NewChat {
+    firstUser: string
+    secondUser: string
+    _id: string
+} 
+export interface PayloadChats {
+    _id: string;
+    chatsUsers: User[];
+    creator: User;
+    groupName?: string;
+}
+export interface NewChatsReducer {
+    _id: string;
+    chatsUsers: User[];
+    creator: User;
+}
+export interface NewChatSocket {
+    payloadChats: PayloadChats
+    newChats: NewChatsReducer
+}
+export interface AddUser {
+    groupId: string
+    members: string
 }

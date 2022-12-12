@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateGroup = exports.deleteChat = exports.userChat = exports.allChats = exports.newChat = void 0;
 const chats_1 = require("../models/chats");
 const newChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { firstUser, secondUser, groupName, chatsUsersId, admin, creator, img } = req.body;
+    const { firstUser, secondUser, groupName, chatsUsersId, admin, creator, img, _id } = req.body;
     try {
         const alreadyChatOne = yield chats_1.Chats.findOne({
             chatsUsers: [firstUser, secondUser]
@@ -22,19 +22,13 @@ const newChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         if (!firstUser && !secondUser) {
             const groupsCreated = yield chats_1.Chats.create({
+                _id,
                 groupName,
                 creator,
                 chatsUsers: [chatsUsersId],
                 admin,
                 img
             });
-            let chat = {
-                chatsUsers: groupsCreated.chatsUsers,
-                groupName,
-                creator,
-                admin,
-                img
-            };
             res.json({ ok: true, msg: "succesfully created", chat: groupsCreated });
         }
         else if (alreadyChatOne || alreadyChatTwo) {
@@ -42,6 +36,7 @@ const newChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         else {
             const newChat = yield chats_1.Chats.create({
+                _id,
                 chatsUsers: [firstUser, secondUser]
             });
             return res.json({ ok: true, msg: "succesfully created", chat: newChat });
@@ -96,26 +91,27 @@ const updateGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (groupSearch) {
             if (members) {
                 yield groupSearch.updateOne({ $push: { chatsUsers: members } });
-                return res.json({ ok: true, msg: "succesfully updated" });
+                return res.json({ ok: true, msg: "succesfully updated", groupId, members });
             }
             else if (admin) {
                 yield groupSearch.updateOne({ $push: { admin: admin } });
-                return res.json({ ok: true, msg: "succesfully updated" });
+                return res.json({ ok: true, msg: "succesfully updated", groupId, admin });
             }
             else if (groupName) {
                 yield groupSearch.updateOne({ groupName });
-                return res.json({ ok: true, msg: "succesfully updated" });
+                return res.json({ ok: true, msg: "succesfully updated", groupId, groupName });
             }
             else if (leaveGroup) {
                 yield groupSearch.updateOne({ $pull: { chatsUsers: leaveGroup } });
-                return res.json({ ok: true, msg: "succesfully removed" });
+                return res.json({ ok: true, msg: "succesfully leave group", groupId, leaveGroup });
             }
             else if (removeAdmin) {
                 yield groupSearch.updateOne({ $pull: { admin: removeAdmin } });
-                return res.json({ ok: true, msg: "succesfully removed" });
+                return res.json({ ok: true, msg: "succesfully removed", groupId, removeAdmin });
             }
             else if (img) {
                 yield groupSearch.updateOne({ img });
+                return res.json({ ok: true, msg: "Image change succesfully", img, groupId });
             }
         }
         else

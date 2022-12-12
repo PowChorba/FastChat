@@ -8,6 +8,10 @@ const ChatsSchema = new mongoose_1.Schema({
             ref: "Users",
             autopopulate: true
         }],
+    _id: {
+        type: String,
+        required: true
+    },
     groupName: {
         type: String,
         require: true
@@ -26,6 +30,8 @@ const ChatsSchema = new mongoose_1.Schema({
         type: String,
         require: true
     }
+}, {
+    _id: false
 });
 ChatsSchema.plugin(require("mongoose-autopopulate"));
 exports.Chats = (0, mongoose_1.model)('Chats', ChatsSchema);

@@ -1,8 +1,8 @@
 import { Button, Input } from "@chakra-ui/react"
 import React, { useEffect, useRef, useState } from "react"
-import { BLOCK_USER, DELETE_CHAT, NEW_MESSAGE, USER_CONTACTS } from "../../../Redux/actions/actions"
+import { ALL_CHATS, ALL_MESSAGES, BLOCK_USER, DELETE_CHAT, NEW_CHAT_SOCKET, NEW_MESSAGE, USER_CHATS, USER_CONTACTS } from "../../../Redux/actions/actions"
 import { useAppDispatch, useAppSelector } from "../../../Redux/hooks"
-import { Chats, GetMessageData, SocketUser, User, CreateMessages } from "../../../types"
+import { Chats, GetMessageData, SocketUser, User, CreateMessages, NewChat, AddUser } from "../../../types"
 import ChatProfile from "../Extras/UserChatProfile"
 import Message from "../Message/Message"
 import s from './Chats.module.css'
@@ -144,6 +144,20 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
     }
 
     useEffect(() => {
+        socket.current?.on("newChat", (data: NewChat) => {
+            if (data.secondUser === currentUser._id) {
+                dispatch(NEW_CHAT_SOCKET(data))
+            }
+        })
+        socket.current?.on("addUserGroup", (data: AddUser) => {
+            if (data.members === currentUser._id ) {
+                setTimeout(() => {
+                    dispatch(ALL_CHATS())
+                    dispatch(USER_CHATS(currentUser._id))
+                    dispatch(ALL_CHATS())
+                }, 1000)
+            }
+        })
         socket.current?.on("getUserWritting", (data: GetMessageData) => {
             if (data.senderChat === currentChat) {
                 if (data.type === "text") {
@@ -155,14 +169,13 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                 }
             }
         })
-    }, [ currentChat, socket.current])
+    }, [currentChat, socket.current])
 
     const [online, setOnline] = useState<string[]>([])
 
     useEffect(() => {
         socket.current?.on('getUsers', (users: SocketUser[]) => {
             let usersConnectedArr = users?.map((e) => e.userId)
-            // console.log("entreee", usersConnectedArr)
             setOnline(usersConnectedArr)
         })
     }, [currentUser, socket.current])
@@ -211,7 +224,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                                 ? filterGroupChat.chatsUsers.map(e => {
                                                     return (<span key={e._id}>{e.nickName}{' '}</span>)
                                                 })
-                                                : writting ? "Writting..." : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' :  lastConnectionDate(friendId?.lastConnection) || "offline")
+                                                : writting ? "Writting..." : sendingAudio ? "Sending audio..." : (online.filter(e => e === friendId?._id).length === 1 ? 'online' : lastConnectionDate(friendId?.lastConnection) || "offline")
                                         }
                                     </p>
                                 </div>
@@ -241,7 +254,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                             </div>
                             <div className={s.divGridForm}>
                                 <div className={s.divImagenIconos}>
-                                    {emoji ? <BiHappyAlt size="1.5em" color="#008069" onClick={() => setEmoji(!emoji)}/> : <BiHappyAlt size="1.5em" onClick={() => setEmoji(!emoji)} />}
+                                    {emoji ? <BiHappyAlt size="1.5em" color="#008069" onClick={() => setEmoji(!emoji)} /> : <BiHappyAlt size="1.5em" onClick={() => setEmoji(!emoji)} />}
                                     {<IconsMenu currentChat={currentChat} currentUser={currentUser} setMessages={setMessages} messages={messages} />}
                                     {audioStatus ? <BiMicrophone size="1.5em" color="#008069" onClick={() => setAudioStatus(!audioStatus)} /> : <BiMicrophone size="1.5em" onClick={() => setAudioStatus(!audioStatus)} />}
                                 </div>
@@ -261,7 +274,7 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                                 <span>{' '}{filterGroupChat?.groupName ? 'Group info' : 'Contact info'}</span>
                             </div>
                             {
-                                filterGroupChat?.groupName ? <ProfileGroup setCurrentChat={setCurrentChat} filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
+                                filterGroupChat?.groupName ? <ProfileGroup socket={socket.current} setCurrentChat={setCurrentChat} filterGroupChat={filterGroupChat} currentChat={currentChat} currentUser={currentUser} />
                                     : <ChatProfile setCurrentChat={setCurrentChat} setProfileChat={setProfileChat} user={friendId} currentChat={currentChat} currentUser={currentUser} />
                             }
                         </div>
