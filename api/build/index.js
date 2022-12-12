@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -47,9 +38,9 @@ const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT);
 });
 const io = new socket_io_1.Server(server, {
-    // cors: {
-    //     origin: ['http://127.0.0.1:5641', 'http://localhost:3000']
-    // }
+    cors: {
+    // origin: ['http://127.0.0.1:5641','http://localhost:3000']
+    }
 });
 let users = [];
 let groups = [];
@@ -82,7 +73,7 @@ io.on('connect', (socket) => {
         removeUser((user === null || user === void 0 ? void 0 : user.userId) || "");
         io.emit('getUsers', users);
         try {
-            const res = yield axios_1.default.put("http://localhost:3001/users/disconnect", user);
+            const res = yield axios_1.default.put("https://fastchat-production.up.railway.app/users/disconnect", user);
             io.emit("userDisconnected", { userId: user === null || user === void 0 ? void 0 : user.userId, data: (res.data.ok ? res.data : "") });
         }
         catch (e) {
