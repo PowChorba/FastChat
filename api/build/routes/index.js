@@ -24,9 +24,4 @@ router.get('/messages/:chatId', messages_1.messageChat);
 router.get('/messages', messages_1.allMessages);
 router.put('/messages', messages_1.deleteMessages);
 router.put("/messages/notification", messages_1.deleteNotifications);
-//GROUPS
-// router.get("/groups",allGroups)
-// router.put("/groups",updateGroup)
-// router.post("/groups",newGroup)
-// router.delete("/groups",deleteGroup)
 exports.default = router;
