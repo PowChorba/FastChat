@@ -77,11 +77,9 @@ io.on('connect', (socket: any) => {
     socket.on('disconnect', async() => {
         let user = getUserBySocket(socket.id)
         removeUser(user?.userId||"")
-        console.log('a user disconnected', user?.userId)
         io.emit('getUsers', users)
         try {
             const res = await axios.put("http://localhost:3001/users/disconnect", user)
-            console.log(res.data)
             io.emit("userDisconnected", {userId:user?.userId, data:(res.data.ok? res.data : "")})
         }catch (e){
             console.log(e)

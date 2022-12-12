@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userById = exports.updateUsers = exports.allUsers = exports.newUser = void 0;
+exports.lastConnection = exports.userById = exports.updateUsers = exports.allUsers = exports.newUser = void 0;
 const users_1 = require("../models/users");
 const newUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nickName, userEmail, password, image } = req.body;
@@ -75,7 +75,13 @@ const updateUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
         else if (!contact && findUser && !contactId && !bloqUserId) {
             yield findUser.updateOne({ image, password, nickName });
-            return res.json({ ok: true, msg: "User updated" });
+            let userUpdate = {
+                image,
+                password,
+                nickName,
+                userId
+            };
+            return res.json({ ok: true, userUpdate, msg: "User updated" });
         }
         else if (findUser && contactId) {
             const filterContact = (_c = findUser.contacts) === null || _c === void 0 ? void 0 : _c.filter((e) => { var _a; return ((_a = e._id) === null || _a === void 0 ? void 0 : _a.toString()) === contactId; });
@@ -127,3 +133,20 @@ const userById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.userById = userById;
+const lastConnection = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.body;
+    try {
+        const lastConnection = new Date().toISOString();
+        const findUser = yield users_1.Users.findById(userId);
+        if (findUser) {
+            const updateUser = yield (findUser === null || findUser === void 0 ? void 0 : findUser.updateOne({ lastConnection: lastConnection }));
+            return res.json({ ok: true, msg: lastConnection });
+        }
+        else
+            return res.json({ ok: true, msg: "couldnt find your user fujk" });
+    }
+    catch (e) {
+        res.status(401).json({ ok: false, msg: e });
+    }
+});
+exports.lastConnection = lastConnection;

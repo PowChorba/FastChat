@@ -155,17 +155,16 @@ export default function Chatss({ setCurrentChat, currentUser, currentChat, frien
                 }
             }
         })
-    }, [ currentChat, socket.current])
+    }, [ currentChat, socket])
 
     const [online, setOnline] = useState<string[]>([])
 
     useEffect(() => {
         socket.current?.on('getUsers', (users: SocketUser[]) => {
             let usersConnectedArr = users?.map((e) => e.userId)
-            // console.log("entreee", usersConnectedArr)
             setOnline(usersConnectedArr)
         })
-    }, [currentUser, socket.current])
+    }, [currentUser, socket])
 
     const actualDayMessages = filterMessages.filter(e => fechaActual(e.createdAt) === fechaActual(date.toString()))
 
