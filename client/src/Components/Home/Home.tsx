@@ -43,13 +43,12 @@ export default function Home(){
 
     // SOCKET CONNECTION 
     useEffect(() => {
-        // socket.current = io('https://fastchat-production.up.railway.app/')
-        socket.current = io('http://localhost:3001')
+        socket.current = io('https://fastchat-production.up.railway.app/')
         socket.current?.on("userDisconnected",(data:userDisconnected)=>{
             dispatch(LAST_CONNECTION(data))
         })
-    }, [])
-    
+    }, [dispatch])
+
     //PARA LOS CHATS DEL USUARIO LOGEADO
     useEffect(() =>{
         dispatch(ALL_USERS())

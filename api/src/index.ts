@@ -36,9 +36,9 @@ const server = app.listen(app.get("port"), () => {
 })
 
 const io: any = new SocketServer(server, {
-    cors: {
-        origin: ['http://127.0.0.1:5641', 'http://localhost:3000']
-    }
+    // cors: {
+    //     origin: ['http://127.0.0.1:5641', 'http://localhost:3000']
+    // }
 })
 
 
@@ -77,7 +77,6 @@ io.on('connect', (socket: any) => {
     socket.on('disconnect', async() => {
         let user = getUserBySocket(socket.id)
         removeUser(user?.userId||"")
-        console.log('a user disconnected', user?.userId)
         io.emit('getUsers', users)
         try {
             const res = await axios.put("http://localhost:3001/users/disconnect", user)

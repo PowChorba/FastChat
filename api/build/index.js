@@ -38,9 +38,9 @@ const server = app.listen(app.get("port"), () => {
     console.log("Server is on port" + " " + process.env.PORT);
 });
 const io = new socket_io_1.Server(server, {
-    cors: {
-        origin: ['http://127.0.0.1:5641', 'http://localhost:3000']
-    }
+// cors: {
+//     origin: ['http://127.0.0.1:5641', 'http://localhost:3000']
+// }
 });
 let users = [];
 let groups = [];
@@ -71,7 +71,6 @@ io.on('connect', (socket) => {
     socket.on('disconnect', () => __awaiter(void 0, void 0, void 0, function* () {
         let user = getUserBySocket(socket.id);
         removeUser((user === null || user === void 0 ? void 0 : user.userId) || "");
-        console.log('a user disconnected', user === null || user === void 0 ? void 0 : user.userId);
         io.emit('getUsers', users);
         try {
             const res = yield axios_1.default.put("http://localhost:3001/users/disconnect", user);

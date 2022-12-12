@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { Chats, Messages, Response, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG, RECEIVE_SOCKET_MESSAGE, DELETE_SOCKET_MESSAGE, NEW_CHAT_SOCKET } from '../actions/actions'
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG, RECEIVE_SOCKET_MESSAGE, DELETE_SOCKET_MESSAGE, NEW_CHAT_SOCKET } from '../actions/actions'
 
 interface Reducer {
     users: User[],
@@ -95,9 +95,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
             state.response = {ok:true, msg:action.payload.msg}
         }
 
-    })
-    callback.addCase(USER_BY_ID.fulfilled, (state, action) => {
-        state.users = action.payload
     })
     callback.addCase(ALL_MESSAGES.fulfilled, (state, action) => {
         state.messages = action.payload
@@ -273,7 +270,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(LEAVE_GROUP.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
             let chatDeleted = stateChatsCopy.filter((chat) => {
@@ -321,7 +317,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(REMOVE_USER.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
@@ -342,7 +337,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(SET_ADMIN.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
@@ -364,7 +358,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(REMOVE_ADMIN.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
@@ -385,7 +378,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
     })
     callback.addCase(CHANGE_IMG.fulfilled, (state, action) => {
         if (action.payload.ok) {
-            console.log(action.payload)
             let stateChatsCopy = state.chats
             let userChatsCopy = state.userChats
 
