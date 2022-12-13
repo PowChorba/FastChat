@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateGroup = exports.deleteChat = exports.userChat = exports.allChats = exports.newChat = void 0;
 const chats_1 = require("../models/chats");
 const newChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { firstUser, secondUser, groupName, chatsUsersId, admin, creator, img } = req.body;
+    const { firstUser, secondUser, groupName, chatsUsersId, admin, creator, img, _id } = req.body;
     try {
         const alreadyChatOne = yield chats_1.Chats.findOne({
             chatsUsers: [firstUser, secondUser]
@@ -22,19 +22,13 @@ const newChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         if (!firstUser && !secondUser) {
             const groupsCreated = yield chats_1.Chats.create({
+                _id,
                 groupName,
                 creator,
                 chatsUsers: [chatsUsersId],
                 admin,
                 img
             });
-            let chat = {
-                chatsUsers: groupsCreated.chatsUsers,
-                groupName,
-                creator,
-                admin,
-                img
-            };
             res.json({ ok: true, msg: "succesfully created", chat: groupsCreated });
         }
         else if (alreadyChatOne || alreadyChatTwo) {
@@ -42,6 +36,7 @@ const newChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         else {
             const newChat = yield chats_1.Chats.create({
+                _id,
                 chatsUsers: [firstUser, secondUser]
             });
             return res.json({ ok: true, msg: "succesfully created", chat: newChat });

@@ -2,21 +2,11 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors = require('cors');
 const { dbConnection } = require("./dataBase/db");
 const index_1 = __importDefault(require("./routes/index"));
-const axios_1 = __importDefault(require("axios"));
 const socket_io_1 = require("socket.io");
 require('dotenv').config();
 const app = (0, express_1.default)();
@@ -92,6 +82,23 @@ io.on('connect', (socket) => {
                 senderId, text, senderChat, messageId, isImage, isAudio
             });
         }
+    });
+    socket.on("joinGroupChat", ({ groupId, members }) => {
+        const user = getUser(members);
+        io.to(groupId).emit("addUserGroup", {
+            groupId, members
+        });
+        io.to(user === null || user === void 0 ? void 0 : user.socketId).emit("addUserGroup", {
+            groupId, members
+        });
+    });
+    socket.on("getNewChat", ({ firstUser, secondUser, _id }) => {
+        const user = getUser(secondUser);
+        io.to(user === null || user === void 0 ? void 0 : user.socketId).emit("newChat", {
+            firstUser,
+            secondUser,
+            _id
+        });
     });
     socket.on("sendEscribiendo", ({ senderId, receiverId, text, senderChat }) => {
         let type = "text";

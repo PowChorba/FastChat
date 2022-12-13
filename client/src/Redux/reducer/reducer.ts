@@ -1,7 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { Chats, Messages, Response, User } from "../../types";
-import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, USER_BY_ID, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG, RECEIVE_SOCKET_MESSAGE, DELETE_SOCKET_MESSAGE } from '../actions/actions'
-import Users from '../../Components/Home/Users/Users';
+import { USER_CHATS, ALL_USERS, NEW_CHAT, NEW_USER, ALL_MESSAGES, NEW_MESSAGE, ALL_CHATS, USER_FILTER, DELETE_MESSAGE, DELETE_CHAT, DELETE_CONTACT, USER_CONTACTS, BLOCK_USER, UNBLOCK_USER, CREATE_GROUP_CHAT, DELETE_NOTIFICATIONS, CLEAR_RESPONSE, LAST_CONNECTION, UPDATE_GROUP, LEAVE_GROUP, ADD_USER, REMOVE_USER, SET_ADMIN, REMOVE_ADMIN, CHANGE_IMG, RECEIVE_SOCKET_MESSAGE, DELETE_SOCKET_MESSAGE, NEW_CHAT_SOCKET } from '../actions/actions'
 
 interface Reducer {
     users: User[],
@@ -59,7 +58,25 @@ export const clientReducer = createReducer(initialState, (callback) => {
             }
             state.response = {ok:true, msg: action.payload.msg}
         }
-
+    })
+    callback.addCase(NEW_CHAT_SOCKET.fulfilled, (state, action) => {
+        let firstUser = state.users.filter((user)=>user._id === action.payload.firstUser)
+        let secondUser = state.users.filter((user)=>user._id === action.payload.secondUser)
+        let chatUsers = [...firstUser, ...secondUser]
+        let payloadChats = {
+            _id: action.payload._id,
+            chatsUsers: chatUsers,
+            creator: firstUser[0],
+            groupName:  ""
+        }
+        
+        let newChat = {
+            _id: action.payload._id,
+            chatsUsers: chatUsers,
+            creator: firstUser[0],
+        }
+                state.chats = [...state.chats, newChat]
+                state.userChats = [...state.userChats, payloadChats]
     })
     callback.addCase(CREATE_GROUP_CHAT.fulfilled, (state, action) => {
         let payloadChats;

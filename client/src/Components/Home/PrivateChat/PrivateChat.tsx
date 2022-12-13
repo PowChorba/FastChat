@@ -1,9 +1,9 @@
 
 import { useEffect, useState } from "react"
 import { BiCircle, BiImageAlt } from "react-icons/bi"
-import { DELETE_NOTIFICATIONS, DELETE_SOCKET_MESSAGE, RECEIVE_SOCKET_MESSAGE, USER_CHATS } from "../../../Redux/actions/actions"
+import { ALL_CHATS, DELETE_NOTIFICATIONS, DELETE_SOCKET_MESSAGE, NEW_CHAT_SOCKET, RECEIVE_SOCKET_MESSAGE, USER_CHATS } from "../../../Redux/actions/actions"
 import { useAppDispatch } from "../../../Redux/hooks"
-import { Chats, GetMessageData, GetMessageDeleted, Messages, User } from "../../../types"
+import { AddUser, Chats, GetMessageData, GetMessageDeleted, Messages, NewChat, NewChatSocket, User } from "../../../types"
 import s from './PrivateChat.module.css'
 import { BsMicFill } from 'react-icons/bs'
 import { fechasMensajes } from "../Tools/Tools"
@@ -49,7 +49,6 @@ export default function PrivateChat({ currentChat, chatUser, currentUser, socket
         dispatch(DELETE_NOTIFICATIONS(allChatData._id))
     }
     // ----------------------------------------------
-
     useEffect(() => {
         if (currentUser?._id) dispatch(USER_CHATS(currentUser._id))
     }, [dispatch, currentUser?._id])
@@ -57,7 +56,7 @@ export default function PrivateChat({ currentChat, chatUser, currentUser, socket
 useEffect(() => {
     // SOCKET MESSAGE RECEIVED 
     socket.current?.on('getMessage', (data: GetMessageData) => {
-        if (data.senderChat === allChatData._id) {
+        if (data.senderChat === allChatData._id && data.senderId !== currentUser._id) {
             // NOTIFICATION SOUND 
             notificationAudio()
             // ----------------
@@ -84,6 +83,15 @@ useEffect(() => {
                 createdAt: data.createdAt,
                 isDeleted: true
             }))
+        }
+    })
+    socket.current?.on("addUserGroup", (data: AddUser) => {
+        if (data.groupId === allChatData._id ) {
+            setTimeout(() => {
+                dispatch(ALL_CHATS())
+                dispatch(USER_CHATS(currentUser._id))
+                dispatch(ALL_CHATS())
+            }, 1000)
         }
     })
     socket.current?.on("getUserWritting", (data: GetMessageData) => {

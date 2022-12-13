@@ -1,4 +1,5 @@
 import { Input, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
+import { v4 as uuidv4 } from 'uuid';
 import { useState } from "react"
 import { IoIosArrowDown } from "react-icons/io"
 import { BLOCK_USER, DELETE_CONTACT, NEW_CHAT } from "../../../Redux/actions/actions"
@@ -8,10 +9,11 @@ import s from './Contacts.module.css'
 
 interface Props {
     currentUser: User
+    socket: any
 }
 
 
-export default function Contacts({currentUser}: Props) {
+export default function Contacts({currentUser, socket}: Props) {
     const dispatch = useAppDispatch()
     const filterBloqUsers = currentUser?.bloqUsers.map(e => e._id)
     const filterContactsUsers = currentUser?.contacts?.filter(e => !filterBloqUsers.includes(e._id))
@@ -39,7 +41,12 @@ export default function Contacts({currentUser}: Props) {
     }
     
     const handleNewChat = () => {
-        dispatch(NEW_CHAT(newChat))
+        let _id = uuidv4()
+        let createChat = {...newChat, _id}
+        dispatch(NEW_CHAT(createChat))
+        socket.current.emit("getNewChat",{
+            ...createChat
+        })
     }
 
     //PARA BORRAR CONTACTO

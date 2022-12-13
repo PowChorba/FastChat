@@ -1,5 +1,5 @@
 export interface User {
-    _id?: string
+    _id: string
     nickName: string
     userEmail: string
     password: string
@@ -52,4 +52,36 @@ export interface ChatsModel {
     creator: User
     admin?: User[]
     img?: string
+}
+export interface PayloadChats {
+    _id: string;
+    chatsUsers: User[];
+    creator: string;
+    groupName?: string;
+}
+export interface NewChatsReducer {
+    _id: string;
+    chatsUsers: User[];
+    creator: string;
+}
+// export interface NewChat {
+//     payloadChats: PayloadChats
+//     newChats: NewChatsReducer
+// }
+export interface NewChat {
+    firstUser: string
+    secondUser: string
+    _id: string
+}
+export interface CreateGroup {
+    _id: string
+    groupName: string
+    creator: string
+    admin: string
+    img: string
+    chatsUsersId: string
+}
+export interface AddUser {
+    groupId: string
+    members: string
 }

@@ -196,7 +196,7 @@ export default function Home(){
                     <button onClick={handleContacts} className={s.botonAtras}>{'<'}</button>
                     <Text fontSize='20px'>Contacts</Text>
                 </div>
-                <Contacts currentUser={currentUser} />
+                <Contacts socket={socket} currentUser={currentUser} />
             </div>
             <div className={profile ? s.contactosHide : s.div}>
                 <div className={s.divProfile}> 
@@ -227,7 +227,7 @@ export default function Home(){
                     <button onClick={handleGroups} className={s.botonAtras}>{'<'}</button>
                     <Text fontSize='20px'>Create Group</Text>
                 </div>
-                <ChatGroups setCreateGroup={setCreateGroup} currentUser={currentUser}/>
+                <ChatGroups socket={socket.current} setCreateGroup={setCreateGroup} currentUser={currentUser}/>
             </div>
         {
                 respuesta?.ok &&

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { CreateGroup, CreateMessages, CreateUser, DeleteUser, Messages, NewChat, UpdateGroup, userDisconnected } from '../../types'
+import { CreateGroup, CreateMessages, CreateUser, DeleteUser, Messages, NewChat, NewChatSocket, UpdateGroup, userDisconnected } from '../../types'
 
 export const ALL_USERS = createAsyncThunk(
     'ALL_USERS', async () => {
@@ -57,7 +57,6 @@ export const USER_CONTACTS = createAsyncThunk(
     }
 )
 
-
 export const NEW_CHAT = createAsyncThunk(
     'NEW_CHAT',async (newChat: NewChat) => {
         try {
@@ -66,6 +65,11 @@ export const NEW_CHAT = createAsyncThunk(
         } catch (error) {
             console.log(error)
         }
+    }
+)
+export const NEW_CHAT_SOCKET = createAsyncThunk(
+    'NEW_CHAT_SOCKET',async (newChat: NewChat) => {
+       return newChat
     }
 )
 
@@ -183,6 +187,11 @@ export const CREATE_GROUP_CHAT = createAsyncThunk(
         } catch (error) {
             console.log(error)
         }
+    }
+)
+export const CREATE_GROUP_CHAT_SOCKET = createAsyncThunk(
+    'CREATE_GROUP_CHAT_SOCKET',async (data: CreateGroup) => {
+        return data
     }
 )
 export const RECEIVE_SOCKET_MESSAGE = createAsyncThunk(

@@ -16,12 +16,13 @@ import ViewPhoto from "../Dialogs/ViewPhoto";
 
 interface Props {
   filterGroupChat: Chats;
+  socket: any
   currentUser: User;
   currentChat: string;
   setCurrentChat: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function ProfileGroup({ setCurrentChat, filterGroupChat, currentUser, currentChat }: Props) {
+export default function ProfileGroup({ socket, setCurrentChat, filterGroupChat, currentUser, currentChat }: Props) {
   const adminsId = filterGroupChat?.admin?.map((e) => e._id);
   const dispatch = useAppDispatch()
   //PARA MANDAR IDS A LOS DIALOGS
@@ -171,6 +172,7 @@ export default function ProfileGroup({ setCurrentChat, filterGroupChat, currentU
       )}
       {dialog ? (
         <AddUsers
+          socket={socket}
           setDialog={setDialog}
           currentUser={currentUser}
           currentChat={currentChat}

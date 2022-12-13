@@ -1,9 +1,8 @@
-import e, {Request, Response} from 'express'
+import  {Request, Response} from 'express'
 import { Chats } from '../models/chats'
-import { Users } from '../models/users'
 
 export const newChat = async (req: Request,res: Response) => {
-    const { firstUser, secondUser, groupName, chatsUsersId , admin, creator , img } = req.body
+    const { firstUser, secondUser, groupName, chatsUsersId , admin, creator , img, _id } = req.body
     try {
         const alreadyChatOne = await Chats.findOne({
             chatsUsers: [firstUser, secondUser]
@@ -13,25 +12,20 @@ export const newChat = async (req: Request,res: Response) => {
         })
         if(!firstUser && !secondUser){
             const groupsCreated = await Chats.create({
+                _id,
                 groupName,
                 creator,
                 chatsUsers: [chatsUsersId],
                 admin,
                 img
             })
-            let chat = {
-                chatsUsers: groupsCreated.chatsUsers,
-                groupName,
-                creator,
-                admin,
-                img
-            }
             res.json({ ok: true, msg:"succesfully created" ,chat: groupsCreated })
         }
         else if(alreadyChatOne || alreadyChatTwo){
             return res.json({ok:true, msg:'Chat already created'})
         }else {
             const newChat = await Chats.create({
+                _id,
                 chatsUsers: [firstUser, secondUser]
             })
             return res.json({ok:true,msg: "succesfully created", chat:newChat})

@@ -7,6 +7,10 @@ chatsUsers: [{
     ref: "Users",
     autopopulate: true
 }],
+_id :{
+    type: String,
+    required: true
+},
 groupName: {
     type: String,
     require: true
@@ -24,8 +28,9 @@ admin: [{
 img: {
     type: String,
     require: true
-} 
-
+}
+}, {
+    _id: false
 })
 ChatsSchema.plugin(require("mongoose-autopopulate"))
 export const Chats = model<ChatsModel>('Chats', ChatsSchema)
