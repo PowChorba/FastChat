@@ -25,6 +25,20 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
     const handleDialog = () => {
         setDialog(!dialog)
     }
+    const colorNames: any = (i:number)=>{
+        let index = i
+        if (i === 0) return "violet"
+        else if (i === 1) return "orange"
+        else if (i === 2) return "blue"
+        else if (i === 3) return "green"
+        else if (i === 4) return "yellow"
+        else if (i === 5) return "grey"
+        else if (i === 6) return "red"
+        else {
+            index = --index
+             return colorNames(index)
+        }
+    }
 
     return(
         <div className={s.contenedorMensajes}>
@@ -38,7 +52,7 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
                 })
 
             }
-            {mensajes.map((e) => {
+            {mensajes.map((e,i) => {
                 return(
                     <div key={e._id} className={e.messageAuthor === currentUser?._id ? s.divRight : s.divLeft}>
                         <div className={e.messageAuthor === currentUser?._id ? s.divSubRight : s.divSubLeft}>
@@ -46,7 +60,7 @@ export default function Message({mensajes, currentUser, actualDayMessages, socke
                                 e.isDeleted ? <p className={s.deletedMessage}><BiBlock/>{e.textMessage}</p>
                                 : filterGroupChat?.groupName 
                                 ?   <div>
-                                        <p>{e.messageAuthor === currentUser?._id ? '' : nameOfUsers[idOfUsers.indexOf(e.messageAuthor)]}</p>
+                                        <p className={s[colorNames(idOfUsers.indexOf(e.messageAuthor))]}>{e.messageAuthor === currentUser?._id ? '' : nameOfUsers[idOfUsers.indexOf(e.messageAuthor)]}</p>
                                         {
                                             e.isImage ? <img src={e.textMessage} alt="Not Found" className={s.image}/> : e.isAudio ? <audio src={e.textMessage} controls className={s.audio}/> : <p className={s.textoMensajes}>{e.textMessage}</p> 
                                         }

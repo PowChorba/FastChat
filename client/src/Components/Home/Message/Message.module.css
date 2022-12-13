@@ -11,6 +11,28 @@
 .textoMensajes{
     padding: 3px;
 }
+.orange{
+    color: orange
+}
+.violet{
+    color: violet
+}
+.yellow{
+    color: yellow
+}
+.green{
+    color: green
+}
+.grey{
+    color: grey
+}
+
+.red{
+    color: red
+}
+.blue{
+    color: blue
+}
 
 .deletedMessage {
     padding: 3px;

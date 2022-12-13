@@ -197,7 +197,6 @@ export const clientReducer = createReducer(initialState, (callback) => {
                 state.users = stateUserCopy
                 state.response = {ok:true, msg:action.payload.msg}
             } else if(action.payload.msg === "User updated"){
-                console.log(action.payload)
                 let stateUserCopy = state.users
                  let indexActualUser = state.users.findIndex((user) => {
                     return user._id === action.payload.userUpdate.userId

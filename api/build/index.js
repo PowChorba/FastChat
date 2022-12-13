@@ -73,7 +73,7 @@ io.on('connect', (socket) => {
         removeUser((user === null || user === void 0 ? void 0 : user.userId) || "");
         io.emit('getUsers', users);
         try {
-            const res = yield axios_1.default.put("http://localhost:3001/users/disconnect", user);
+            const res = yield axios_1.default.put("https://fastchat-production.up.railway.app/users/disconnect", user);
             io.emit("userDisconnected", { userId: user === null || user === void 0 ? void 0 : user.userId, data: (res.data.ok ? res.data : "") });
         }
         catch (e) {

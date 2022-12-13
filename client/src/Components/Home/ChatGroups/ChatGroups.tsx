@@ -61,9 +61,6 @@ export default function ChatGroups({currentUser, setCreateGroup, socket}: Props)
         let _id = uuidv4()
         let createGroupChat = {...group, _id}
         dispatch(CREATE_GROUP_CHAT(createGroupChat))
-        // socket.current.emit("getGroupChat",{
-        //     ...createGroupChat
-        // })
         setCreateGroup(true)
     } 
 

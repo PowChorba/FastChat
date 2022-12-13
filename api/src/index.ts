@@ -79,7 +79,7 @@ io.on('connect', (socket: any) => {
         removeUser(user?.userId||"")
         io.emit('getUsers', users)
         try {
-            const res = await axios.put("http://localhost:3001/users/disconnect", user)
+            const res = await axios.put("https://fastchat-production.up.railway.app/users/disconnect", user)
             io.emit("userDisconnected", {userId:user?.userId, data:(res.data.ok? res.data : "")})
         }catch (e){
             console.log(e)

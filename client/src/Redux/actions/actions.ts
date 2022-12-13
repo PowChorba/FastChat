@@ -189,16 +189,6 @@ export const CREATE_GROUP_CHAT = createAsyncThunk(
         }
     }
 )
-// export const GET_GROUP_CHAT = createAsyncThunk(
-//     'GET_GROUP_CHAT',async (data: CreateGroup) => {
-//         try {
-//             const response = await axios.post('/chats', data)
-//             return response.data
-//         } catch (error) {
-//             console.log(error)
-//         }
-//     }
-// )
 export const CREATE_GROUP_CHAT_SOCKET = createAsyncThunk(
     'CREATE_GROUP_CHAT_SOCKET',async (data: CreateGroup) => {
         return data

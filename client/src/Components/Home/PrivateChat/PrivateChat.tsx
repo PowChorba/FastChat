@@ -49,7 +49,6 @@ export default function PrivateChat({ currentChat, chatUser, currentUser, socket
         dispatch(DELETE_NOTIFICATIONS(allChatData._id))
     }
     // ----------------------------------------------
-    // if (allChatData.groupName) console.log(allChatData._id, allChatData.groupName)
     useEffect(() => {
         if (currentUser?._id) dispatch(USER_CHATS(currentUser._id))
     }, [dispatch, currentUser?._id])
@@ -87,7 +86,6 @@ useEffect(() => {
         }
     })
     socket.current?.on("addUserGroup", (data: AddUser) => {
-        console.log(allChatData.groupName,"data",data.groupId, "chat:",allChatData._id)
         if (data.groupId === allChatData._id ) {
             setTimeout(() => {
                 dispatch(ALL_CHATS())
