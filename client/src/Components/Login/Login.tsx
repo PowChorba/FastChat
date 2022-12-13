@@ -36,6 +36,8 @@ export default function Login(){
         }    
     }
 
+    console.log(navigator.languages)
+
     return(
         <div >
             <div className={s.contenedor}>
