@@ -1,12 +1,12 @@
 # FastChat
 
---- English ---
+- English -
 
 FastChat is a chat in real time, which consists of a registration system, login and email verification. 
 Once entered on the main page, you will be able to add, delete and block contacts.
 At the same time, you can create private chats and group chats. Also you can send images, icons, audios and text messages
 
---- Spanish ---
+- Spanish -
 
 FastChat es un chat en tiempo real, el cual cuenta con un sistema de registro, login y verificacion de email. 
 Una ves ingresado a la pagina principal, vas a poder agregar, eliminar y bloquear contactos. 
